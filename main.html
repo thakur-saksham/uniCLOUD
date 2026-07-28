@@ -1172,15 +1172,6 @@
   <div id="orb-canvas"></div>
 
 
-  <!-- ================= INTRO SCREEN ================= -->
-
-  <div class="intro-screen" id="intro">
-    <span class="intro-text active">Hello</span>
-    <span class="intro-text">नमस्ते</span>
-    <span class="intro-text">नमस्कार</span>
-    <span class="intro-text">こんにちは</span>
-    <span class="intro-text">Привет</span>
-  </div>
 
   <section class="hero">
     <nav class="top-nav">
@@ -1692,11 +1683,8 @@
           }
         }
 
-        if (currentUser && (currentUser.intro_seen || sessionStorage.getItem('intro_done'))) {
+        if (intro) {
           intro.remove();
-        } else {
-          sessionStorage.setItem('intro_done', '1');
-          runIntro();
         }
       }).catch(() => { window.location.href = '/login.html'; });
     } else {
