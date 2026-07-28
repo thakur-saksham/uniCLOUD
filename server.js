@@ -368,6 +368,27 @@ app.get('/api/subjects', async (req, res) => {
   res.json(rows);
 });
 
+// Bulk endpoint: returns ALL subjects for a branch grouped by semester in ONE call
+app.get('/api/subjects/all', async (req, res) => {
+  const { branch } = req.query;
+  if (!branch) return res.status(400).json({ error: 'branch required' });
+
+  const b = (await db.query('SELECT id FROM branches WHERE name = ?', [branch])).rows[0];
+  if (!b) return res.json({});
+
+  const rows = (await db.query('SELECT id, name, semester FROM subjects WHERE branch_id = ? ORDER BY semester, name', [b.id])).rows;
+  
+  // Group by semester: { sem1: [...], sem2: [...], ... }
+  const grouped = {};
+  rows.forEach(r => {
+    const key = 'sem' + r.semester;
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(r);
+  });
+  
+  res.json(grouped);
+});
+
 // ═══════════════════════════════════════════════════════════════
 //  ATTENDANCE
 // ═══════════════════════════════════════════════════════════════
