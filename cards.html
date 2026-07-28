@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Card Stack – Strong Tilt</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  height: 100vh;
+  background: #0e0e13;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ===== STAGE ===== */
+.stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  perspective: 2200px; /* 🔥 deeper perspective */
+}
+
+/* ===== CARD BASE ===== */
+.card {
+  position: relative;
+  width: 300px;
+  height: 420px;
+  border-radius: 22px;
+  transform-style: preserve-3d;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+  cursor: pointer;
+  background: #000;
+}
+
+/* ===== IMAGE ===== */
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 22px;
+  transform: translateZ(50px);
+}
+
+/* ===== OVERLAY ===== */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 22px;
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.65),
+    transparent 65%
+  );
+  border-radius: 22px;
+  transform: translateZ(100px);
+  pointer-events: none;
+}
+
+/* ===== SIDE CARDS (BEHIND) ===== */
+.card.left {
+  transform: translateX(0px) translateZ(-160px);
+  box-shadow: 50px 45px 100px rgba(0,0,0,0.9);
+  z-index: 1;
+}
+
+.card.right {
+  transform: translateX(-10px) translateZ(-160px);
+  box-shadow: -50px 45px 100px rgba(0,0,0,0.9);
+  z-index: 1;
+}
+
+/* ===== MIDDLE CARD ===== */
+.card.middle {
+  width: 350px;
+  height: 480px;
+  transform: translateZ(0);
+  box-shadow: 0 90px 180px rgba(0,0,0,1);
+  z-index: 3;
+}
+
+/* ===== HOVER SHADOW BOOST ===== */
+.card:hover {
+  box-shadow: 0 120px 220px rgba(0,0,0,1);
+}
+</style>
+</head>
+
+<body>
+
+<div class="stage">
+  <div class="card left">
+    <img src="https://picsum.photos/500/700?1">
+    <div class="overlay">Resources</div>
+  </div>
+
+  <div class="card middle">
+    <img src="https://picsum.photos/500/700?2">
+    <div class="overlay">Attendance</div>
+  </div>
+
+  <div class="card right">
+    <img src="https://picsum.photos/500/700?3">
+    <div class="overlay">Profile</div>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll(".card").forEach(card => {
+  card.addEventListener("mousemove", e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    /* 🔥 STRONGER ROTATION */
+    const rotateX = ((y / rect.height) - 0.5) * -26;
+    const rotateY = ((x / rect.width) - 0.5) * 26;
+
+    card.style.transform = `
+      translateZ(200px)
+      rotateX(${rotateX}deg)
+      rotateY(${rotateY}deg)
+      scale(1.12)
+    `;
+    card.style.zIndex = 10;
+  });
+
+  card.addEventListener("mouseleave", () => {
+    card.style.transform = "";
+    card.style.zIndex = "";
+  });
+});
+</script>
+
+</body>
+</html>

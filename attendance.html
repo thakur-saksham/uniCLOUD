@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attendance | uniCLOUD</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/phosphor-icons@1.4.2/src/css/icons.css" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Montserrat',sans-serif}
+
+:root{
+  --purple: rgba(160,120,255,1);
+  --purple-dim: rgba(160,120,255,0.18);
+  --purple-border: rgba(160,120,255,0.25);
+  --green: #4ade80;
+  --yellow: #facc15;
+  --red: #f87171;
+  --bg: #0e0e13;
+  --glass: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.09);
+  --text-muted: rgba(255,255,255,0.45);
+}
+
+html,body{height:100%;background:radial-gradient(1400px circle at 0% 0%,#4b3f63 0%,#2f2a3a 30%,#17171c 55%,#0e0e13 100%);color:#fff;overflow-x:hidden}
+body::after{content:"";position:fixed;inset:0;background-image:url("https://www.transparenttextures.com/patterns/asfalt-light.png");opacity:.05;pointer-events:none;z-index:0}
+
+/* LAYOUT */
+.page{min-height:100vh;padding:28px;position:relative;z-index:1}
+
+/* HEADER */
+.top-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand-dot{width:10px;height:10px;border-radius:50%;background:rgba(192,132,252,0.9);box-shadow:0 0 16px rgba(192,132,252,0.65)}
+.brand-name{font-size:20px;font-weight:800;color:rgba(255,255,255,0.92)}
+.page-title{font-size:13px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase}
+
+/* OVERALL PANEL */
+.overall-panel{
+  background:rgba(10,10,14,0.55);
+  border:1px solid var(--glass-border);
+  border-radius:24px;
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+  padding:28px 32px;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:32px;
+  align-items:center;
+  margin-bottom:24px;
+  box-shadow:0 40px 80px rgba(0,0,0,0.55),inset 0 0 24px rgba(255,255,255,0.025);
+}
+
+/* DIAL */
+.dial-wrap{position:relative;width:130px;height:130px;flex-shrink:0}
+.dial-wrap svg{width:130px;height:130px;transform:rotate(-90deg)}
+.dial-bg{fill:none;stroke:rgba(255,255,255,0.06);stroke-width:10}
+.dial-fill{fill:none;stroke-width:10;stroke-linecap:round;stroke-dasharray:345;stroke-dashoffset:345;transition:stroke-dashoffset 0.8s cubic-bezier(.4,0,.2,1),stroke 0.4s ease}
+.dial-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.dial-pct{font-size:28px;font-weight:800;line-height:1}
+.dial-label{font-size:10px;color:var(--text-muted);letter-spacing:1.5px;margin-top:4px;text-transform:uppercase}
+
+/* OVERALL STATS */
+.overall-stats{display:flex;flex-direction:column;gap:10px}
+.stat-row{display:flex;gap:18px;flex-wrap:wrap}
+.stat-chip{
+  display:flex;align-items:center;gap:8px;
+  background:var(--glass);border:1px solid var(--glass-border);
+  border-radius:12px;padding:9px 14px;font-size:13px;
+}
+.stat-chip i{font-size:16px;opacity:.7}
+.stat-chip .num{font-weight:700;font-size:15px;margin-right:2px}
+.state-badge{padding:6px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border:1px solid;align-self:flex-start}
+.state-badge.safe{background:rgba(74,222,128,0.12);border-color:rgba(74,222,128,0.35);color:var(--green)}
+.state-badge.warn{background:rgba(250,204,21,0.12);border-color:rgba(250,204,21,0.35);color:var(--yellow)}
+.state-badge.danger{background:rgba(248,113,113,0.12);border-color:rgba(248,113,113,0.35);color:var(--red)}
+
+/* SETTINGS SECTION */
+.settings-section{display:flex;flex-direction:column;gap:12px;min-width:220px}
+.setting-group{display:flex;flex-direction:column;gap:6px}
+.setting-label{font-size:11px;color:var(--text-muted);letter-spacing:1.2px;text-transform:uppercase}
+.setting-row{display:flex;align-items:center;gap:10px}
+.slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:99px;background:rgba(255,255,255,0.1);outline:none;cursor:pointer}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:rgba(192,132,252,0.9);box-shadow:0 0 12px rgba(192,132,252,0.6);cursor:pointer}
+.slider-val{font-size:14px;font-weight:700;min-width:26px;text-align:right;color:rgba(192,132,252,0.95)}
+.req-input{width:64px;background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;color:#fff;font-size:14px;font-weight:700;padding:6px 10px;text-align:center;outline:none}
+.req-input:focus{border-color:var(--purple-border)}
+
+/* SIM PANEL */
+.sim-toggle-btn{
+  display:flex;align-items:center;gap:8px;
+  background:var(--glass);border:1px solid var(--glass-border);
+  border-radius:12px;padding:8px 14px;cursor:pointer;
+  font-size:12px;color:rgba(255,255,255,0.8);
+  transition:background .2s,border-color .2s;
+  width:100%;
+}
+.sim-toggle-btn:hover{background:rgba(160,120,255,0.12);border-color:var(--purple-border)}
+.sim-toggle-btn i{font-size:16px;color:rgba(192,132,252,0.9)}
+
+.sim-panel{
+  overflow:hidden;max-height:0;transition:max-height .35s cubic-bezier(.4,0,.2,1);
+  background:rgba(160,120,255,0.05);border:1px solid var(--purple-border);
+  border-radius:14px;margin-top:8px;
+}
+.sim-panel.open{max-height:200px}
+.sim-inner{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.sim-title{font-size:11px;color:rgba(192,132,252,0.8);letter-spacing:1.2px;text-transform:uppercase;font-weight:600}
+.sim-row{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:rgba(255,255,255,0.7)}
+.sim-case{background:rgba(255,255,255,0.04);border-radius:10px;padding:8px 12px;flex:1;text-align:center}
+.sim-case .sc-val{font-size:16px;font-weight:800;margin-bottom:2px}
+.sim-case .sc-label{font-size:10px;color:var(--text-muted);letter-spacing:.8px}
+
+/* ADD SUBJECT */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-title{font-size:16px;font-weight:700;letter-spacing:.5px;opacity:.85}
+.add-btn{
+  display:flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,rgba(160,120,255,0.28),rgba(120,90,220,0.18));
+  border:1px solid var(--purple-border);
+  border-radius:12px;padding:8px 16px;
+  font-size:12px;font-weight:600;color:#fff;cursor:pointer;
+  transition:transform .15s,box-shadow .15s;
+}
+.add-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(160,120,255,0.2)}
+.add-btn i{font-size:16px}
+
+/* ADD FORM */
+.add-form{
+  background:rgba(10,10,14,0.6);
+  border:1px solid var(--purple-border);
+  border-radius:18px;
+  padding:20px 22px;
+  margin-bottom:16px;
+  backdrop-filter:blur(16px);
+  display:none;
+  animation:fadeSlide .25s ease;
+}
+.add-form.open{display:block}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.add-form-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.add-input{
+  flex:1;min-width:160px;
+  background:rgba(255,255,255,0.06);border:1px solid var(--glass-border);
+  border-radius:10px;padding:10px 14px;color:#fff;font-size:13px;outline:none;
+}
+.add-input::placeholder{color:var(--text-muted)}
+.add-input:focus{border-color:var(--purple-border)}
+.add-confirm-btn{
+  background:rgba(160,120,255,0.28);border:1px solid var(--purple-border);
+  border-radius:10px;padding:10px 18px;color:#fff;font-size:13px;font-weight:600;
+  cursor:pointer;white-space:nowrap;transition:background .15s;
+}
+.add-confirm-btn:hover{background:rgba(160,120,255,0.4)}
+
+/* SUBJECT ROWS */
+.subject-list{display:flex;flex-direction:column;gap:10px}
+.subject-row{
+  background:rgba(10,10,14,0.5);
+  border:1px solid var(--glass-border);
+  border-radius:18px;
+  overflow:hidden;
+  transition:border-color .2s;
+  backdrop-filter:blur(14px);
+}
+.subject-row.open{border-color:var(--purple-border)}
+.subject-header{
+  display:flex;align-items:center;gap:12px;
+  padding:16px 20px;cursor:pointer;
+  transition:background .2s;user-select:none;
+}
+.subject-header:hover{background:rgba(255,255,255,0.03)}
+.subject-name{font-size:15px;font-weight:600;flex:1}
+.subject-pct{font-size:14px;font-weight:700;min-width:50px;text-align:right}
+.subject-bar-wrap{flex:2;height:6px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden;min-width:80px}
+.subject-bar-fill{height:100%;border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1),background .4s ease;width:0%}
+.chevron{font-size:18px;color:var(--text-muted);transition:transform .3s}
+.subject-row.open .chevron{transform:rotate(180deg)}
+.delete-btn{background:none;border:none;cursor:pointer;padding:4px;color:rgba(248,113,113,0.6);font-size:18px;transition:color .15s;line-height:1}
+.delete-btn:hover{color:rgba(248,113,113,1)}
+
+/* SUBJECT BODY */
+.subject-body{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
+.body-inner{padding:0 20px 18px}
+.steppers-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.stepper{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px}
+.stepper-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.1px}
+.stepper-ctrl{display:flex;align-items:center;gap:0;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:12px;overflow:hidden}
+.stepper-btn{width:38px;height:38px;background:none;border:none;color:#fff;font-size:18px;cursor:pointer;transition:background .15s;flex-shrink:0}
+.stepper-btn:hover{background:rgba(255,255,255,0.08)}
+.stepper-input{flex:1;background:none;border:none;color:#fff;font-size:16px;font-weight:700;text-align:center;outline:none;min-width:0;padding:0 4px}
+.stepper-input::-webkit-inner-spin-button,.stepper-input::-webkit-outer-spin-button{-webkit-appearance:none}
+
+/* CHIPS */
+.chip-row{display:flex;gap:10px;flex-wrap:wrap}
+.chip{
+  display:flex;align-items:center;gap:6px;
+  border-radius:12px;padding:8px 14px;font-size:13px;
+  border:1px solid;
+}
+.attend-chip{background:rgba(74,222,128,0.08);border-color:rgba(74,222,128,0.25);color:var(--green)}
+.skip-chip{background:rgba(250,204,21,0.08);border-color:rgba(250,204,21,0.25);color:var(--yellow)}
+.chip i{font-size:16px}
+.chip .num{font-weight:800;font-size:15px}
+
+/* ADVICE BOX */
+.advice-box{
+  margin-top:20px;
+  background:rgba(160,120,255,0.06);
+  border:1px solid rgba(160,120,255,0.18);
+  border-radius:16px;
+  padding:16px 20px;
+  font-size:13px;
+  line-height:1.7;
+  color:rgba(255,255,255,0.82);
+}
+.advice-title{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(192,132,252,0.85);font-weight:700;margin-bottom:8px}
+
+/* DEBARRED PANEL */
+.debarred-box{
+  background:rgba(248,113,113,0.08);
+  border:1px solid rgba(248,113,113,0.25);
+  border-radius:16px;
+  padding:16px 20px;
+  margin-top:12px;
+  display:none;
+}
+.debarred-box.show{display:block}
+.debarred-title{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--red);text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.debarred-text{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6}
+
+/* EMPTY STATE */
+.empty-state{
+  text-align:center;padding:48px 20px;
+  color:var(--text-muted);font-size:14px;
+}
+.empty-state i{font-size:40px;display:block;margin-bottom:12px;opacity:.4}
+
+/* RESPONSIVE */
+@media(max-width:820px){
+  .overall-panel{grid-template-columns:1fr;gap:20px}
+  .dial-wrap{margin:0 auto}
+}
+@media(max-width:560px){
+  .page{padding:16px}
+  .overall-panel{padding:20px}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- NAV -->
+  <div class="top-nav">
+    <a class="brand" href="main.html">
+      <div class="brand-dot"></div>
+      <span class="brand-name">uniCLOUD</span>
+    </a>
+    <div class="page-title">Attendance Tracker</div>
+  </div>
+
+  <!-- OVERALL PANEL -->
+  <div class="overall-panel">
+
+    <!-- DIAL -->
+    <div class="dial-wrap">
+      <svg viewBox="0 0 130 130">
+        <circle class="dial-bg" cx="65" cy="65" r="54.9"/>
+        <circle class="dial-fill" id="overallStroke" cx="65" cy="65" r="54.9"/>
+      </svg>
+      <div class="dial-center">
+        <span class="dial-pct" id="overallPct">—</span>
+        <span class="dial-label" id="overallStateLabel">Overall</span>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="overall-stats">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <span id="overallBadge" class="state-badge safe">SAFE</span>
+        <span style="font-size:13px;color:var(--text-muted)" id="overallRefLabel">Required 75%</span>
+      </div>
+      <div class="stat-row">
+        <div class="stat-chip"><i class="ph ph-student"></i><span class="num" id="totalAttEl">0</span> attended</div>
+        <div class="stat-chip"><i class="ph ph-chalkboard-teacher"></i><span class="num" id="totalCondEl">0</span> conducted</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-chip attend-chip"><i class="ph ph-check-circle"></i>Attend <span class="num" id="globalAttendNum" style="margin:0 4px">0</span> more to be safe</div>
+        <div class="stat-chip skip-chip"><i class="ph ph-pause-circle"></i>Can skip <span class="num" id="globalSkipNum" style="margin:0 4px">0</span></div>
+      </div>
+
+      <!-- DEBARRED WARNING -->
+      <div class="debarred-box" id="debarredBox">
+        <div class="debarred-title"><i class="ph ph-warning-circle"></i> Debarment Risk</div>
+        <div class="debarred-text" id="debarredText">Your attendance is critically low.</div>
+      </div>
+    </div>
+
+    <!-- SETTINGS & SIM -->
+    <div class="settings-section">
+
+      <div class="setting-group">
+        <div class="setting-label">Required %</div>
+        <div class="setting-row">
+          <input class="req-input" type="number" id="requiredPct" min="0" max="100" value="75">
+          <span style="font-size:12px;color:var(--text-muted)">%</span>
+        </div>
+      </div>
+
+      <button class="sim-toggle-btn" id="simToggleBtn">
+        <i class="ph ph-chart-line-up"></i>
+        Simulate future classes
+      </button>
+
+      <div class="sim-panel" id="simPanel">
+        <div class="sim-inner">
+          <div class="sim-title">Projection</div>
+          <div class="setting-group">
+            <div class="setting-label">Avg classes/week</div>
+            <div class="setting-row">
+              <input type="range" class="slider" id="perWeekSlider" min="1" max="10" value="3">
+              <span class="slider-val" id="perWeekVal">3</span>
+            </div>
+          </div>
+          <div class="setting-group">
+            <div class="setting-label">Weeks remaining</div>
+            <div class="setting-row">
+              <input type="range" class="slider" id="weeksSlider" min="1" max="20" value="10">
+              <span class="slider-val" id="weeksVal">10</span>
+            </div>
+          </div>
+          <div class="sim-row" id="simCases">
+            <div class="sim-case"><div class="sc-val" id="simBest">—</div><div class="sc-label">Best case</div></div>
+            <div class="sim-case"><div class="sc-val" id="simWorst">—</div><div class="sc-label">Worst case</div></div>
+            <div class="sim-case"><div class="sc-val" id="simNeed">—</div><div class="sc-label">Need to attend</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SUBJECTS -->
+  <div class="section-header">
+    <div class="section-title">Subjects</div>
+    <button class="add-btn" id="addSubjectBtn"><i class="ph ph-plus"></i> Add Subject</button>
+  </div>
+
+  <!-- ADD FORM -->
+  <div class="add-form" id="addForm">
+    <div class="add-form-row">
+      <input class="add-input" type="text" id="newSubjectName" placeholder="Subject name (e.g. Mathematics I)">
+      <input class="add-input" type="number" id="newConducted" placeholder="Classes conducted" min="0" style="max-width:170px">
+      <input class="add-input" type="number" id="newAttended" placeholder="Classes attended" min="0" style="max-width:170px">
+      <button class="add-confirm-btn" id="addConfirmBtn">Add</button>
+    </div>
+  </div>
+
+  <!-- LIST -->
+  <div class="subject-list" id="subjectList">
+    <div class="empty-state" id="emptyState">
+      <i class="ph ph-books"></i>
+      No subjects added yet. Click "Add Subject" to get started.
+    </div>
+  </div>
+
+  <!-- ADVICE -->
+  <div class="advice-box" style="margin-top:20px">
+    <div class="advice-title"><i class="ph ph-lightbulb" style="margin-right:4px"></i> Smart Advice</div>
+    <div id="adviceText">Add your subjects and enter your attendance to see personalised advice.</div>
+  </div>
+
+</div>
+
+<script>
+// ========== STATE ==========
+const CIRC = 2 * Math.PI * 54.9; // r=54.9 matches SVG
+let subjects = JSON.parse(localStorage.getItem('uc_attendance') || '[]');
+let nextId = parseInt(localStorage.getItem('uc_att_nextid') || '1', 10);
+
+function save() {
+  localStorage.setItem('uc_attendance', JSON.stringify(subjects));
+  localStorage.setItem('uc_att_nextid', String(nextId));
+}
+
+// ========== HELPERS ==========
+function pct(a, c) { return c <= 0 ? 0 : (a / c) * 100; }
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function req() { return clamp(parseFloat(document.getElementById('requiredPct').value || '75'), 0, 100); }
+function stateColor(s) { return s === 'SAFE' ? 'var(--green)' : s === 'WARN' ? 'var(--yellow)' : 'var(--red)'; }
+function riskState(p, r) { return p >= r ? 'SAFE' : p >= r - 10 ? 'WARN' : 'DANGER'; }
+
+// Classes to attend to reach req%: (req*c - a) / (1 - req)
+function toAttend(a, c, r) {
+  const rr = r / 100;
+  const needed = Math.ceil((rr * c - a) / (1 - rr));
+  return Math.max(0, needed);
+}
+// Classes can skip: floor((a - req*(c+x)) >= 0) => floor((a - req*c) / req)
+function canSkip(a, c, r) {
+  const rr = r / 100;
+  const s = Math.floor((a - rr * c) / rr);
+  return Math.max(0, s);
+}
+
+// ========== RENDER ==========
+function renderAll() {
+  renderSubjects();
+  updateOverall();
+}
+
+function renderSubjects() {
+  const list = document.getElementById('subjectList');
+  const empty = document.getElementById('emptyState');
+  // remove old rows
+  list.querySelectorAll('.subject-row').forEach(r => r.remove());
+
+  if (subjects.length === 0) {
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  subjects.forEach(sub => {
+    const row = document.createElement('div');
+    row.className = 'subject-row';
+    row.id = 'row-' + sub.id;
+
+    const r = req();
+    const p = pct(sub.attended, sub.conducted);
+    const state = riskState(p, r);
+    const color = stateColor(state);
+    const barW = clamp(p, 0, 100);
+    const ta = toAttend(sub.attended, sub.conducted, r);
+    const cs = canSkip(sub.attended, sub.conducted, r);
+
+    row.innerHTML = `
+      <div class="subject-header" data-id="${sub.id}">
+        <span class="subject-name">${sub.name}</span>
+        <div class="subject-bar-wrap"><div class="subject-bar-fill" style="width:${barW}%;background:${color}"></div></div>
+        <span class="subject-pct" style="color:${color}">${sub.conducted <= 0 ? '—' : Math.round(p) + '%'}</span>
+        <button class="delete-btn" data-del="${sub.id}" title="Remove subject"><i class="ph ph-trash"></i></button>
+        <i class="ph ph-caret-down chevron"></i>
+      </div>
+      <div class="subject-body">
+        <div class="body-inner">
+          <div class="steppers-row">
+            <div class="stepper">
+              <div class="stepper-label">Classes conducted</div>
+              <div class="stepper-ctrl">
+                <button class="stepper-btn step-minus" data-id="${sub.id}" data-field="conducted">&#8722;</button>
+                <input class="stepper-input step-input-conducted" type="number" min="0" value="${sub.conducted}" data-id="${sub.id}">
+                <button class="stepper-btn step-plus" data-id="${sub.id}" data-field="conducted">&#43;</button>
+              </div>
+            </div>
+            <div class="stepper">
+              <div class="stepper-label">Classes attended</div>
+              <div class="stepper-ctrl">
+                <button class="stepper-btn step-minus" data-id="${sub.id}" data-field="attended">&#8722;</button>
+                <input class="stepper-input step-input-attended" type="number" min="0" value="${sub.attended}" data-id="${sub.id}">
+                <button class="stepper-btn step-plus" data-id="${sub.id}" data-field="attended">&#43;</button>
+              </div>
+            </div>
+          </div>
+          <div class="chip-row">
+            <div class="chip attend-chip"><i class="ph ph-check-circle"></i><span class="num attend-num">${ta}</span><span>Attend next</span></div>
+            <div class="chip skip-chip"><i class="ph ph-pause-circle"></i><span class="num skip-num">${cs === Infinity || Number.isNaN(cs) ? '0' : cs}</span><span>Can skip</span></div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    list.appendChild(row);
+
+    // ACCORDION
+    row.querySelector('.subject-header').addEventListener('click', (e) => {
+      if (e.target.closest('.delete-btn') || e.target.closest('.stepper-btn') || e.target.closest('.stepper-input')) return;
+      const open = row.classList.toggle('open');
+      const body = row.querySelector('.subject-body');
+      body.style.maxHeight = open ? body.scrollHeight + 'px' : '0px';
+    });
+
+    // DELETE
+    row.querySelector('.delete-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (confirm('Remove ' + sub.name + '?')) {
+        subjects = subjects.filter(s => s.id !== sub.id);
+        save();
+        renderAll();
+      }
+    });
+
+    // STEPPER BUTTONS
+    row.querySelectorAll('.stepper-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = parseInt(btn.dataset.id);
+        const field = btn.dataset.field;
+        const delta = btn.classList.contains('step-plus') ? 1 : -1;
+        const s = subjects.find(s => s.id === id);
+        if (!s) return;
+        s[field] = Math.max(0, s[field] + delta);
+        if (s.attended > s.conducted) s.attended = s.conducted;
+        save();
+        updateSubjectRow(s);
+        updateOverall();
+      });
+    });
+
+    // DIRECT INPUT
+    row.querySelectorAll('.stepper-input').forEach(input => {
+      input.addEventListener('input', (e) => {
+        e.stopPropagation();
+        const id = parseInt(input.dataset.id);
+        const s = subjects.find(s => s.id === id);
+        if (!s) return;
+        const val = Math.max(0, parseInt(input.value || '0', 10) || 0);
+        if (input.classList.contains('step-input-conducted')) s.conducted = val;
+        if (input.classList.contains('step-input-attended')) s.attended = Math.min(val, s.conducted);
+        save();
+        updateSubjectRow(s);
+        updateOverall();
+      });
+    });
+  });
+}
+
+function updateSubjectRow(sub) {
+  const row = document.getElementById('row-' + sub.id);
+  if (!row) return;
+  const r = req();
+  const p = pct(sub.attended, sub.conducted);
+  const state = riskState(p, r);
+  const color = stateColor(state);
+  const barW = clamp(p, 0, 100);
+  const ta = toAttend(sub.attended, sub.conducted, r);
+  const cs = canSkip(sub.attended, sub.conducted, r);
+
+  const fill = row.querySelector('.subject-bar-fill');
+  if (fill) { fill.style.width = barW + '%'; fill.style.background = color; }
+  const pctEl = row.querySelector('.subject-pct');
+  if (pctEl) { pctEl.textContent = sub.conducted <= 0 ? '—' : Math.round(p) + '%'; pctEl.style.color = color; }
+  const attInput = row.querySelector('.step-input-attended');
+  const condInput = row.querySelector('.step-input-conducted');
+  if (attInput) attInput.value = sub.attended;
+  if (condInput) condInput.value = sub.conducted;
+  const attNum = row.querySelector('.attend-num');
+  const skipNum = row.querySelector('.skip-num');
+  if (attNum) attNum.textContent = ta;
+  if (skipNum) skipNum.textContent = cs === Infinity || Number.isNaN(cs) ? '0' : cs;
+
+  // re-calc body height if open
+  const body = row.querySelector('.subject-body');
+  if (row.classList.contains('open') && body) {
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+}
+
+function updateOverall() {
+  const r = req();
+  let totalA = 0, totalC = 0;
+  subjects.forEach(s => { totalA += s.attended; totalC += s.conducted; });
+  const p = pct(totalA, totalC);
+  const state = riskState(p, r);
+  const color = stateColor(state);
+
+  document.getElementById('overallPct').textContent = totalC <= 0 ? '—' : Math.round(p) + '%';
+  document.getElementById('overallPct').style.color = color;
+  document.getElementById('overallStateLabel').textContent = state === 'DANGER' ? 'AT RISK' : state;
+  document.getElementById('overallRefLabel').textContent = 'Required ' + Math.round(r) + '%';
+  document.getElementById('totalAttEl').textContent = totalA;
+  document.getElementById('totalCondEl').textContent = totalC;
+
+  const stroke = document.getElementById('overallStroke');
+  stroke.style.stroke = color;
+  const dashOffset = CIRC * (1 - clamp(p, 0, 100) / 100);
+  stroke.style.strokeDasharray = CIRC.toFixed(2);
+  stroke.style.strokeDashoffset = totalC <= 0 ? CIRC.toFixed(2) : dashOffset.toFixed(2);
+
+  const badge = document.getElementById('overallBadge');
+  badge.textContent = state === 'DANGER' ? 'AT RISK' : state;
+  badge.className = 'state-badge ' + (state === 'SAFE' ? 'safe' : state === 'WARN' ? 'warn' : 'danger');
+
+  const globalTA = toAttend(totalA, totalC, r);
+  const globalCS = canSkip(totalA, totalC, r);
+  document.getElementById('globalAttendNum').textContent = globalTA;
+  document.getElementById('globalSkipNum').textContent = globalCS === Infinity || Number.isNaN(globalCS) ? '0' : globalCS;
+
+  // debarred warning
+  const debarredBox = document.getElementById('debarredBox');
+  const debarredText = document.getElementById('debarredText');
+  if (state === 'DANGER' && totalC > 0) {
+    debarredBox.classList.add('show');
+    debarredText.textContent = `You must attend the next ${globalTA} class${globalTA !== 1 ? 'es' : ''} without missing any to avoid debarment. Missing even one more will push your attendance further below ${Math.round(r)}%.`;
+  } else {
+    debarredBox.classList.remove('show');
+  }
+
+  // all subject rows
+  subjects.forEach(updateSubjectRow);
+
+  // sim
+  updateSim(totalA, totalC, r);
+
+  // advice
+  updateAdvice(p, r, state, globalTA, globalCS, totalC);
+}
+
+function updateSim(totalA, totalC, r) {
+  const perWeek = parseInt(document.getElementById('perWeekSlider').value, 10) || 3;
+  const weeks = parseInt(document.getElementById('weeksSlider').value, 10) || 10;
+  document.getElementById('perWeekVal').textContent = perWeek;
+  document.getElementById('weeksVal').textContent = weeks;
+
+  const totalClasses = perWeek * weeks;
+  const bestPct = totalC + totalClasses <= 0 ? 0 : pct(totalA + totalClasses, totalC + totalClasses);
+  const worstPct = totalC + totalClasses <= 0 ? 0 : pct(totalA, totalC + totalClasses);
+
+  // classes needed to hit r% if attending all remaining
+  const rr = r / 100;
+  let needToAttend = 0;
+  for (let x = 0; x <= totalClasses; x++) {
+    if ((totalA + x) / (totalC + totalClasses) >= rr) { needToAttend = x; break; }
+    needToAttend = totalClasses + 1;
+  }
+
+  document.getElementById('simBest').textContent = Math.round(bestPct) + '%';
+  document.getElementById('simWorst').textContent = Math.round(worstPct) + '%';
+  document.getElementById('simNeed').textContent = needToAttend > totalClasses ? `>${totalClasses}` : needToAttend + ' / ' + totalClasses;
+}
+
+function updateAdvice(p, r, state, ta, cs, totalC) {
+  const el = document.getElementById('adviceText');
+  if (subjects.length === 0 || totalC === 0) {
+    el.textContent = 'Add your subjects and enter your attendance to see personalised advice.';
+    return;
+  }
+
+  if (state === 'SAFE') {
+    if (cs > 0) {
+      el.textContent = `You're doing well! You can afford to miss up to ${cs} class${cs !== 1 ? 'es' : ''} across all subjects and still stay above ${Math.round(r)}%. Keep it consistent — don't use all skips at once.`;
+    } else {
+      el.textContent = `You're just above the safe zone. Don't skip any classes — even one absence could push you into the warning zone. Keep attending regularly.`;
+    }
+  } else if (state === 'WARN') {
+    el.textContent = `You're in the warning zone. Attend the next ${ta} class${ta !== 1 ? 'es' : ''} without missing any to get back to safe territory. Avoid all skips until you're safely above ${Math.round(r)}%.`;
+  } else {
+    el.textContent = `Your attendance is critically low. You need to attend at least ${ta} more class${ta !== 1 ? 'es' : ''} without skipping a single one to reach ${Math.round(r)}%. Contact your department if debarment is near — act now.`;
+  }
+}
+
+// ========== CONTROLS ==========
+document.getElementById('requiredPct').addEventListener('input', () => { updateOverall(); });
+
+document.getElementById('simToggleBtn').addEventListener('click', () => {
+  document.getElementById('simPanel').classList.toggle('open');
+  updateOverall();
+});
+
+document.getElementById('perWeekSlider').addEventListener('input', () => updateOverall());
+document.getElementById('weeksSlider').addEventListener('input', () => updateOverall());
+
+// ADD SUBJECT
+document.getElementById('addSubjectBtn').addEventListener('click', () => {
+  const form = document.getElementById('addForm');
+  form.classList.toggle('open');
+  if (form.classList.contains('open')) document.getElementById('newSubjectName').focus();
+});
+
+document.getElementById('addConfirmBtn').addEventListener('click', () => {
+  const name = document.getElementById('newSubjectName').value.trim();
+  const conducted = Math.max(0, parseInt(document.getElementById('newConducted').value || '0', 10) || 0);
+  const attended = Math.min(Math.max(0, parseInt(document.getElementById('newAttended').value || '0', 10) || 0), conducted);
+  if (!name) { document.getElementById('newSubjectName').focus(); return; }
+  subjects.push({ id: nextId++, name, conducted, attended });
+  save();
+  document.getElementById('newSubjectName').value = '';
+  document.getElementById('newConducted').value = '';
+  document.getElementById('newAttended').value = '';
+  document.getElementById('addForm').classList.remove('open');
+  renderAll();
+});
+
+document.getElementById('newSubjectName').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('addConfirmBtn').click();
+});
+
+// ========== INIT ==========
+renderAll();
+</script>
+</body>
+</html>

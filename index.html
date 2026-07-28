@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>uniCLOUD</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/phosphor-icons@1.4.2/src/css/icons.css" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    #orb-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.9;
+}
+
+
+
+    /* ================= INTRO SCREEN ================= */
+    .intro-screen {
+      position: fixed;
+      inset: 0;
+
+      /* iOS-style frosted background */
+      background:
+        radial-gradient(1200px circle at 20% 20%,
+          rgba(170, 140, 255, 0.18),
+          transparent 55%),
+        linear-gradient(rgba(20, 20, 26, 0.85),
+          rgba(10, 10, 14, 0.92));
+
+      backdrop-filter: blur(28px) saturate(140%);
+      -webkit-backdrop-filter: blur(28px) saturate(140%);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      z-index: 99999;
+      overflow: hidden;
+    }
+
+    .intro-screen::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("https://www.transparenttextures.com/patterns/asfalt-light.png");
+      opacity: 0.06;
+      pointer-events: none;
+    }
+
+    /* GLASS CARD */
+    .intro-card {
+      width: 420px;
+      height: 200px;
+
+      background: rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+
+      box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.55),
+        inset 0 0 24px rgba(255, 255, 255, 0.12);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+
+    /* TEXT */
+    /* BASE STATE (waiting text) */
+    .intro-text {
+      position: absolute;
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #ffffff;
+
+      opacity: 0;
+      transform: translateY(40px);
+      filter: blur(14px);
+
+      transition:
+        opacity 0.9s cubic-bezier(.25, .46, .45, .94),
+        transform 0.9s cubic-bezier(.25, .46, .45, .94),
+        filter 0.9s cubic-bezier(.25, .46, .45, .94);
+    }
+
+
+    .intro-text.active {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    .intro-text.exit {
+      opacity: 0;
+      transform: translateY(-40px);
+      filter: blur(18px);
+    }
+
+    .intro-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .intro-screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+
+      background-image: url("https://www.transparenttextures.com/patterns/asfalt-light.png");
+      opacity: 0;
+
+      pointer-events: none;
+      z-index: 1;
+
+      animation: grainFadeIn 1.2s ease forwards;
+    }
+
+    @keyframes grainFadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 0.08;
+      }
+
+      /* subtle, premium */
+    }
+
+
+
+    /* FINAL EXIT */
+    .intro-screen.exit {
+      animation: introExit 1.2s ease forwards;
+    }
+
+    @keyframes introExit {
+      to {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+    }
+
+
+
+
+    /* ===== BODY ===== */
+    body {
+      height: 100vh;
+      background: radial-gradient(1400px circle at 0% 0%,
+          #4b3f63 0%,
+          #2f2a3a 30%,
+          #17171c 55%,
+          #0e0e13 100%);
+      color: #fff;
+      cursor: none;
+      overflow: hidden;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("https://www.transparenttextures.com/patterns/asfalt-light.png");
+      opacity: 0.05;
+      pointer-events: none;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      height: 100vh;
+      padding: 30px 80px;
+      position: relative;
+    }
+
+    /* ===== NAV ===== */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 80px;
+    }
+
+    .logo {
+      margin-left: -80px;
+    }
+
+    .logo img {
+      height: 120px;
+    }
+
+    /* NAV AREA */
+    .nav-area {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    /* ===== GLASS NAV TABS ===== */
+    /* ===== NAV TABS (DEFAULT) ===== */
+    .nav-item {
+      position: relative;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      letter-spacing: 1.1px;
+      color: #dcdcdc;
+      cursor: pointer;
+
+      padding: 8px 16px;
+      border-radius: 14px;
+
+      background: transparent;
+      /* ❌ no glass by default */
+      border: 1px solid transparent;
+
+      transition:
+        color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    /* ===== UNDERLINE ===== */
+    .nav-item::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -10px;
+      width: 0%;
+      height: 2px;
+      background: #9f7cff;
+      transform: translateX(-50%);
+      transition: width 0.3s ease;
+    }
+
+    /* ===== HOVER STATE ===== */
+    .nav-item:hover {
+      color: #ffffff;
+
+      /* GLASS APPEARS ONLY ON HOVER */
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+
+      border: 1px solid rgba(180, 140, 255, 0.35);
+
+      /* INNER PURPLE GLOW */
+      box-shadow:
+        inset 0 0 18px rgba(160, 120, 255, 0.45),
+        inset 0 0 32px rgba(160, 120, 255, 0.18);
+    }
+
+    /* UNDERLINE ON HOVER */
+    .nav-item:hover::after {
+      width: 100%;
+    }
+
+    .hero-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, 50%);
+      text-align: center;
+      z-index: 5;
+    }
+
+
+
+    .hero-title {
+      font-size: clamp(4rem, 12vw, 8rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 0%, #e9d5ff 50%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 80px rgba(139, 92, 246, 0.3);
+    }
+
+    .hero-title::before {
+      content: 'uniCLOUD';
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: -1;
+      background: linear-gradient(135deg, var(--purple-mid), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: blur(40px);
+      opacity: 0.4;
+    }
+
+    .hero-tagline {
+      font-size: clamp(0.75rem, 1.5vw, 1rem);
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+      opacity: 0;
+      animation: fadeIn 1s ease forwards 1.2s;
+    }
+
+
+    /* LOGIN */
+    .login-avatar {
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      border-radius: 50%;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ===== CENTER ===== */
+    .center {
+      position: absolute;
+      top: 52%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .center h1 {
+      font-size: 96px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #ffffff;
+
+      /* 🔥 DEEP GLOW EFFECT */
+      text-shadow:
+        0 0 8px rgba(170, 140, 255, 0.45),
+        0 0 20px rgba(150, 120, 255, 0.35),
+        0 0 40px rgba(120, 90, 220, 0.25),
+        0 0 80px rgba(90, 60, 180, 0.15);
+    }
+
+
+    .center p {
+      margin-top: 10px;
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: #9a9a9a;
+    }
+
+    /* ===== FLOATING RESOURCES PANEL ===== */
+
+    .cursor {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: white;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
+      transition: width 0.25s ease, height 0.25s ease;
+      left: 50%;
+      top: 50%;
+      opacity: 0;
+    }
+
+    .resources-panel {
+      position: absolute;
+      top: 110px;
+      right: 140px;
+      width: 420px;
+      padding: 22px;
+
+      background: linear-gradient(145deg,
+          rgba(18, 18, 22, 0.9),
+          rgba(10, 10, 14, 0.78));
+
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(24px);
+
+      box-shadow:
+        0 40px 80px rgba(0, 0, 0, 0.8),
+        inset 0 0 25px rgba(255, 255, 255, 0.03);
+
+      display: none;
+      z-index: 50;
+    }
+
+    .resources-panel h3 {
+      font-size: 18px;
+      margin-bottom: 18px;
+    }
+
+    /* GRID */
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    /* CARD */
+    .resource-card {
+      height: 86px;
+      border-radius: 14px;
+
+      background: lin1ear-gradient(145deg,
+          rgba(255, 255, 255, 0.06),
+          rgba(255, 255, 255, 0.02));
+
+      border: 1px solid rgba(255, 255, 255, 0.06);
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+
+      font-size: 13px;
+      cursor: pointer;
+
+      transition: all 0.25s ease;
+    }
+
+    .resource-card i {
+      font-size: 24px;
+    }
+
+    .resource-card:hover {
+      background: linear-gradient(145deg,
+          rgba(160, 120, 255, 0.18),
+          rgba(255, 255, 255, 0.04));
+
+      box-shadow:
+        inset 0 0 20px rgba(160, 120, 255, 0.35),
+        0 15px 35px rgba(0, 0, 0, 0.6);
+
+      transform: translateY(-3px);
+    }
+
+    .profile-wrapper {
+      position: relative;
+      padding: 15px 0;
+      /* Bridge for hover */
+    }
+
+    .login-avatar {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .profile-menu {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      width: 260px;
+      background: #111111;
+      /* Solid dark like image */
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 8px;
+      display: none;
+      /* Hidden by default */
+      flex-direction: column;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+      z-index: 9999;
+    }
+
+    /* Trigger Show on Hover */
+    .profile-wrapper:hover .profile-menu {
+      display: flex;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      color: #e0e0e0;
+      font-size: 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .menu-item i {
+      font-size: 20px;
+      color: #888;
+    }
+
+    /* Dimmer icons */
+
+    .menu-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Logout style from screenshot */
+    .logout-item {
+      margin-top: 5px;
+      background: rgba(255, 80, 80, 0.12);
+      color: #ff8080;
+    }
+
+    .logout-item i {
+      color: #ff8080;
+    }
+
+
+    /* ===== CURSOR ===== */
+    .cursor {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: white;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
+      transition: width 0.25s ease, height 0.25s ease;
+      left: 50%;
+      top: 50%;
+      opacity: 0;
+    }
+
+    .cursor.visible {
+      opacity: 1;
+    }
+
+    .resources-panel {
+      position: absolute;
+      top: 100px;
+      right: 100px;
+      width: 360px;
+      padding: 20px;
+      background: rgba(15, 15, 20, .85);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      display: none;
+    }
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .resource-card {
+      height: 80px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .resource-card:hover {
+      background: rgba(160, 120, 255, .2);
+    }
+
+    /* SEMESTER PANEL */
+    #branchTitle {
+      margin-bottom: 18px;
+      /* spacing below Petroleum */
+    }
+
+    .semester-panel {
+      position: absolute;
+      top: 120px;
+      left: 49%;
+      width: 600px;
+      transform: translateX(-55%);
+      padding: 24px;
+      background: rgba(15, 15, 20, 0.65);
+      /* 👈 more transparent */
+      backdrop-filter: blur(26px);
+      box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.7),
+        inset 0 0 30px rgba(255, 255, 255, 0.04);
+      border-radius: 18px;
+      display: none;
+    }
+
+    .semester-tabs {
+      display: flex !important;
+      gap: 14px !important;
+      margin-bottom: 22px;
+    }
+
+    .sem-tab {
+      width: auto !important;
+      height: auto !important;
+      min-height: 42px !important;
+
+      border-radius: 999px !important;
+      opacity: 80%;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+
+      padding: 10px 22px !important;
+
+      background: rgba(255, 255, 255, 0.06) !important;
+      color: #ccc !important;
+      white-space: nowrap !important;
+
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .sem-tab.active {
+      background: rgba(140, 100, 220, 0.55) !important;
+      color: #fff !important;
+    }
+
+
+
+    .resource-row {
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      background: rgba(255, 255, 255, .04);
+      cursor: pointer;
+    }
+
+    .resource-row:hover {
+      background: rgba(160, 120, 255, .2);
+    }
+
+    /* PROFILE DASHBOARD */
+    .profile-dashboard {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .profile-dashboard.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .profile-dashboard-content {
+      width: 90%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 0;
+      background: linear-gradient(145deg,
+          rgba(18, 18, 22, 0.95),
+          rgba(10, 10, 14, 0.9));
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      box-shadow:
+        0 50px 100px rgba(0, 0, 0, 0.8),
+        inset 0 0 30px rgba(255, 255, 255, 0.05);
+      position: relative;
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+      display: flex;
+    }
+
+    .profile-dashboard.active .profile-dashboard-content {
+      transform: scale(1);
+    }
+
+    .profile-sidebar {
+      width: 260px;
+      background: rgba(5, 5, 7, 0.95);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 26px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .profile-sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 10px 18px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .profile-sidebar-brand .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(192, 132, 252, 0.9);
+      box-shadow: 0 0 16px rgba(192, 132, 252, 0.65);
+      flex: 0 0 auto;
+    }
+
+    .profile-sidebar-brand .brand-text {
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .profile-sidebar-section-label {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.45);
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      padding: 8px 10px 0 10px;
+    }
+
+    .profile-sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .profile-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 12px;
+      border-radius: 12px;
+      color: rgba(255, 255, 255, 0.78);
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      user-select: none;
+    }
+
+    .profile-nav-item i {
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    .profile-nav-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.95);
+      transform: translateY(-1px);
+    }
+
+    .profile-nav-item.active {
+      background: rgba(160, 120, 255, 0.16);
+      border: 1px solid rgba(160, 120, 255, 0.25);
+      color: rgba(255, 255, 255, 0.98);
+    }
+
+    .profile-nav-item.active i {
+      color: rgba(192, 132, 252, 0.95);
+    }
+
+    .profile-nav-item.logout {
+      margin-top: 8px;
+      background: rgba(255, 80, 80, 0.10);
+      border: 1px solid rgba(255, 80, 80, 0.18);
+      color: rgba(255, 180, 180, 0.95);
+    }
+
+    .profile-nav-item.logout i {
+      color: rgba(255, 140, 140, 0.95);
+    }
+
+    .profile-main {
+      flex: 1;
+      padding: 36px 38px 38px 38px;
+      overflow: auto;
+    }
+
+    .profile-dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .profile-dashboard-header h2 {
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ffffff 0%, #e9d5ff 50%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .close-profile-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+    }
+
+    .close-profile-btn:hover {
+      background: rgba(255, 80, 80, 0.2);
+      border-color: rgba(255, 80, 80, 0.4);
+      transform: rotate(90deg);
+    }
+
+    .profile-info-section {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .profile-avatar-large {
+      width: 200px;
+      height: 200px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(160, 120, 255, 0.3), rgba(140, 100, 220, 0.2));
+      border: 2px solid rgba(160, 120, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.5),
+        inset 0 0 30px rgba(160, 120, 255, 0.2);
+    }
+
+    .profile-details {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .profile-name {
+      font-size: 36px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .profile-greeting {
+      color: rgba(255, 255, 255, 0.75);
+      font-weight: 600;
+    }
+
+    .profile-email {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 20px;
+    }
+
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .stat-card {
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      text-align: center;
+      transition: all 0.25s ease;
+    }
+
+    .stat-card:hover {
+      background: rgba(160, 120, 255, 0.15);
+      border-color: rgba(160, 120, 255, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(160, 120, 255, 0.2);
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #c084fc;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .profile-section {
+      margin-bottom: 30px;
+    }
+
+    .profile-section-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .info-item {
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+    }
+
+    .info-label {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+
+    .info-value {
+      font-size: 16px;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .action-btn {
+      padding: 12px 24px;
+      border-radius: 12px;
+      background: rgba(160, 120, 255, 0.15);
+      border: 1px solid rgba(160, 120, 255, 0.3);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .action-btn:hover {
+      background: rgba(160, 120, 255, 0.25);
+      border-color: rgba(160, 120, 255, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(160, 120, 255, 0.3);
+    }
+
+    .action-btn i {
+      font-size: 18px;
+    }
+
+    /* Scrollbar styling */
+    .profile-dashboard-content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .profile-dashboard-content::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    .profile-dashboard-content::-webkit-scrollbar-thumb {
+      background: rgba(160, 120, 255, 0.3);
+      border-radius: 10px;
+    }
+
+    .profile-dashboard-content::-webkit-scrollbar-thumb:hover {
+      background: rgba(160, 120, 255, 0.5);
+    }
+
+    /* ── Mobile responsive (320px – 768px) ── */
+    @media (max-width: 768px) {
+      body {
+        cursor: auto;
+        overflow: auto;
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+      .cursor { display: none !important; }
+
+      .intro-card {
+        width: min(340px, 90vw);
+        height: auto;
+        min-height: 160px;
+        padding: 24px;
+      }
+      .intro-text { font-size: clamp(24px, 7vw, 32px); }
+
+      .hero {
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding: 16px 20px 48px;
+      }
+      .top-nav {
+        height: auto;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+      .logo { margin-left: 0; }
+      .logo img { height: 64px; max-width: 100%; }
+      .nav-area {
+        gap: 6px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        flex: 1;
+        min-width: 0;
+      }
+      .nav-item {
+        font-size: 13px;
+        padding: 10px 12px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+      }
+      .nav-item::after { display: none; }
+
+      .center {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        margin-top: 40px;
+        padding: 0 8px;
+      }
+      .center h1 {
+        font-size: clamp(2.4rem, 12vw, 3.5rem);
+        letter-spacing: 1px;
+      }
+      .center p {
+        font-size: 10px;
+        letter-spacing: 2px;
+        margin-top: 12px;
+      }
+
+      .resources-panel {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: 75vh;
+        overflow-y: auto;
+        border-radius: 18px 18px 0 0;
+        padding: 18px 16px calc(18px + env(safe-area-inset-bottom, 0px));
+      }
+      .resource-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .resource-card {
+        height: 72px;
+        font-size: 12px;
+        min-height: 72px;
+      }
+      .resource-card i { font-size: 20px; }
+
+      .semester-panel {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-width: 100%;
+        transform: none;
+        max-height: 82vh;
+        overflow-y: auto;
+        border-radius: 18px 18px 0 0;
+        padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 0px));
+      }
+      .semester-tabs { flex-wrap: wrap; }
+
+      .profile-wrapper { padding: 8px 0; }
+      .profile-menu {
+        position: fixed;
+        top: auto;
+        bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+        left: 12px;
+        right: 12px;
+        width: auto;
+        max-height: 70vh;
+        overflow-y: auto;
+      }
+      .profile-wrapper.open .profile-menu { display: flex; }
+      .profile-wrapper:hover .profile-menu { display: none; }
+      .profile-wrapper.open:hover .profile-menu { display: flex; }
+      .menu-item {
+        min-height: 48px;
+        padding: 14px 16px;
+      }
+      .login-avatar {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .nav-area .nav-item:not(#resourcesBtn) { display: none; }
+      .resource-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+  <script src="js/api.js"></script>
+</head>
+
+<body>
+
+  <div id="orb-canvas"></div>
+
+
+  <!-- ================= INTRO SCREEN ================= -->
+
+  <div class="intro-screen" id="intro">
+    <span class="intro-text active">Hello</span>
+    <span class="intro-text">नमस्ते</span>
+    <span class="intro-text">नमस्कार</span>
+    <span class="intro-text">こんにちは</span>
+    <span class="intro-text">Привет</span>
+  </div>
+
+  <section class="hero">
+    <nav class="top-nav">
+      <div class="logo">
+        <img src="logo.png">
+      </div>
+
+      <div class="nav-area">
+        <div class="nav-item">Explore</div>
+        <div class="nav-item" id="resourcesBtn">Resources</div>
+        <div class="nav-item" id="attendanceNav">Attendance</div>
+
+        <div class="profile-wrapper">
+          <div class="login-avatar">👤</div>
+          <div class="profile-menu">
+            <div class="menu-item" id="myProfileBtn"><i class="ph ph-user"></i> My Profile</div>
+            <div class="menu-item" id="profileAttendanceBtn"><i class="ph ph-note-pencil"></i> Attendance</div>
+            <div class="menu-item" id="savedResourcesBtn"><i class="ph ph-list-bullets"></i> Saved Resources</div>
+            <div class="menu-item" id="myReviewsBtn"><i class="ph ph-bookmark-simple"></i> My Reviews</div>
+            <div class="menu-item" id="settingsBtn"><i class="ph ph-gear"></i> Settings</div>
+            <div class="menu-item logout-item" onclick="logout()">
+              <i class="ph ph-sign-out"></i> Logout
+            </div>
+          </div>
+        </div>
+    </nav>
+
+
+    <!-- TEXT -->
+    <div class="center">
+      <h1>uniCLOUD</h1>
+      <p>YOUR ENTIRE CAMPUS. ONE PLATFORM</p>
+    </div>
+
+  </section>
+
+  <!-- FLOATING PANEL -->
+  <div class="resources-panel" id="resourcesPanel">
+    <h3>Browse By</h3>
+
+    <div class="resource-grid">
+      <div class="resource-card"><i class="ph ph-drop"></i><span>Petroleum</span></div>
+      <div class="resource-card"><i class="ph ph-airplane-takeoff"></i><span>Aerospace</span></div>
+      <div class="resource-card"><i class="ph ph-flask"></i><span>Chemical</span></div>
+      <div class="resource-card"><i class="ph ph-buildings"></i><span>Civil</span></div>
+      <div class="resource-card"><i class="ph ph-lightning"></i><span>Electrical</span></div>
+      <div class="resource-card"><i class="ph ph-gear"></i><span>Mechanical</span></div>
+      <div class="resource-card"><i class="ph ph-code"></i><span>CSE</span></div>
+      <div class="resource-card"><i class="ph ph-fire"></i><span>Fire & Safety</span></div>
+      <div class="resource-card"><i class="ph ph-atom"></i><span>B.Sc</span></div>
+      <div class="resource-card"><i class="ph ph-monitor"></i><span>BCA</span></div>
+      <div class="resource-card"><i class="ph ph-pen-nib"></i><span>B.Des</span></div>
+    </div>
+  </div>
+
+  <div class="cursor"></div>
+
+  <!-- SEMESTER PANEL -->
+  <div class="semester-panel" id="semesterPanel">
+    <h3 id="branchTitle"></h3>
+
+    <div class="semester-tabs">
+      <div class="sem-tab active" data-sem="1">Semester 1</div>
+      <div class="sem-tab" data-sem="2">Semester 2</div>
+      <div class="sem-tab" data-sem="3">Semester 3</div>
+      <div class="sem-tab" data-sem="4">Semester 4</div>
+    </div>
+
+    <div id="semContent"></div>
+  </div>
+
+  <!-- PROFILE DASHBOARD (Moved to profile.html) -->
+
+  <script>
+
+
+    /* CURSOR */
+    const cursor = document.querySelector('.cursor');
+
+    // Show cursor on first mouse move
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+      cursor.classList.add('visible');
+    });
+
+    /* CURSOR SCALE */
+    document.querySelectorAll('.nav-item, .logo').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '42px';
+        cursor.style.height = '42px';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '26px';
+        cursor.style.height = '26px';
+      });
+    });
+
+
+    const branchData = {
+      Petroleum: {
+        sem1: [
+          { icon: "ph-math-operations", name: "Mathematics I" },
+          { icon: "ph-wave-sine", name: "Physics" },
+          { icon: "ph-test-tube", name: "Chemistry" }
+        ],
+        sem2: [
+          { icon: "ph-drop", name: "Fluid Mechanics" },
+          { icon: "ph-fire", name: "Thermodynamics" },
+          { icon: "ph-mountains", name: "Geology" }
+        ]
+      },
+
+      CSE: {
+        sem1: [
+          { icon: "ph-code", name: "C" },
+          { icon: "ph-terminal", name: "LINUX" },
+          { icon: "ph-math-operations", name: "AEM1" },
+          { icon: "ph-user", name: "MANAGING SELF" },
+          { icon: "ph-leaf", name: "EVS" },
+          { icon: "ph-lightbulb", name: "PROBLEM SOLVING" }
+        ],
+        sem2: [
+          { icon: "ph-math-operations", name: "AEM2" },
+          { icon: "ph-tree-structure", name: "DSA IN C" },
+          { icon: "ph-cpu", name: "DE" },
+          { icon: "ph-robot", name: "ELEMENTS OF AIML" },
+          { icon: "ph-leaf", name: "EVS" },
+          { icon: "ph-atom", name: "PHYSICS" },
+          { icon: "ph-file-code", name: "PYTHON" },
+          { icon: "ph-clock", name: "TIME AND PRIORITY MANAGEMENT" }
+        ],
+        sem3: [
+          { icon: "ph-desktop", name: "Operating Systems" },
+          { icon: "ph-chart-line-up", name: "Design and Analysis of Algorithms" },
+          { icon: "ph-users", name: "Leading Conversations" },
+          { icon: "ph-cpu", name: "Computer organization and Architecture" },
+          { icon: "ph-brain", name: "EDGE Aptitude Fundamentals" },
+          { icon: "ph-graph", name: "Data communication and Networks" }
+        ]
+      },
+
+      Civil: {
+        sem1: [
+          { icon: "ph-math-operations", name: "Mathematics I" },
+          { icon: "ph-pencil-line", name: "Engineering Drawing" },
+          { icon: "ph-wave-sine", name: "Physics" }
+        ],
+        sem2: [
+          { icon: "ph-bridge", name: "Strength of Materials" },
+          { icon: "ph-map-trifold", name: "Surveying" },
+          { icon: "ph-mountains", name: "Geology" }
+        ]
+      },
+      Aerospace: {
+        sem1: [
+          { icon: "ph-math-operations", name: "AEM1" },
+          { icon: "ph-airplane", name: "Engineering Graphics" },
+          { icon: "ph-wave-sine", name: "Physics" }
+        ],
+        sem2: [
+          { icon: "ph-rocket-launch", name: "Engineering Mechanics" },
+          { icon: "ph-gear", name: "Basic Electrical and Electronics Engineering" },
+          { icon: "ph-fire", name: "Introduction to Aerospace Engineering" }
+        ],
+        sem3: [
+          { icon: "ph-airplane", name: "Aircraft System & Instruments" },
+          { icon: "ph-drop", name: "Fluid Mechanics" }
+        ],
+        sem4: [
+          { icon: "ph-rocket-launch", name: "Aerodynamics I" },
+          { icon: "ph-math-operations", name: "Discrete Mathematics" }
+        ]
+      },
+
+      Chemical: {
+        sem1: [
+          { icon: "ph-math-operations", name: "AEM1" },
+          { icon: "ph-test-tube", name: "Basic Chemistry" },
+          { icon: "ph-lightning", name: "Basic Electrical and Electronics Engineering" },
+          { icon: "ph-leaf", name: "EVS" },
+          { icon: "ph-user", name: "Managing Self" },
+          { icon: "ph-code", name: "Programming for Engineers" }
+        ],
+        sem2: [
+          { icon: "ph-math-operations", name: "AEM2" },
+          { icon: "ph-hammer", name: "Design and Build Lab" },
+          { icon: "ph-pencil-line", name: "Engineering Graphics" },
+          { icon: "ph-leaf", name: "EVS (Living)" },
+          { icon: "ph-calculator", name: "Materials and Energy Balance Calculations" },
+          { icon: "ph-atom", name: "Physics" },
+          { icon: "ph-flask", name: "Process Chemistry" },
+          { icon: "ph-clock", name: "Time and Priority Management" },
+          { icon: "ph-wrench", name: "Workshop Practices" }
+        ],
+        sem3: [
+          { icon: "ph-fire", name: "Chemical Engineering Thermodynamics" },
+          { icon: "ph-factory", name: "Chemical Technology" },
+          { icon: "ph-users", name: "Leading Conversations" },
+          { icon: "ph-arrows-left-right", name: "Momentum Transfer" },
+          { icon: "ph-thermometer", name: "Process Heat Transfer" },
+          { icon: "ph-handshake", name: "Social Internship" }
+        ],
+        sem4: [
+          { icon: "ph-flask", name: "Chemical Reaction Engineering" },
+          { icon: "ph-chart-bar", name: "Data Analysis and Machine Learning" },
+          { icon: "ph-brain", name: "EDGE Softskills" },
+          { icon: "ph-arrows-out", name: "Mass Transfer" },
+          { icon: "ph-calculator", name: "Numerical Method in ChE" },
+          { icon: "ph-pen-nib", name: "Writing with Impact" }
+        ]
+      },
+
+      Electrical: {
+        sem1: [
+          { icon: "ph-math-operations", name: "Mathematics I" },
+          { icon: "ph-lightning", name: "Basic Electrical Engineering" },
+          { icon: "ph-wave-sine", name: "Physics" }
+        ],
+        sem2: [
+          { icon: "ph-cpu", name: "Electronic Devices" },
+          { icon: "ph-plug", name: "Network Theory" },
+          { icon: "ph-waveform", name: "Signals & Systems" }
+        ]
+      },
+
+      Mechanical: {
+        sem1: [
+          { icon: "ph-math-operations", name: "Mathematics I" },
+          { icon: "ph-gear", name: "Engineering Mechanics" },
+          { icon: "ph-wave-sine", name: "Physics" }
+        ],
+        sem2: [
+          { icon: "ph-wrench", name: "Manufacturing Processes" },
+          { icon: "ph-fire", name: "Thermodynamics" },
+          { icon: "ph-cube", name: "Strength of Materials" }
+        ]
+      },
+
+      "Fire & Safety": {
+        sem1: [
+          { icon: "ph-math-operations", name: "Mathematics I" },
+          { icon: "ph-fire", name: "Programming For Engineers" },
+          { icon: "ph-wave-sine", name: "Physics" }
+        ],
+        sem2: [
+          { icon: "ph-math-operations", name: "Mathematics II" },
+          { icon: "ph-fire-extinguisher", name: "Engineering Mechanics" },
+          { icon: "ph-first-aid", name: "Programming For Problem Solving" }
+        ],
+        sem3: [
+          { icon: "ph-fire", name: "Fundamentals Of Fire Engineering" },
+          { icon: "ph-drop", name: "Fluid Mechanics" }
+        ],
+        sem4: [
+          { icon: "ph-fire-extinguisher", name: "Fire Engineering Ii" },
+          { icon: "ph-brain", name: "Machine Learning (ai-minor)" }
+        ]
+      },
+
+      "B.Sc": {
+        sem1: [
+          { icon: "ph-math-operations", name: "Mathematics" },
+          { icon: "ph-atom", name: "Physics" },
+          { icon: "ph-test-tube", name: "Chemistry" }
+        ],
+        sem2: [
+          { icon: "ph-function", name: "Advanced Mathematics" },
+          { icon: "ph-wave-sine", name: "Modern Physics" },
+          { icon: "ph-flask", name: "Physical Chemistry" }
+        ]
+      },
+
+      BCA: {
+        sem1: [
+          { icon: "ph-code", name: "Programming in C" },
+          { icon: "ph-math-operations", name: "Discrete Mathematics" },
+          { icon: "ph-monitor", name: "Computer Fundamentals" }
+        ],
+        sem2: [
+          { icon: "ph-database", name: "Database Management Systems" },
+          { icon: "ph-brackets-curly", name: "Object Oriented Programming" },
+          { icon: "ph-tree-structure", name: "Data Structures" }
+        ]
+      },
+
+      "B.Des": {
+        sem1: [
+          { icon: "ph-pencil-line", name: "Design Fundamentals" },
+          { icon: "ph-palette", name: "Visual Communication" },
+          { icon: "ph-layout", name: "Design Drawing" }
+        ],
+        sem2: [
+          { icon: "ph-pen-nib", name: "Typography" },
+          { icon: "ph-cube", name: "3D Design Basics" },
+          { icon: "ph-devices", name: "Digital Design Tools" }
+        ]
+      }
+
+    };
+
+    const resourcesBtn = document.getElementById("resourcesBtn");
+    const resourcesPanel = document.getElementById("resourcesPanel");
+    const semesterPanel = document.getElementById("semesterPanel");
+    const branchTitle = document.getElementById("branchTitle");
+    const semContent = document.getElementById("semContent");
+    const semTabs = document.querySelectorAll(".sem-tab");
+
+    let currentBranch = "";
+    let currentSem = "sem1";
+
+
+    resourcesBtn.onclick = e => {
+      e.stopPropagation();
+      resourcesPanel.style.display =
+        resourcesPanel.style.display === "block" ? "none" : "block";
+    };
+
+    /* Course subjects from API (branch -> { sem1: [], sem2: [] }) */
+    let branchSubjectsCache = {};
+
+    function ensureBranchSubjectsLoaded(branch, cb) {
+      if (branchSubjectsCache[branch]) {
+        if (cb) cb();
+        return;
+      }
+      if (!window.unicloud) {
+        if (cb) cb();
+        return;
+      }
+      Promise.all([
+        window.unicloud.get("/api/subjects?branch=" + encodeURIComponent(branch) + "&semester=1"),
+        window.unicloud.get("/api/subjects?branch=" + encodeURIComponent(branch) + "&semester=2"),
+        window.unicloud.get("/api/subjects?branch=" + encodeURIComponent(branch) + "&semester=3"),
+        window.unicloud.get("/api/subjects?branch=" + encodeURIComponent(branch) + "&semester=4")
+      ]).then(([sem1, sem2, sem3, sem4]) => {
+        branchSubjectsCache[branch] = { sem1: sem1 || [], sem2: sem2 || [], sem3: sem3 || [], sem4: sem4 || [] };
+        if (cb) cb();
+      }).catch(() => {
+        branchSubjectsCache[branch] = { sem1: [], sem2: [], sem3: [], sem4: [] };
+        if (cb) cb();
+      });
+    }
+
+    /* COURSE CLICK */
+    document.querySelectorAll(".resource-card").forEach(card => {
+      card.onclick = e => {
+        e.stopPropagation();
+        currentBranch = card.innerText.trim();
+        currentSem = "sem1";
+
+        branchTitle.innerText = currentBranch;
+        semTabs.forEach(t => t.classList.remove("active"));
+        semTabs[0].classList.add("active");
+
+        ensureBranchSubjectsLoaded(currentBranch, () => {
+          renderSubjects();
+          semesterPanel.style.display = "block";
+        });
+      };
+    });
+
+    semTabs.forEach(tab => {
+      tab.onclick = e => {
+        e.stopPropagation();
+        semTabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        currentSem = "sem" + tab.dataset.sem;
+        renderSubjects();
+      };
+    });
+
+
+    /* RENDER: prefer API subjects, fallback to hardcoded branchData */
+    function renderSubjects() {
+      semContent.innerHTML = "";
+      const semNum = parseInt(currentSem.replace('sem', ''), 10);
+      let list = [];
+      if (branchSubjectsCache[currentBranch] && branchSubjectsCache[currentBranch][currentSem]) {
+        list = branchSubjectsCache[currentBranch][currentSem];
+      } else if (branchData[currentBranch] && branchData[currentBranch][currentSem]) {
+        list = branchData[currentBranch][currentSem];
+      }
+      list.forEach(sub => {
+        const row = document.createElement("div");
+        row.className = "resource-row";
+        const name = (sub && sub.name) ? sub.name : (typeof sub === "string" ? sub : "");
+        row.innerText = name;
+
+        row.onclick = () => {
+          if (window.unicloud) {
+            window.unicloud.patch("/api/users/me", { default_branch: currentBranch, default_semester: semNum }).catch(() => { });
+          }
+          window.open(
+            `subject.html?branch=${encodeURIComponent(currentBranch)}&subject=${encodeURIComponent(name)}&semester=${semNum}`,
+            "_blank"
+          );
+        };
+
+        semContent.appendChild(row);
+      });
+    }
+
+
+    resourcesBtn.onclick = (e) => {
+      e.stopPropagation();
+      resourcesPanel.style.display = (resourcesPanel.style.display === "block") ? "none" : "block";
+    };
+
+    document.addEventListener("click", () => {
+      resourcesPanel.style.display = "none";
+    });
+
+    /* LOGOUT */
+    function logout() {
+      window.location.href = "C:\\Users\\ASUS\\OneDrive\\Desktop\\SAKSHAM\\uniCLOUD\\login.html";
+    }
+
+    const texts = document.querySelectorAll('.intro-text');
+    const intro = document.getElementById('intro');
+    let currentUser = null;
+
+    function runIntro() {
+      let index = 0;
+      let skipped = false;
+
+      // Skip function
+      const skipIntro = () => {
+        if (skipped) return;
+        skipped = true;
+        clearInterval(introTimer);
+
+        // Immediate exit
+        intro.classList.add('exit');
+        setTimeout(() => {
+          intro.remove();
+          if (currentUser && window.unicloud) {
+            window.unicloud.patch('/api/users/me', { intro_seen: 1 }).catch(() => { });
+          }
+        }, 800);
+      };
+
+      // Add hover/move listener
+      document.addEventListener('mousemove', skipIntro, { once: true });
+
+      const introTimer = setInterval(() => {
+        if (skipped) return;
+        texts[index].classList.remove('active');
+        texts[index].classList.add('exit');
+        index++;
+        if (index < texts.length) {
+          texts[index].classList.add('active');
+        } else {
+          clearInterval(introTimer);
+          document.removeEventListener('mousemove', skipIntro); // cleanup if finished naturally
+          setTimeout(() => intro.classList.add('exit'), 500);
+          setTimeout(() => {
+            intro.remove();
+            if (currentUser && window.unicloud) {
+              window.unicloud.patch('/api/users/me', { intro_seen: 1 }).catch(() => { });
+            }
+          }, 1600);
+        }
+      }, 1100);
+    }
+
+    if (window.unicloud) {
+      window.unicloud.get('/auth/me').then(data => {
+        currentUser = data.user || null;
+
+        if (currentUser) {
+          // Set defaults from user profile
+          if (currentUser.default_branch) {
+            currentBranch = currentUser.default_branch;
+          }
+          if (currentUser.default_semester) {
+            currentSem = "sem" + currentUser.default_semester;
+          }
+        }
+
+        if (currentUser && currentUser.intro_seen) {
+          intro.remove();
+        } else {
+          runIntro();
+        }
+      }).catch(() => runIntro());
+    } else {
+      runIntro();
+    }
+
+    document.addEventListener("click", () => {
+      resourcesPanel.style.display = "none";
+      semesterPanel.style.display = "none";
+      document.querySelector('.profile-wrapper')?.classList.remove('open');
+    });
+    resourcesPanel.addEventListener("click", e => e.stopPropagation());
+    semesterPanel.addEventListener("click", e => e.stopPropagation());
+    resourcesBtn.addEventListener("click", e => e.stopPropagation());
+
+    const profileWrapper = document.querySelector('.profile-wrapper');
+    const navAvatarEl = document.getElementById('navAvatar');
+    if (profileWrapper && navAvatarEl) {
+      navAvatarEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileWrapper.classList.toggle('open');
+      });
+    }
+
+    /* MY PROFILE -> open full page dashboard */
+    const myProfileBtn = document.getElementById("myProfileBtn");
+    if (myProfileBtn) {
+      myProfileBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        window.open("profile.html", "_blank");
+      });
+    }
+
+    /* ATTENDANCE NAV -> attendance dashboard */
+    const attendanceNav = document.getElementById("attendanceNav");
+    if (attendanceNav) {
+      attendanceNav.addEventListener("click", () => {
+        window.location.href = "profile.html#attendance";
+      });
+    }
+
+    const profileAttendanceBtn = document.getElementById("profileAttendanceBtn");
+    if (profileAttendanceBtn) {
+      profileAttendanceBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        window.location.href = "profile.html#attendance";
+      });
+    }
+
+    const savedResourcesBtn = document.getElementById("savedResourcesBtn");
+    if (savedResourcesBtn) {
+      savedResourcesBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        window.open("profile.html#saved", "_blank");
+      });
+    }
+
+    const myReviewsBtn = document.getElementById("myReviewsBtn");
+    if (myReviewsBtn) {
+      myReviewsBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        window.open("profile.html#reviews", "_blank");
+      });
+    }
+
+    const settingsBtn = document.getElementById("settingsBtn");
+    if (settingsBtn) {
+      settingsBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        window.open("profile.html#settings", "_blank");
+      });
+    }
+
+  </script>
+
+</body>
+
+</html>

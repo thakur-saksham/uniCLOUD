@@ -1,0 +1,2898 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>uniCLOUD - My Profile</title>
+
+  <meta name="google-client-id" content="924624675009-d6shu4oi4ef2dli73aqg7irddi5j98el.apps.googleusercontent.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/phosphor-icons@1.4.2/src/css/icons.css" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
+
+    body {
+      height: 100vh;
+      background: radial-gradient(1400px circle at 0% 0%, #4b3f63 0%, #2f2a3a 30%, #17171c 55%, #0e0e13 100%);
+      color: #fff;
+      cursor: none;
+      overflow: hidden; /* keep body locked; main will scroll */
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("https://www.transparenttextures.com/patterns/asfalt-light.png");
+      opacity: 0.05;
+      pointer-events: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: white;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
+      transition: width 0.25s ease, height 0.25s ease, opacity 0.2s ease;
+      left: 50%;
+      top: 50%;
+      opacity: 0;
+    }
+    .cursor.visible { opacity: 1; }
+
+    /* Layout */
+    .page {
+      position: relative;
+      height: 100vh;
+      padding: 22px; /* adds premium breathing room */
+      display: block;
+    }
+
+    .shell {
+      width: calc(100vw - 44px);
+      height: calc(100vh - 44px);
+      border-radius: 28px;
+      background: rgba(10, 10, 14, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(26px);
+      -webkit-backdrop-filter: blur(26px);
+      box-shadow: 0 50px 120px rgba(0,0,0,0.65), inset 0 0 30px rgba(255,255,255,0.04);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Left black sidebar (like image) */
+    /* Floating sidebar */
+    .sidebar {
+      width: 290px;
+      background: rgba(8, 8, 11, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border-radius: 24px;
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      box-shadow: 0 28px 80px rgba(0,0,0,0.55), inset 0 0 20px rgba(255,255,255,0.03);
+
+      /* float + stay visible while scrolling main */
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 10px 18px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+    }
+    .brand:focus-visible {
+      outline: 2px solid rgba(192,132,252,0.8);
+      outline-offset: 2px;
+    }
+    .brand .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(192, 132, 252, 0.9);
+      box-shadow: 0 0 16px rgba(192, 132, 252, 0.65);
+      flex: 0 0 auto;
+    }
+    .brand .text {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .section-label {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.45);
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      padding: 8px 10px 0 10px;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 0 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 14px;
+      border-radius: 14px;
+      color: rgba(255, 255, 255, 0.78);
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+      border: 1px solid transparent;
+      user-select: none;
+    }
+    .nav-item i {
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.55);
+    }
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-1px);
+    }
+    .nav-item.active {
+      background: rgba(160, 120, 255, 0.16);
+      border-color: rgba(160, 120, 255, 0.25);
+      color: rgba(255, 255, 255, 0.98);
+    }
+    .nav-item.active i { color: rgba(192, 132, 252, 0.95); }
+
+    .nav-item.logout {
+      margin-top: 10px;
+      background: rgba(255, 80, 80, 0.10);
+      border-color: rgba(255, 80, 80, 0.18);
+      color: rgba(255, 180, 180, 0.95);
+    }
+    .nav-item.logout i { color: rgba(255, 140, 140, 0.95); }
+
+    /* Main content */
+    .main {
+      position: absolute;
+      left: 326px; /* sidebar width (290) + padding/gap */
+      top: 0;
+      right: 0;
+      bottom: 0;
+      padding: 30px 34px;
+      overflow: auto; /* full page scroll */
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .main::-webkit-scrollbar { width: 10px; }
+    .main::-webkit-scrollbar-track { background: rgba(255,255,255,0.06); border-radius: 10px; }
+    .main::-webkit-scrollbar-thumb { background: rgba(160,120,255,0.25); border-radius: 10px; }
+    .main::-webkit-scrollbar-thumb:hover { background: rgba(160,120,255,0.4); }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 18px;
+      margin-bottom: 26px;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+    }
+    .title {
+      font-size: 44px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 0%, #e9d5ff 50%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .close-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+    .close-btn i { font-size: 20px; color: rgba(255,255,255,0.9); }
+    .close-btn:hover {
+      transform: rotate(90deg);
+      background: rgba(255, 80, 80, 0.18);
+      border-color: rgba(255, 80, 80, 0.35);
+    }
+
+    .top-card {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 28px;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .avatar-card {
+      height: 260px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, rgba(160, 120, 255, 0.28), rgba(140, 100, 220, 0.16));
+      border: 2px solid rgba(160, 120, 255, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 22px 50px rgba(0,0,0,0.55), inset 0 0 30px rgba(160,120,255,0.18);
+    }
+    .avatar-card i {
+      font-size: 90px;
+      color: rgba(192, 132, 252, 0.75);
+    }
+
+    .name {
+      font-size: 44px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .greeting {
+      color: rgba(255,255,255,0.68);
+      font-weight: 700;
+    }
+    .email {
+      margin-top: 10px;
+      font-size: 18px;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .stats {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      max-width: 520px;
+    }
+    .stat {
+      padding: 18px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+    .stat:hover {
+      transform: translateY(-2px);
+      background: rgba(160,120,255,0.14);
+      border-color: rgba(160,120,255,0.26);
+    }
+    .stat .val {
+      font-size: 34px;
+      font-weight: 900;
+      color: rgba(192,132,252,0.95);
+      margin-bottom: 6px;
+    }
+    .stat .lbl {
+      font-size: 12px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .section {
+      margin-top: 18px;
+    }
+    .section h3 {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+    .divider {
+      height: 1px;
+      background: rgba(255,255,255,0.10);
+      margin-bottom: 18px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .info {
+      padding: 18px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .info .k {
+      font-size: 12px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 8px;
+    }
+    .info .v {
+      font-size: 18px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.92);
+    }
+
+    /* Responsive */
+    @media (max-width: 980px) {
+      body { overflow: auto; }
+      .page { height: auto; padding: 16px; }
+      .shell { width: 100%; height: auto; min-height: calc(100vh - 32px); }
+      .sidebar { width: 240px; }
+      .top-card { grid-template-columns: 1fr; }
+      .stats { max-width: none; }
+      .info-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Views */
+    .view { display: none; animation: fadeUp 0.28s ease both; }
+    .view.active { display: block; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Attendance UI - calm, single overview */
+    .att-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 22px;
+      padding: 20px 22px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35), inset 0 0 18px rgba(255,255,255,0.03);
+    }
+
+    .att-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .att-title {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .att-required {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      white-space: nowrap;
+    }
+    .att-required input {
+      width: 72px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.92);
+      outline: none;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .overall-row {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 26px;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .overall-meter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .overall-gauge {
+      width: 220px;
+      height: 220px;
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+    .overall-gauge svg {
+      width: 220px;
+      height: 220px;
+      transform: rotate(-90deg);
+    }
+    .overall-gauge .bg {
+      stroke: rgba(255,255,255,0.08);
+      stroke-width: 12;
+      fill: none;
+    }
+    .overall-gauge .fg {
+      stroke-width: 12;
+      fill: none;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.35s ease, stroke 0.25s ease;
+    }
+    .overall-center {
+      position: absolute;
+      text-align: center;
+    }
+    .overall-state {
+      font-size: 15px;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .overall-pct {
+      font-size: 34px;
+      font-weight: 900;
+    }
+    .overall-ref {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .overall-note {
+      font-size: 13px;
+      color: rgba(255,255,255,0.72);
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.32);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* subject pills / rows */
+    .subject-list {
+      margin-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 14px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .subject-row {
+      border-radius: 16px;
+      background: rgba(0,0,0,0.26);
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .subject-row.open {
+      background: rgba(0,0,0,0.40);
+      border-color: rgba(192,132,252,0.55);
+    }
+
+    .subject-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: inherit;
+    }
+    .subject-name {
+      flex: 0 0 170px;
+      font-size: 14px;
+      font-weight: 700;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .subject-bar {
+      flex: 1;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+    .subject-bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #22c55e, #a3e635);
+      transition: width 0.25s ease, background 0.25s ease;
+    }
+    .subject-pct {
+      width: 52px;
+      text-align: right;
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .subject-body {
+      padding: 0 14px 12px 14px;
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+    }
+    .subject-row.open .subject-body {
+      opacity: 1;
+      max-height: 220px;
+    }
+
+    .stepper-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .stepper {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border-radius: 14px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .stepper-label {
+      font-size: 11px;
+      letter-spacing: 1.1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 4px;
+    }
+    .stepper-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .stepper-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(0,0,0,0.45);
+      color: rgba(255,255,255,0.9);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      padding: 0;
+    }
+    .stepper-input {
+      flex: 1;
+      padding: 7px 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.5);
+      color: rgba(255,255,255,0.95);
+      outline: none;
+      font-weight: 600;
+    }
+
+    .chip-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .chip {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 11px;
+      color: rgba(255,255,255,0.8);
+    }
+    .chip i {
+      font-size: 16px;
+      color: rgba(192,132,252,0.9);
+    }
+    .chip .num {
+      font-weight: 700;
+    }
+
+    .sim-toggle {
+      margin-top: 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.35);
+      color: rgba(255,255,255,0.9);
+      padding: 8px 16px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .sim-panel {
+      margin-top: 10px;
+      border-radius: 18px;
+      background: rgba(0,0,0,0.28);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 12px 14px;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease, opacity 0.25s ease;
+    }
+    .sim-panel.open {
+      max-height: 500px; /* Increased from 220px */
+      opacity: 1;
+      overflow-y: auto; /* Allow scrolling if needed */
+    }
+
+    .sim-row {
+      margin-bottom: 10px;
+    }
+    .sim-row-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: rgba(255,255,255,0.85);
+    }
+    .sim-row input[type="range"] {
+      width: 100%;
+      accent-color: #c084fc;
+    }
+
+    .guidance {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(160,120,255,0.12), rgba(255,255,255,0.03));
+      border: 1px solid rgba(160,120,255,0.20);
+      color: rgba(255,255,255,0.92);
+      font-weight: 700;
+      font-size: 13px;
+      text-align: center;
+      font-style: italic;
+    }
+
+    .settings-form { margin-top: 12px; }
+    .settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 12px; }
+    .settings-item.full { grid-column: 1 / -1; }
+    .settings-item label { display: block; font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 6px; }
+    .settings-item input, .settings-item select {
+      width: 100%; padding: 10px 12px; border-radius: 12px; background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.10); color: rgba(255,255,255,0.92); outline: none; font-size: 14px;
+    }
+    .settings-item select { cursor: pointer; }
+    .auth-btn { padding: 12px 20px; border-radius: 12px; border: none; background: linear-gradient(90deg, rgba(160,120,255,0.4), rgba(140,100,220,0.3)); color: #fff; font-weight: 600; cursor: pointer; min-height: 44px; }
+    .auth-btn:hover { opacity: 0.95; }
+
+    @media (max-width: 1180px) {
+      .sidebar { position: static; width: 100%; height: auto; margin-bottom: 14px; }
+      .shell { overflow: auto; }
+      .main { position: static; padding: 18px; }
+      .att-wrap { grid-template-columns: 1fr; }
+      .subjects { grid-template-columns: 1fr; }
+      .settings-grid { grid-template-columns: 1fr; }
+    }
+
+    /* â”€â”€ SIDEBAR UTIL BUTTONS â”€â”€ */
+    .sidebar-util-btn {
+      width: 100%; padding: 9px 14px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.6); font-size: 12px; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; gap: 8px;
+      font-family: Montserrat, sans-serif; transition: background 0.2s;
+    }
+    .sidebar-util-btn:hover { background: rgba(255,255,255,0.08); }
+
+    /* â”€â”€ TIMETABLE â”€â”€ */
+    .tt-week {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+    .tt-day-col { display: flex; flex-direction: column; gap: 8px; }
+    .tt-day-header {
+      text-align: center; font-size: 11px; font-weight: 800;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: rgba(255,255,255,0.45); padding: 8px 0 10px;
+    }
+    .tt-day-col.today .tt-day-header { color: #a78bfa; }
+    .tt-slot {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px; padding: 10px 10px;
+      font-size: 12px; position: relative;
+      transition: background 0.2s;
+    }
+    .tt-slot:hover { background: rgba(160,120,255,0.08); }
+    .tt-slot .tt-time { color: rgba(255,255,255,0.35); font-size: 10px; margin-bottom: 4px; font-weight: 600; }
+    .tt-slot .tt-subj { font-weight: 700; font-size: 12px; color: rgba(255,255,255,0.9); }
+    .tt-slot .tt-room { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 3px; }
+    .tt-del {
+      position: absolute; top: 6px; right: 7px;
+      background: none; border: none; color: rgba(255,80,80,0.5);
+      cursor: pointer; font-size: 14px; line-height: 1; padding: 0;
+      opacity: 0; transition: opacity 0.15s;
+      display: grid; place-items: center;
+    }
+    .tt-edit {
+      position: absolute; top: 6px; right: 28px;
+      background: none; border: none; color: rgba(160,120,255,0.55);
+      cursor: pointer; font-size: 13px; line-height: 1; padding: 0;
+      opacity: 0; transition: opacity 0.15s;
+      display: grid; place-items: center;
+    }
+    .tt-slot:hover .tt-del, .tt-slot:hover .tt-edit { opacity: 1; }
+    .tt-today-card {
+      background: linear-gradient(135deg, rgba(160,120,255,0.12), rgba(120,90,220,0.06));
+      border: 1px solid rgba(160,120,255,0.22);
+      border-radius: 16px; padding: 14px 16px;
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 8px;
+    }
+    .tt-today-time { font-size: 24px; font-weight: 900; color: #a78bfa; min-width: 62px; }
+    .tt-today-subj { font-size: 15px; font-weight: 700; }
+    .tt-today-room { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+    .tt-today-actions {
+      margin-left: auto;
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .tt-today-actions .tt-edit,
+    .tt-today-actions .tt-del {
+      position: static;
+      opacity: 1;
+      min-width: 36px;
+      min-height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* â”€â”€ LIGHT MODE â”€â”€ */
+    body.light {
+      background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 40%, #f0f0f5 100%) !important;
+      color: #1a1a2e;
+    }
+    body.light::after { opacity: 0.02; }
+    body.light .shell {
+      background: rgba(255,255,255,0.6);
+      border-color: rgba(120,80,220,0.15);
+      box-shadow: 0 50px 120px rgba(100,70,200,0.15), inset 0 0 30px rgba(255,255,255,0.5);
+    }
+    body.light .sidebar {
+      background: rgba(250,248,255,0.92);
+      border-color: rgba(160,120,255,0.18);
+      box-shadow: 0 28px 80px rgba(100,70,200,0.12);
+    }
+    body.light .brand .text { color: #1a1a2e; }
+    body.light .section-label { color: rgba(0,0,0,0.38); }
+    body.light .nav-item { color: rgba(0,0,0,0.65); border-color: transparent; }
+    body.light .nav-item i { color: rgba(0,0,0,0.38); }
+    body.light .nav-item:hover { background: rgba(160,120,255,0.1); color: #5b21b6; }
+    body.light .nav-item.active { background: rgba(160,120,255,0.18); border-color: rgba(160,120,255,0.3); color: #5b21b6; }
+    body.light .nav-item.active i { color: #7c3aed; }
+    body.light .nav-item.logout { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.18); color: #dc2626; }
+    body.light .nav-item.logout i { color: #dc2626; }
+    body.light .sidebar-util-btn { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.1); color: rgba(0,0,0,0.55); }
+    body.light .main { background: transparent; }
+    body.light .header { border-bottom-color: rgba(0,0,0,0.08); }
+    body.light .title {
+      background: linear-gradient(135deg, #1a1a2e 0%, #4c1d95 50%, #7c3aed 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    body.light .att-card {
+      background: rgba(255,255,255,0.75);
+      border-color: rgba(160,120,255,0.15);
+      box-shadow: 0 8px 32px rgba(100,70,200,0.08);
+      color: #1a1a2e;
+    }
+    body.light .att-title { color: #1a1a2e; }
+    body.light .att-required { color: rgba(0,0,0,0.6); }
+    body.light .att-required input, body.light .settings-form input,
+    body.light .settings-form select, body.light textarea, body.light .att-card input,
+    body.light .att-card select {
+      background: rgba(255,255,255,0.9) !important;
+      border-color: rgba(160,120,255,0.25) !important;
+      color: #1a1a2e !important;
+    }
+    body.light .subject-list .subject-row { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.06); }
+    body.light .subject-row:hover { background: rgba(160,120,255,0.1); }
+    body.light .stat { background: rgba(255,255,255,0.6); border-color: rgba(160,120,255,0.15); }
+    body.light .info { background: rgba(255,255,255,0.7); border-color: rgba(0,0,0,0.06); }
+    body.light .info .k { color: rgba(0,0,0,0.45); }
+    body.light .info .v { color: #1a1a2e; }
+    body.light .main::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+    body.light .main::-webkit-scrollbar-thumb { background: rgba(160,120,255,0.35); }
+    body.light .tt-day-header { color: rgba(0,0,0,0.38); }
+    body.light .tt-day-col.today .tt-day-header { color: #7c3aed; }
+    body.light .tt-slot { background: rgba(255,255,255,0.7); border-color: rgba(0,0,0,0.07); }
+    body.light .tt-slot .tt-time { color: rgba(0,0,0,0.35); }
+    body.light .tt-slot .tt-subj { color: #1a1a2e; }
+    body.light .tt-slot .tt-room { color: rgba(0,0,0,0.38); }
+    body.light .tt-today-card { background: rgba(160,120,255,0.1); border-color: rgba(160,120,255,0.3); }
+    body.light .close-btn { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); }
+    body.light .close-btn i { color: rgba(0,0,0,0.6); }
+
+    .tt-week-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+      margin: 0 -4px;
+    }
+    .tt-week-wrap .tt-week {
+      min-width: 640px;
+    }
+    .tt-scroll-hint {
+      display: none;
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      text-align: center;
+      margin-top: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Loading states */
+    .loading-state {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 0;
+      color: rgba(255,255,255,0.45);
+      font-size: 14px;
+    }
+    .loading-spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(160,120,255,0.25);
+      border-top-color: #a78bfa;
+      border-radius: 50%;
+      animation: tt-spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes tt-spin { to { transform: rotate(360deg); } }
+    body.light .loading-state { color: rgba(0,0,0,0.45); }
+
+    /* Table / list scroll on small screens */
+    .scroll-x-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 0 -4px;
+      padding: 0 4px 4px;
+    }
+    .tt-modal-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,0.65);
+      align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .tt-modal-overlay.open { display: flex; }
+    .tt-modal {
+      background: #1a1228;
+      border: 1px solid rgba(160,120,255,0.25);
+      border-radius: 18px;
+      padding: 24px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    }
+    body.light .tt-modal { background: #fff; border-color: rgba(160,120,255,0.3); }
+
+    .tt-modal .tt-time-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* Timetable add form */
+    .tt-add-form {
+      display: grid;
+      grid-template-columns: 100px 110px 110px 1fr 100px auto;
+      gap: 10px;
+      align-items: end;
+    }
+    .tt-add-form input[type="time"],
+    .tt-modal input[type="time"] {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .tt-modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      justify-content: flex-end;
+    }
+    .tt-modal-actions button {
+      min-height: 44px;
+      padding: 9px 18px;
+    }
+    .tt-btn-danger {
+      border: none;
+      border-radius: 10px;
+      background: rgba(239,68,68,0.85);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: Montserrat, sans-serif;
+    }
+
+    /* Mobile bottom navigation */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10000;
+      background: rgba(8, 8, 11, 0.94);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+      justify-content: space-around;
+      gap: 2px;
+    }
+    .mobile-bottom-nav button {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 8px 4px;
+      border: none;
+      border-radius: 12px;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 10px;
+      font-weight: 700;
+      font-family: Montserrat, sans-serif;
+      cursor: pointer;
+      min-height: 52px;
+    }
+    .mobile-bottom-nav button i { font-size: 20px; }
+    .mobile-bottom-nav button.active {
+      color: #c084fc;
+      background: rgba(160, 120, 255, 0.12);
+    }
+    body.light .mobile-bottom-nav {
+      background: rgba(255, 255, 255, 0.96);
+      border-top-color: rgba(0, 0, 0, 0.08);
+    }
+    body.light .mobile-bottom-nav button { color: rgba(0, 0, 0, 0.45); }
+    body.light .mobile-bottom-nav button.active { color: #7c3aed; background: rgba(160, 120, 255, 0.12); }
+
+    @media (max-width: 768px) {
+      body { cursor: auto; overflow-x: hidden; overflow-y: auto; }
+      .page { max-width: 100vw; overflow-x: hidden; }
+      .shell { max-width: 100%; overflow-x: hidden; }
+      .main { max-width: 100%; overflow-x: hidden; padding: 16px 18px; }
+      .att-card { max-width: 100%; overflow: hidden; }
+      .settings-form input, .settings-form select, .settings-item input, .settings-item select,
+      .att-card input, .att-card select, .att-card textarea {
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      .auth-btn, .settings-form button, #view-qa button, #ttAddBtn, #ttEditSave, #ttEditCancel {
+        min-height: 44px;
+      }
+      #googleConnectBtn { min-height: 44px; padding: 10px 16px !important; }
+      .title { font-size: 28px; }
+      .name { font-size: 28px; }
+      .email { font-size: 15px; }
+      .stats { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .stat { padding: 14px 10px; }
+      .stat .val { font-size: 26px; }
+      .att-header-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .avatar-card { height: 200px; }
+      .tt-scroll-hint { display: block; }
+      .tt-add-form {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .tt-add-form > div:nth-child(3),
+      .tt-add-form > div:nth-child(4) { grid-column: 1 / -1; }
+      .tt-add-form > div:nth-child(5) { grid-column: 1 / -1; }
+      .tt-add-form > button { grid-column: 1 / -1; width: 100%; padding: 12px !important; min-height: 48px; }
+      .tt-week-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0; }
+      .tt-week-wrap .tt-week { min-width: 560px; }
+      .tt-slot { padding: 12px 36px 12px 10px; min-height: 72px; }
+      .tt-del, .tt-edit { opacity: 1 !important; min-width: 32px; min-height: 32px; }
+      .tt-today-card { flex-wrap: wrap; gap: 10px; padding: 14px; }
+      .tt-today-actions { margin-left: 0; width: 100%; justify-content: flex-end; }
+      .tt-modal-overlay { padding: 16px; align-items: flex-end; }
+      .tt-modal {
+        max-width: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 20px 18px calc(20px + env(safe-area-inset-bottom, 0px));
+        border-radius: 18px 18px 0 0;
+        max-height: 92vh;
+        overflow-y: auto;
+      }
+      .tt-modal .tt-time-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      #view-qa .att-card > div:first-child button,
+      #view-qa #qaAskBtn { width: 100%; min-height: 48px; }
+      #view-qa .att-card > div:first-child > div:last-child { width: 100% !important; }
+      .settings-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      body { cursor: auto; overflow: auto; }
+      .cursor { display: none !important; }
+
+      .page {
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding: 10px;
+        padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+      }
+      .shell {
+        width: 100%;
+        height: auto;
+        min-height: calc(100dvh - 20px);
+        border-radius: 18px;
+        overflow: visible;
+        display: flex;
+        flex-direction: column;
+      }
+      .sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 200;
+        left: auto;
+        bottom: auto;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 14px;
+        border-radius: 0;
+        margin-bottom: 0;
+        gap: 8px;
+      }
+      .sidebar .section-label,
+      .sidebar .nav,
+      .sidebar > div:last-child { display: none !important; }
+      .sidebar .brand {
+        padding: 0;
+        border: none;
+        flex: 1;
+      }
+      .mobile-top-actions {
+        display: flex !important;
+        gap: 6px;
+      }
+      .main {
+        position: static;
+        left: auto;
+        right: auto;
+        padding: 16px 14px 20px;
+        overflow: visible;
+        flex: 1;
+      }
+      .header .title { font-size: 22px; }
+      .att-card { padding: 16px; border-radius: 16px; }
+      .tt-add-form {
+        grid-template-columns: 1fr 1fr;
+      }
+      .tt-add-form > div:nth-child(3),
+      .tt-add-form > div:nth-child(4),
+      .tt-add-form > div:nth-child(5) { grid-column: 1 / -1; }
+      .tt-add-form > button { grid-column: 1 / -1; width: 100%; padding: 12px !important; min-height: 48px; }
+      .tt-week-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .tt-week-wrap .tt-week { min-width: 580px; }
+      .tt-slot { padding: 12px 10px 12px 8px; min-height: 72px; }
+      .tt-del, .tt-edit { opacity: 1 !important; min-width: 28px; min-height: 28px; }
+      .tt-today-card { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .tt-today-time { font-size: 20px; min-width: auto; }
+      .tt-modal { max-width: 100%; margin: 0 8px; padding: 20px 16px; }
+      .mobile-bottom-nav { display: flex; }
+      .overall-row { grid-template-columns: 1fr; }
+      .info-grid { grid-template-columns: 1fr; }
+      .top-card { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 380px) {
+      .stats { grid-template-columns: 1fr; }
+      .page { padding: 8px; padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+      .main { padding: 14px 12px 18px; }
+    }
+
+    @media (pointer: coarse) {
+      .tt-del, .tt-edit { opacity: 1; }
+      .nav-item { min-height: 48px; }
+    }
+
+    .mobile-top-actions { display: none; }
+    .mobile-icon-btn {
+      width: 40px; height: 40px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.7);
+      display: grid; place-items: center;
+      cursor: pointer; font-size: 18px;
+    }
+    body.light .mobile-icon-btn {
+      background: rgba(0,0,0,0.04);
+      border-color: rgba(0,0,0,0.1);
+      color: rgba(0,0,0,0.6);
+    }
+  </style>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="js/api.js"></script>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <aside class="sidebar">
+        <button class="brand" id="brandHome" type="button">
+          <div class="dot"></div>
+          <div class="text">uniCLOUD</div>
+        </button>
+        <div class="mobile-top-actions">
+          <button type="button" class="mobile-icon-btn" id="mobileThemeBtn" aria-label="Toggle theme"><i class="ph ph-sun" id="mobileThemeIcon"></i></button>
+          <button type="button" class="mobile-icon-btn" id="mobileNotifyBtn" aria-label="Toggle alerts"><i class="ph ph-bell" id="mobileNotifyIcon"></i></button>
+        </div>
+
+        <div class="section-label">General</div>
+        <div class="nav">
+          <div class="nav-item active" data-nav="profile"><i class="ph ph-user"></i>My Profile</div>
+          <div class="nav-item" data-nav="attendance"><i class="ph ph-note-pencil"></i>Attendance</div>
+          <div class="nav-item" data-nav="saved"><i class="ph ph-list-bullets"></i>Saved Resources</div>
+          <div class="nav-item" data-nav="timetable"><i class="ph ph-calendar"></i>Timetable</div>
+          <div class="nav-item" data-nav="qa"><i class="ph ph-chat-circle-text"></i>Q&amp;A</div>
+          <div class="nav-item" data-nav="settings"><i class="ph ph-gear"></i>Settings</div>
+          <div class="nav-item logout" id="logoutBtn"><i class="ph ph-sign-out"></i>Logout</div>
+        </div>
+        <div style="padding:12px 8px 0;border-top:1px solid rgba(255,255,255,0.07);margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+          <button id="themeToggle" type="button" class="sidebar-util-btn">
+            <i class="ph ph-sun" id="themeIcon"></i><span id="themeLabel">Light Mode</span>
+          </button>
+          <button id="notifyToggle" type="button" class="sidebar-util-btn">
+            <i class="ph ph-bell" id="notifyIcon"></i><span id="notifyLabel">Enable Alerts</span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="main">
+        <!-- PROFILE VIEW -->
+        <section class="view active" id="view-profile">
+          <div class="header">
+            <div class="title">My Profile</div>
+            <div class="close-btn" id="closeBtn" title="Close">
+              <i class="ph ph-x"></i>
+            </div>
+          </div>
+
+          <div class="top-card">
+            <div class="avatar-card">
+              <i class="ph ph-user"></i>
+            </div>
+
+            <div>
+              <div class="name">
+                <span class="greeting" id="greetingText">Good morning</span>, John Doe
+              </div>
+              <div class="email">john.doe@university.edu</div>
+
+              <div class="stats">
+                <div class="stat">
+                  <div class="val">24</div>
+                  <div class="lbl">Resources</div>
+                </div>
+                <div class="stat">
+                  <div class="val">85%</div>
+                  <div class="lbl">Attendance</div>
+                </div>
+                <div class="stat">
+                  <div class="val">12</div>
+                  <div class="lbl">Reviews</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>Personal Information</h3>
+            <div class="divider"></div>
+            <div class="info-grid">
+              <div class="info"><div class="k">Student ID</div><div class="v">—</div></div>
+              <div class="info"><div class="k">Branch</div><div class="v">—</div></div>
+              <div class="info"><div class="k">Semester</div><div class="v">—</div></div>
+              <div class="info"><div class="k">Year</div><div class="v">—</div></div>
+              <div class="info"><div class="k">Phone</div><div class="v">—</div></div>
+              <div class="info"><div class="k">Date Joined</div><div class="v">—</div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ATTENDANCE VIEW -->
+        <section class="view" id="view-attendance">
+          <div class="header">
+            <div class="title">Attendance</div>
+            <div class="close-btn" id="closeBtn2" title="Close">
+              <i class="ph ph-x"></i>
+            </div>
+          </div>
+
+          <!-- SETTINGS SAVE TOAST -->
+          <div id="settingsToast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:linear-gradient(135deg,rgba(34,197,94,0.95),rgba(22,163,74,0.9));color:#fff;padding:13px 28px;border-radius:999px;font-size:14px;font-weight:700;box-shadow:0 12px 40px rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:all .45s cubic-bezier(.175,.885,.32,1.275);z-index:9999;display:flex;align-items:center;gap:10px;">
+            <i class="ph ph-check-circle" style="font-size:20px;"></i><span>Profile saved!</span>
+          </div>
+
+          <div class="att-card">
+            <!-- Row 1: Title + Required % -->
+            <div class="att-header-row">
+              <div class="att-title">Overall Attendance</div>
+              <div class="att-required">
+                Required %
+                <input id="requiredPct" type="number" min="0" max="100" value="75" />
+              </div>
+            </div>
+
+            <!-- Row 2: Branch + Semester picker -->
+            <div style="display:flex;align-items:flex-end;gap:10px;margin:14px 0 6px 0;flex-wrap:wrap;">
+              <div style="flex:1;min-width:160px;">
+                <label style="display:block;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:6px;">Branch</label>
+                <select id="addSubBranch" style="width:100%;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.10);color:#fff;font-size:13px;font-family:inherit;outline:none;">
+                  <option value="">Select branch</option>
+                </select>
+              </div>
+              <div style="width:120px;">
+                <label style="display:block;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:6px;">Semester</label>
+                <select id="addSubSemester" style="width:100%;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.10);color:#fff;font-size:13px;font-family:inherit;outline:none;">
+                  <option value="1">Sem 1</option><option value="2">Sem 2</option><option value="3">Sem 3</option><option value="4">Sem 4</option>
+                  <option value="5">Sem 5</option><option value="6">Sem 6</option><option value="7">Sem 7</option><option value="8">Sem 8</option>
+                </select>
+              </div>
+              <button id="attLoadBtn" type="button" style="padding:10px 22px;border-radius:12px;border:none;background:linear-gradient(135deg,rgba(139,92,246,0.6),rgba(109,40,217,0.5));color:#fff;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;box-shadow:0 4px 14px rgba(109,40,217,0.3);white-space:nowrap;">
+                Load Subjects
+              </button>
+            </div>
+            <!-- Status banner -->
+            <div id="attCourseBanner" style="display:none;background:rgba(160,120,255,0.10);border:1px solid rgba(160,120,255,0.20);border-radius:12px;padding:9px 14px;margin-bottom:10px;font-size:12px;font-weight:700;color:rgba(192,132,252,0.9);display:flex;align-items:center;gap:8px;">
+              <i class="ph ph-graduation-cap"></i>
+              <span id="attCourseLabel">—</span>
+            </div>
+
+            <div class="overall-row">
+              <div class="overall-meter">
+                <div class="overall-gauge">
+                  <svg viewBox="0 0 220 220" aria-hidden="true">
+                    <circle class="bg" cx="110" cy="110" r="90"></circle>
+                    <circle class="fg" id="overallStroke" cx="110" cy="110" r="90"
+                      style="stroke-dasharray: 565.48; stroke-dashoffset: 565.48;"></circle>
+                  </svg>
+                  <div class="overall-center">
+                    <div class="overall-state" id="overallStateLabel">SAFE</div>
+                    <div class="overall-pct" id="overallPctLabel">—</div>
+                    <div class="overall-ref" id="overallRefLabel">Required 75%</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="overall-note" id="overallNote">
+                Your overall attendance status is calculated across all subjects in real time as you update the numbers below.
+              </div>
+            </div>
+
+            <div class="subject-list" id="subjectList"></div>
+
+            <button class="sim-toggle" id="simToggle">Simulate future</button>
+            <div class="sim-panel" id="simPanel">
+              <div class="sim-row">
+                <div class="sim-row-label">
+                  <span>Average classes / week</span>
+                  <span id="classesPerWeekVal">3</span>
+                </div>
+                <input id="classesPerWeek" type="range" min="1" max="10" value="3" />
+              </div>
+              <div class="sim-row">
+                <div class="sim-row-label">
+                  <span>Weeks remaining</span>
+                  <span id="weeksRemainingVal">10</span>
+                </div>
+                <input id="weeksRemaining" type="range" min="1" max="20" value="10" />
+              </div>
+            </div>
+
+            <div class="guidance">"We'll tell you exactly what to do to avoid getting debarred."</div>
+          </div>
+        </section>
+
+        <!-- SAVED RESOURCES VIEW -->
+        <section class="view" id="view-saved">
+          <div class="header">
+            <div class="title">Saved Resources</div>
+            <div class="close-btn" id="closeBtn3" title="Close">
+              <i class="ph ph-x"></i>
+            </div>
+          </div>
+
+          <div class="att-card">
+            <div class="att-header-row">
+              <div class="att-title">Your saved PDFs</div>
+            </div>
+            <div id="savedList" class="subject-list"></div>
+          </div>
+        </section>
+
+        <!-- SETTINGS VIEW -->
+        <section class="view" id="view-settings">
+          <div class="header">
+            <div class="title">Settings</div>
+            <div class="close-btn" id="closeBtn4" title="Close">
+              <i class="ph ph-x"></i>
+            </div>
+          </div>
+
+          <!-- Avatar Upload Card -->
+          <div class="att-card" style="margin-bottom:18px;">
+            <div class="att-title" style="margin-bottom:16px;">Profile Picture</div>
+            <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+              <div id="settingsAvatarWrap" style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,rgba(160,120,255,0.3),rgba(140,100,220,0.18));border:2px solid rgba(160,120,255,0.4);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;font-size:32px;">
+                <i id="settingsAvatarIcon" class="ph ph-user" style="color:rgba(192,132,252,0.75);font-size:36px;"></i>
+                <img id="settingsAvatarImg" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;">
+              </div>
+              <div style="flex:1;min-width:200px;">
+                <input type="file" id="setProfilePicFile" accept="image/*" style="display:none;">
+                <button type="button" id="uploadPicBtn" style="padding:9px 18px;border-radius:12px;border:1px solid rgba(160,120,255,0.4);background:rgba(160,120,255,0.12);color:#e9d5ff;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:8px;">
+                  <i class="ph ph-upload-simple" style="margin-right:5px;"></i>Upload Photo
+                </button>
+                <span id="picFileName" style="margin-left:8px;font-size:12px;color:rgba(255,255,255,0.4);">Max 500 KB</span>
+                <input type="hidden" id="setProfilePicBase64">
+                <div style="margin-top:8px;">
+                  <input type="url" id="setProfilePic" placeholder="Or paste image URL: https://..." style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.10);color:rgba(255,255,255,0.85);outline:none;font-size:13px;">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile Info Form -->
+          <div class="att-card" style="margin-bottom:18px;">
+            <div class="att-title" style="margin-bottom:4px;">Profile information</div>
+            <form id="settingsForm" class="settings-form">
+              <div class="settings-grid">
+                <div class="settings-item">
+                  <label>Full name</label>
+                  <input type="text" id="setName" placeholder="Your full name">
+                </div>
+                <div class="settings-item">
+                  <label>Student ID</label>
+                  <input type="text" id="setStudentId" placeholder="e.g. STU2024001">
+                </div>
+                <div class="settings-item">
+                  <label>Branch</label>
+                  <select id="setBranch"><option value="">Select branch</option></select>
+                </div>
+                <div class="settings-item">
+                  <label>Semester</label>
+                  <select id="setSemester">
+                    <option value="1">Semester 1</option><option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option><option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option><option value="6">Semester 6</option>
+                    <option value="7">Semester 7</option><option value="8">Semester 8</option>
+                  </select>
+                </div>
+                <div class="settings-item">
+                  <label>Academic year</label>
+                  <input type="text" id="setYear" placeholder="e.g. 2024-25">
+                </div>
+                <div class="settings-item">
+                  <label>Phone</label>
+                  <input type="tel" id="setPhone" placeholder="Phone number">
+                </div>
+                <div class="settings-item">
+                  <label>Default course branch</label>
+                  <select id="setDefaultBranch"><option value="">Same as profile branch</option></select>
+                </div>
+                <div class="settings-item">
+                  <label>Default semester</label>
+                  <select id="setDefaultSemester">
+                    <option value="">Same as profile</option>
+                    <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                    <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                    <option value="7">7</option><option value="8">8</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" class="auth-btn" style="margin-top:16px;display:flex;align-items:center;gap:8px;">
+                <i class="ph ph-floppy-disk"></i> Save Changes
+              </button>
+            </form>
+          </div>
+
+          <!-- Connected Accounts -->
+          <div class="att-card" style="margin-bottom:18px;">
+            <div class="att-title" style="margin-bottom:14px;">Connected Accounts</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:12px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+              <div style="display:flex;align-items:center;gap:14px;">
+                <div style="width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;">
+                  <svg viewBox="0 0 24 24" width="20" height="20"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                </div>
+                <div>
+                  <div style="font-size:14px;font-weight:700;">Google</div>
+                  <div id="googleStatusText" style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:2px;">Checking…</div>
+                </div>
+              </div>
+              <button id="googleConnectBtn" type="button" style="padding:9px 16px;border-radius:10px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.85);font-size:13px;font-weight:600;cursor:pointer;display:none;">Connect Google</button>
+            </div>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="att-card" style="border-color:rgba(239,68,68,0.2);">
+            <div class="att-title" style="color:rgba(252,165,165,0.9);margin-bottom:10px;">Danger Zone</div>
+            <p style="font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:14px;">These actions are permanent and cannot be undone.</p>
+            <button id="deleteAccountBtn" type="button" style="padding:10px 18px;border-radius:10px;border:1px solid rgba(239,68,68,0.35);background:rgba(239,68,68,0.10);color:rgba(252,165,165,0.95);font-size:13px;font-weight:600;cursor:pointer;">
+              <i class="ph ph-trash" style="margin-right:6px;"></i>Delete My Account
+            </button>
+          </div>
+        </section>
+
+        <!-- TIMETABLE VIEW -->
+        <section class="view" id="view-timetable">
+          <div class="header">
+            <div class="title">Timetable</div>
+          </div>
+
+          <!-- Today highlight -->
+          <div class="att-card" style="margin-bottom:18px;">
+            <div class="att-title" style="margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+              <i class="ph ph-sun-horizon" style="color:#a78bfa;font-size:20px;"></i>
+              Today — <span id="todayName" style="color:#a78bfa;font-weight:900;"></span>
+            </div>
+            <div id="todayClasses"></div>
+          </div>
+
+          <!-- Add form -->
+          <div class="att-card" style="margin-bottom:18px;">
+            <div class="att-title" style="margin-bottom:14px;">Add a Class</div>
+            <div class="tt-add-form" id="ttAddForm">
+              <div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Day</div>
+                <select id="ttDay" style="width:100%;padding:9px 10px;border-radius:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;font-size:13px;font-family:Montserrat,sans-serif;">
+                  <option>Mon</option><option>Tue</option><option>Wed</option>
+                  <option>Thu</option><option>Fri</option><option>Sat</option>
+                </select>
+              </div>
+              <div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Start Time</div>
+                <input type="time" id="ttTime" style="width:100%;padding:9px 10px;border-radius:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;font-size:13px;">
+              </div>
+              <div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">End Time</div>
+                <input type="time" id="ttEndTime" style="width:100%;padding:9px 10px;border-radius:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;font-size:13px;">
+              </div>
+              <div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Subject</div>
+                <input type="text" id="ttSubject" placeholder="e.g. Data Structures" style="width:100%;padding:9px 12px;border-radius:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;font-size:13px;font-family:Montserrat,sans-serif;">
+              </div>
+              <div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Room</div>
+                <input type="text" id="ttRoom" placeholder="A-101" style="width:100%;padding:9px 10px;border-radius:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;font-size:13px;font-family:Montserrat,sans-serif;">
+              </div>
+              <button id="ttAddBtn" type="button" style="padding:9px 20px;border-radius:10px;border:none;background:linear-gradient(135deg,rgba(160,120,255,0.9),rgba(120,80,220,0.9));color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:Montserrat,sans-serif;white-space:nowrap;">
+                + Add
+              </button>
+            </div>
+          </div>
+
+          <!-- Weekly grid -->
+          <div class="att-card">
+            <div class="att-title" style="margin-bottom:18px;">Weekly Schedule</div>
+            <div class="tt-week-wrap">
+              <div class="tt-week" id="ttGrid"></div>
+            </div>
+            <p class="tt-scroll-hint"><i class="ph ph-arrows-horizontal"></i> Swipe to see all days</p>
+          </div>
+        </section>
+
+        <!-- Timetable edit modal -->
+        <div class="tt-modal-overlay" id="ttEditModal">
+          <div class="tt-modal">
+            <div class="att-title" style="margin-bottom:16px;">Edit Class</div>
+            <input type="hidden" id="ttEditId">
+            <div style="display:grid;gap:12px;">
+              <div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Day</div>
+                <select id="ttEditDay" style="width:100%;padding:9px 10px;border-radius:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;font-size:13px;font-family:Montserrat,sans-serif;">
+                  <option>Mon</option><option>Tue</option><option>Wed</option>
+                  <option>Thu</option><option>Fri</option><option>Sat</option>
+                </select>
+              </div>
+              <div class="tt-time-row">
+                <div>
+                  <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Start Time</div>
+                  <input type="time" id="ttEditTime" style="width:100%;padding:9px 10px;border-radius:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;font-size:13px;">
+                </div>
+                <div>
+                  <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">End Time</div>
+                  <input type="time" id="ttEditEndTime" style="width:100%;padding:9px 10px;border-radius:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;font-size:13px;">
+                </div>
+              </div>
+              <div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Subject</div>
+                <input type="text" id="ttEditSubject" style="width:100%;padding:9px 12px;border-radius:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;font-size:13px;font-family:Montserrat,sans-serif;">
+              </div>
+              <div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Room</div>
+                <input type="text" id="ttEditRoom" style="width:100%;padding:9px 10px;border-radius:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;font-size:13px;font-family:Montserrat,sans-serif;">
+              </div>
+            </div>
+            <div class="tt-modal-actions">
+              <button id="ttEditCancel" type="button" style="border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.75);font-size:13px;font-weight:600;cursor:pointer;font-family:Montserrat,sans-serif;">Cancel</button>
+              <button id="ttEditSave" type="button" style="border-radius:10px;border:none;background:linear-gradient(135deg,rgba(160,120,255,0.9),rgba(120,80,220,0.9));color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:Montserrat,sans-serif;">Save</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timetable delete confirmation -->
+        <div class="tt-modal-overlay" id="ttDeleteModal">
+          <div class="tt-modal" style="max-width:360px;text-align:center;">
+            <div class="att-title" style="margin-bottom:10px;">Delete this class?</div>
+            <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:20px;">This action cannot be undone.</p>
+            <div class="tt-modal-actions" style="justify-content:center;">
+              <button id="ttDeleteCancel" type="button" style="border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.75);font-size:13px;font-weight:600;cursor:pointer;font-family:Montserrat,sans-serif;">Cancel</button>
+              <button id="ttDeleteConfirm" type="button" class="tt-btn-danger">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q&A VIEW -->
+        <section class="view" id="view-qa">
+          <div class="header">
+            <div class="title">Q&amp;A</div>
+          </div>
+          <div class="att-card" style="margin-bottom:18px;">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+              <div style="flex:1;min-width:180px;">
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Subject</div>
+                <input type="text" id="qaSubjectInput" placeholder="e.g. Data Structures" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;font-size:14px;font-family:Montserrat,sans-serif;">
+              </div>
+              <div style="width:120px;">
+                <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Branch</div>
+                <input type="text" id="qaBranchInput" placeholder="CSE" style="width:100%;padding:10px 14px;border-radius:12px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;font-size:14px;font-family:Montserrat,sans-serif;">
+              </div>
+              <button id="qaLoadBtn" type="button" style="padding:10px 22px;border-radius:12px;border:none;background:linear-gradient(135deg,rgba(160,120,255,0.9),rgba(120,80,220,0.9));color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:Montserrat,sans-serif;">Load</button>
+            </div>
+          </div>
+          <div class="att-card" style="margin-bottom:18px;">
+            <div class="att-title" style="margin-bottom:12px;">Ask Anonymously</div>
+            <textarea id="qaQuestion" rows="3" placeholder="Type your question…" style="width:100%;padding:12px;border-radius:12px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);color:#fff;outline:none;font-size:14px;resize:vertical;font-family:Montserrat,sans-serif;"></textarea>
+            <button id="qaAskBtn" type="button" style="margin-top:10px;padding:10px 22px;border-radius:12px;border:none;background:linear-gradient(135deg,rgba(160,120,255,0.9),rgba(120,80,220,0.9));color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:Montserrat,sans-serif;">Post Question</button>
+          </div>
+          <div id="qaList" class="att-card">
+            <div style="color:rgba(255,255,255,0.35);font-size:14px;">Enter a subject above and click Load.</div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Main navigation">
+    <button type="button" data-nav="profile" class="active"><i class="ph ph-user"></i><span>Profile</span></button>
+    <button type="button" data-nav="attendance"><i class="ph ph-note-pencil"></i><span>Attend</span></button>
+    <button type="button" data-nav="timetable"><i class="ph ph-calendar"></i><span>Schedule</span></button>
+    <button type="button" data-nav="saved"><i class="ph ph-list-bullets"></i><span>Saved</span></button>
+    <button type="button" data-nav="settings"><i class="ph ph-gear"></i><span>Settings</span></button>
+  </nav>
+
+  <div class="cursor"></div>
+
+  <script>
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       CURSOR
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    const cursor = document.querySelector('.cursor');
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+      cursor.classList.add('visible');
+    });
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       GREETING
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    function getGreetingForNow() {
+      const h = new Date().getHours();
+      if (h < 12) return 'Good morning';
+      if (h < 17) return 'Good afternoon';
+      return 'Good evening';
+    }
+    // Initial greeting (static span in HTML may not exist yet, updated in refreshProfileView)
+    setInterval(() => {
+      const g = document.getElementById('greetingText');
+      if (g) g.textContent = getGreetingForNow();
+    }, 60000);
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       VIEW SWITCHING
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    const navItems = Array.from(document.querySelectorAll('.nav-item[data-nav]'));
+    const views = {
+      profile:    document.getElementById('view-profile'),
+      attendance: document.getElementById('view-attendance'),
+      saved:      document.getElementById('view-saved'),
+      settings:   document.getElementById('view-settings'),
+      reviews:    document.getElementById('view-reviews') || document.getElementById('view-saved'),
+      timetable:  document.getElementById('view-timetable'),
+      qa:         document.getElementById('view-qa')
+    };
+
+    function setView(viewKey) {
+      Object.values(views).forEach(v => v && v.classList.remove('active'));
+      if (views[viewKey]) views[viewKey].classList.add('active');
+      navItems.forEach(x => x.classList.toggle('active', x.dataset.nav === viewKey));
+      document.querySelectorAll('.mobile-bottom-nav button[data-nav]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.nav === viewKey);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function _handleNav(key) {
+      setView(key);
+      if (key === 'attendance') loadAttendanceFromApi();
+      if (key === 'saved') renderSavedResources();
+      if (key === 'settings') { refreshSettingsFields(); loadBranches(); updateGoogleConnectStatus(); }
+      if (key === 'timetable') loadTimetable();
+    }
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => _handleNav(item.dataset.nav));
+    });
+
+    document.querySelectorAll('.mobile-bottom-nav button[data-nav]').forEach(btn => {
+      btn.addEventListener('click', () => _handleNav(btn.dataset.nav));
+    });
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       CLOSE / LOGOUT / BRAND
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    function goHome() { window.location.href = '/main.html'; }
+
+    ['closeBtn','closeBtn2','closeBtn3','closeBtn4'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('click', goHome);
+    });
+    const brandHome = document.getElementById('brandHome');
+    if (brandHome) brandHome.addEventListener('click', goHome);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') goHome(); });
+
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        sessionStorage.clear();
+        localStorage.clear();
+        fetch('/auth/logout', { method: 'POST', credentials: 'include' })
+          .finally(() => { window.location.href = '/login.html'; });
+      });
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       STATE
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    var currentUser  = null;
+    var branchesList = [];
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       LOAD USER FROM SERVER
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    function loadUser() {
+      return fetch('/auth/me', { credentials: 'include' })
+        .then(r => r.json())
+        .then(data => {
+          if (data.user) {
+            currentUser = data.user;
+            refreshProfileView();
+            refreshSettingsFields();
+            return currentUser;
+          }
+          window.location.href = '/login.html';
+          return null;
+        })
+        .catch(() => {
+          window.location.href = '/login.html';
+          return null;
+        });
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       REFRESH PROFILE TAB
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    function refreshProfileView() {
+      const u = currentUser;
+
+      // Name + greeting
+      const nameEl = document.querySelector('#view-profile .name');
+      if (nameEl) {
+        const displayName = u ? (u.full_name || (u.email && u.email !== 'guest@unicloud.local' ? u.email.split('@')[0] : 'Guest User')) : 'Not signed in';
+        nameEl.innerHTML = `<span class="greeting" id="greetingText">${getGreetingForNow()}</span>, ${displayName}`;
+      }
+
+      // Email
+      const emailEl = document.querySelector('#view-profile .email');
+      if (emailEl) emailEl.textContent = u ? (u.email || '') : 'Sign in to sync your data';
+
+      // Avatar
+      const avatarCard = document.querySelector('.avatar-card');
+      if (avatarCard) {
+        if (u && u.profile_picture_url) {
+          avatarCard.innerHTML = `<img src="${u.profile_picture_url}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" onerror="this.parentElement.innerHTML='<i class=\\'ph ph-user\\'></i>'">`;
+        } else if (u && u._isGuest) {
+          avatarCard.innerHTML = `<i class="ph ph-ghost" style="font-size:90px;color:rgba(192,132,252,0.75);"></i>`;
+        } else {
+          avatarCard.innerHTML = `<i class="ph ph-user" style="font-size:90px;color:rgba(192,132,252,0.75);"></i>`;
+        }
+      }
+
+      // Info grid
+      const vals = document.querySelectorAll('#view-profile .info .v');
+      if (vals.length >= 5 && u) {
+        vals[0].textContent = u.student_id    || '—';
+        vals[1].textContent = u.branch        || '—';
+        vals[2].textContent = u.semester      ? 'Semester ' + u.semester : '—';
+        vals[3].textContent = u.academic_year || '—';
+        vals[4].textContent = u.phone         || '—';
+        if (vals[5]) {
+          const d = new Date(u.created_at || Date.now());
+          vals[5].textContent = isNaN(d) ? '—' : d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        }
+      }
+
+      // Stats (live from server)
+      if (u && !u._isGuest && window.unicloud) {
+        // Saved resources count
+        window.unicloud.get('/api/saved').then(list => {
+          const el = document.querySelector('#view-profile .stats .stat:nth-child(1) .val');
+          if (el && Array.isArray(list)) el.textContent = list.length;
+        }).catch(() => {});
+        // Attendance % (overall)
+        if (u.branch && u.semester) {
+          fetch(`/api/attendance/me`, { credentials: 'include' }).then(r => r.json()).then(rows => {
+            if (!Array.isArray(rows) || !rows.length) return;
+            let att = 0, cond = 0;
+            rows.forEach(r => { att += (r.attended || 0); cond += (r.conducted || 0); });
+            const pct = cond > 0 ? Math.round(att / cond * 100) : 0;
+            const el = document.querySelector('#view-profile .stats .stat:nth-child(2) .val');
+            if (el) el.textContent = pct + '%';
+          }).catch(() => {});
+        }
+      }
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       REFRESH SETTINGS FIELDS
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    function refreshSettingsFields() {
+      const u = currentUser;
+      function setVal(id, val) { const el = document.getElementById(id); if (el) el.value = val || ''; }
+
+      setVal('setName',       u ? u.full_name      : '');
+      setVal('setStudentId',  u ? u.student_id     : '');
+      setVal('setYear',       u ? u.academic_year  : '');
+      setVal('setPhone',      u ? u.phone          : '');
+      setVal('setProfilePic', u ? u.profile_picture_url : '');
+
+      const semEl = document.getElementById('setSemester');
+      if (semEl && u && u.semester) semEl.value = String(u.semester);
+
+      const brEl = document.getElementById('setBranch');
+      if (brEl && u && u.branch) brEl.value = u.branch;
+
+      const defBrEl = document.getElementById('setDefaultBranch');
+      if (defBrEl && u && u.default_branch) defBrEl.value = u.default_branch;
+
+      const defSemEl = document.getElementById('setDefaultSemester');
+      if (defSemEl && u && u.default_semester) defSemEl.value = String(u.default_semester);
+
+      // Update settings avatar preview
+      const img  = document.getElementById('settingsAvatarImg');
+      const icon = document.getElementById('settingsAvatarIcon');
+      if (u && u.profile_picture_url) {
+        if (img)  { img.src = u.profile_picture_url; img.style.display = 'block'; }
+        if (icon) icon.style.display = 'none';
+      } else {
+        if (img)  img.style.display = 'none';
+        if (icon) icon.style.display = '';
+      }
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       SETTINGS FORM SUBMIT
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    const settingsFormEl = document.getElementById('settingsForm');
+    if (settingsFormEl) {
+      settingsFormEl.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (!window.unicloud) { alert('Please sign in to save changes.'); return; }
+        if (currentUser && currentUser._isGuest) { alert('Guest users cannot save settings. Please create an account.'); return; }
+
+        const submitBtn = settingsFormEl.querySelector('[type=submit]');
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<i class="ph ph-spinner"></i> Saving…'; }
+
+        // Profile picture: base64 from upload takes priority over URL field
+        const picBase64 = (document.getElementById('setProfilePicBase64') || {}).value || '';
+        const picUrl    = (document.getElementById('setProfilePic') || {}).value.trim();
+        const finalPic  = picBase64 || picUrl || undefined;
+
+        const payload = {};
+        const name   = (document.getElementById('setName')      || {}).value?.trim();
+        const sid    = (document.getElementById('setStudentId') || {}).value?.trim();
+        const branch = (document.getElementById('setBranch')    || {}).value;
+        const sem    = (document.getElementById('setSemester')  || {}).value;
+        const year   = (document.getElementById('setYear')      || {}).value?.trim();
+        const phone  = (document.getElementById('setPhone')     || {}).value?.trim();
+        const defBr  = (document.getElementById('setDefaultBranch')    || {}).value;
+        const defSem = (document.getElementById('setDefaultSemester')  || {}).value;
+
+        if (name)    payload.full_name          = name;
+        if (sid)     payload.student_id         = sid;
+        if (branch)  payload.branch             = branch;
+        if (sem)     payload.semester           = parseInt(sem, 10);
+        if (year)    payload.academic_year      = year;
+        if (phone)   payload.phone              = phone;
+        if (finalPic) payload.profile_picture_url = finalPic;
+        if (defBr)   payload.default_branch    = defBr;
+        if (defSem)  payload.default_semester  = parseInt(defSem, 10);
+
+        window.unicloud.patch('/api/users/me', payload)
+          .then(user => {
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = '<i class="ph ph-floppy-disk"></i> Save Changes'; }
+            if (user && (user.email || user.id)) {
+              currentUser = user;
+              // Clear base64 after save
+              const b64el = document.getElementById('setProfilePicBase64');
+              if (b64el) b64el.value = '';
+              refreshProfileView();
+              refreshSettingsFields();
+              loadBranches();
+              showToast('Profile saved!', 'success');
+            } else if (user && user.error) {
+              showToast('Error: ' + user.error, 'error');
+            }
+          })
+          .catch(err => {
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = '<i class="ph ph-floppy-disk"></i> Save Changes'; }
+            if (err && err.status === 401) {
+              showToast('Session expired. Please sign in again.', 'error');
+              setTimeout(() => window.location.href = '/login.html', 1500);
+            } else {
+              showToast('Failed to save. Is the server running?', 'error');
+            }
+          });
+      });
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       TOAST NOTIFICATION
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    function showToast(msg, type) {
+      const toast = document.getElementById('settingsToast');
+      if (!toast) return;
+      const span = toast.querySelector('span');
+      if (span) span.textContent = msg;
+      toast.style.background = type === 'error'
+        ? 'linear-gradient(135deg,rgba(239,68,68,0.95),rgba(220,38,38,0.9))'
+        : 'linear-gradient(135deg,rgba(34,197,94,0.95),rgba(22,163,74,0.9))';
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+      toast.style.pointerEvents = 'auto';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(80px)';
+        toast.style.pointerEvents = 'none';
+      }, 3000);
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       PROFILE PICTURE FILE UPLOAD
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    const uploadPicBtn = document.getElementById('uploadPicBtn');
+    const fileInput    = document.getElementById('setProfilePicFile');
+    if (uploadPicBtn && fileInput) {
+      uploadPicBtn.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (!file) return;
+        if (file.size > 500 * 1024) {
+          showToast('Image too large — max 500 KB', 'error');
+          this.value = '';
+          return;
+        }
+        const nameSpan = document.getElementById('picFileName');
+        if (nameSpan) nameSpan.textContent = file.name;
+        const reader = new FileReader();
+        reader.onload = evt => {
+          const b64 = evt.target.result;
+          const hiddenEl = document.getElementById('setProfilePicBase64');
+          if (hiddenEl) hiddenEl.value = b64;
+          // Update settings avatar
+          const img  = document.getElementById('settingsAvatarImg');
+          const icon = document.getElementById('settingsAvatarIcon');
+          if (img)  { img.src = b64; img.style.display = 'block'; }
+          if (icon) icon.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       GOOGLE CONNECT STATUS
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    function updateGoogleConnectStatus() {
+      const statusEl = document.getElementById('googleStatusText');
+      const btn      = document.getElementById('googleConnectBtn');
+      if (!statusEl) return;
+
+      const GCID = document.querySelector('meta[name="google-client-id"]')?.content || '';
+      const hasGoogle = currentUser && currentUser.google_id;
+
+      if (hasGoogle) {
+        statusEl.textContent = 'Connected — ' + (currentUser.email || '');
+        statusEl.style.color = 'rgba(34,197,94,0.9)';
+        if (btn) btn.style.display = 'none';
+      } else if (!GCID || GCID === 'YOUR_GOOGLE_CLIENT_ID_HERE') {
+        statusEl.textContent = 'Google Sign-In is currently unavailable.';
+        statusEl.style.color = 'rgba(255,255,255,0.45)';
+        if (btn) btn.style.display = 'none';
+      } else {
+        statusEl.textContent = 'Not connected';
+        statusEl.style.color = 'rgba(255,255,255,0.45)';
+        if (btn) {
+          btn.style.display = '';
+          btn.onclick = () => triggerProfileGoogleConnect();
+        }
+      }
+    }
+
+    async function handleGoogleConnectCredential(response) {
+      try {
+        const data = await window.unicloud.post('/auth/google', { token: response.credential });
+        if (data.error) { showToast(data.error, 'error'); return; }
+        if (data.user) {
+          currentUser = data.user;
+          updateGoogleConnectStatus();
+          showToast('Google account connected!', 'success');
+        }
+      } catch {
+        showToast('Failed to connect Google account.', 'error');
+      }
+    }
+
+    function initProfileGoogle() {
+      const GCID = document.querySelector('meta[name="google-client-id"]')?.content || '';
+      if (!GCID || GCID === 'YOUR_GOOGLE_CLIENT_ID_HERE') return false;
+      if (!window.google?.accounts?.id) return false;
+      window.google.accounts.id.initialize({
+        client_id: GCID,
+        callback: handleGoogleConnectCredential,
+        auto_select: false,
+        cancel_on_tap_outside: true,
+        ux_mode: 'popup',
+        use_fedcm_for_prompt: true,
+      });
+      return true;
+    }
+
+    function isMobileDevice() {
+      return window.matchMedia('(max-width: 768px)').matches
+        || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    function showProfileGoogleButton() {
+      if (!initProfileGoogle()) {
+        showToast('Google Sign-In is unavailable. Add ' + window.location.origin + ' to Authorized JavaScript origins in Google Cloud Console.', 'error');
+        return;
+      }
+      let container = document.getElementById('profileGoogleBtnHost');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'profileGoogleBtnHost';
+        container.style.cssText = 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:9999;padding:24px;border-radius:16px;background:#141414;border:1px solid rgba(255,255,255,0.12);';
+        document.body.appendChild(container);
+      }
+      container.innerHTML = '';
+      window.google.accounts.id.renderButton(container, {
+        type: 'standard',
+        theme: 'outline',
+        size: 'large',
+        text: 'signin_with',
+        width: 280,
+      });
+    }
+
+    function triggerProfileGoogleConnect() {
+      const GCID = document.querySelector('meta[name="google-client-id"]')?.content || '';
+      if (!GCID || GCID === 'YOUR_GOOGLE_CLIENT_ID_HERE') {
+        showToast('Google Sign-In is currently unavailable.', 'error');
+        return;
+      }
+      if (!window.google?.accounts?.id) {
+        showToast('Google Sign-In is still loading. Please try again.', 'error');
+        return;
+      }
+      if (!initProfileGoogle()) return;
+
+      if (isMobileDevice()) {
+        showProfileGoogleButton();
+        return;
+      }
+
+      window.google.accounts.id.prompt(n => {
+        if (n.isNotDisplayed() || n.isSkippedMoment() || n.isDismissedMoment()) {
+          showProfileGoogleButton();
+        }
+      });
+    }
+
+    window.addEventListener('load', () => {
+      const tryInit = () => {
+        if (window.google?.accounts?.id) initProfileGoogle();
+        else setTimeout(tryInit, 150);
+      };
+      tryInit();
+    });
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       DELETE ACCOUNT
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+    if (deleteAccountBtn) {
+      deleteAccountBtn.addEventListener('click', () => {
+        if (!window.unicloud) { alert('Not signed in.'); return; }
+        if (currentUser && currentUser._isGuest) { alert('No account to delete for guest users.'); return; }
+        if (!confirm('Permanently delete your account?\n\nThis deletes ALL your attendance records, saved resources, and profile data. This CANNOT be undone.')) return;
+        const confirm2 = prompt('Type DELETE to confirm:');
+        if (confirm2 !== 'DELETE') { alert('Cancelled.'); return; }
+        window.unicloud.del('/api/users/me')
+          .then(res => {
+            if (res && res.ok) {
+              alert('Your account has been deleted.');
+              sessionStorage.clear();
+              window.location.href = '/login.html';
+            } else {
+              showToast('Delete failed: ' + (res?.error || 'unknown error'), 'error');
+            }
+          })
+          .catch(() => showToast('Delete failed. Server error.', 'error'));
+      });
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       LOAD BRANCHES (for dropdowns)
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    function getMaxSemesters(branchName) {
+      if (!branchName) return 8;
+      if (['B.Sc','BCA','B.Des'].some(x => branchName.includes(x))) return 6;
+      return 8;
+    }
+
+    function populateSemesterOptions(selectEl, maxSem, selectedValue) {
+      if (!selectEl) return;
+      selectEl.innerHTML = '';
+      for (let i = 1; i <= maxSem; i++) {
+        const opt = document.createElement('option');
+        opt.value = String(i);
+        opt.textContent = 'Semester ' + i;
+        selectEl.appendChild(opt);
+      }
+      if (selectedValue && parseInt(selectedValue) <= maxSem) selectEl.value = String(selectedValue);
+      else selectEl.value = '1';
+    }
+
+    function loadBranches() {
+      if (!window.unicloud) return Promise.resolve([]);
+      return window.unicloud.get('/api/branches').then(rows => {
+        branchesList = Array.isArray(rows) ? rows : [];
+
+        function fillSelect(id, includeEmpty, emptyLabel) {
+          const sel = document.getElementById(id);
+          if (!sel) return;
+          const prev = sel.value;
+          sel.innerHTML = includeEmpty ? `<option value="">${emptyLabel}</option>` : '';
+          branchesList.forEach(b => {
+            const opt = document.createElement('option');
+            opt.value = b.name; opt.textContent = b.name;
+            sel.appendChild(opt);
+          });
+          if (prev) sel.value = prev;
+        }
+
+        fillSelect('setBranch',        true,  'Select branch');
+        fillSelect('setDefaultBranch', true,  'Same as profile branch');
+        fillSelect('addSubBranch',     true,  'Select branch');
+
+        // Restore user's values after filling
+        if (currentUser) {
+          const brEl = document.getElementById('setBranch');
+          if (brEl && currentUser.branch) brEl.value = currentUser.branch;
+
+          const defBrEl = document.getElementById('setDefaultBranch');
+          if (defBrEl && currentUser.default_branch) defBrEl.value = currentUser.default_branch;
+
+          // Attendance branch + semester pre-selection
+          const addSubBranch = document.getElementById('addSubBranch');
+          const addSubSem    = document.getElementById('addSubSemester');
+          if (addSubBranch && currentUser.branch) addSubBranch.value = currentUser.branch;
+          if (addSubSem    && currentUser.semester) addSubSem.value = String(currentUser.semester);
+        }
+
+        // Branch change â†’ update semester count
+        const brEl = document.getElementById('setBranch');
+        if (brEl) {
+          brEl.onchange = () => {
+            const semEl = document.getElementById('setSemester');
+            const max   = getMaxSemesters(brEl.value);
+            const cur   = semEl ? semEl.value : '1';
+            populateSemesterOptions(semEl, max, cur);
+          };
+          // Initial populate
+          const semEl = document.getElementById('setSemester');
+          const max   = getMaxSemesters(brEl.value);
+          const cur   = (currentUser && currentUser.semester) ? currentUser.semester : (semEl ? semEl.value : '1');
+          populateSemesterOptions(semEl, max, cur);
+        }
+
+        // Auto-load attendance subjects if user has branch saved
+        if (currentUser && currentUser.branch) {
+          const sem = currentUser.semester || 1;
+          loadSubjectsForBranchSem(currentUser.branch, sem);
+        }
+
+        return branchesList;
+      }).catch(() => []);
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       ATTENDANCE
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    const requiredPctInput  = document.getElementById('requiredPct');
+    const subjectListEl     = document.getElementById('subjectList');
+    const overallStroke     = document.getElementById('overallStroke');
+    const overallStateLabel = document.getElementById('overallStateLabel');
+    const overallPctLabel   = document.getElementById('overallPctLabel');
+    const overallRefLabel   = document.getElementById('overallRefLabel');
+    const classesPerWeekEl  = document.getElementById('classesPerWeek');
+    const weeksRemainingEl  = document.getElementById('weeksRemaining');
+    const classesPerWeekValEl = document.getElementById('classesPerWeekVal');
+    const weeksRemainingValEl = document.getElementById('weeksRemainingVal');
+    const simToggle         = document.getElementById('simToggle');
+    const simPanel          = document.getElementById('simPanel');
+    const savedListEl       = document.getElementById('savedList');
+    const attLoadBtn        = document.getElementById('attLoadBtn');
+    const attCourseBanner   = document.getElementById('attCourseBanner');
+    const attCourseLabel    = document.getElementById('attCourseLabel');
+
+    var subjectsData = [];
+    const subjectViews = {};
+    const OVERALL_RADIUS = 90;
+    const OVERALL_CIRC   = 2 * Math.PI * OVERALL_RADIUS;
+
+    function clamp(n, a, b)  { return Math.max(a, Math.min(b, n)); }
+    function pct(att, cond)  { return cond <= 0 ? 100 : (att / cond) * 100; }
+    function riskState(p, req) {
+      if (p >= req + 5) return 'SAFE';
+      if (p >= req)     return 'WARNING';
+      return 'DANGER';
+    }
+    function stateColor(s) {
+      if (s === 'SAFE')    return '#22c55e';
+      if (s === 'WARNING') return '#eab308';
+      return '#ef4444';
+    }
+    function classesToAttendToReach(a, c, req) {
+      if (c <= 0) return 0;
+      const r = req / 100;
+      if (a / c >= r) return 0;
+      const denom = 1 - r;
+      if (denom <= 0) return Infinity;
+      return Math.max(0, Math.ceil((r * c - a) / denom));
+    }
+    function classesCanSkipNow(a, c, req) {
+      if (c <= 0) return 0;
+      const r = req / 100;
+      if (a / c < r || r <= 0) return 0;
+      return Math.max(0, Math.floor((a / r) - c));
+    }
+
+    if (attLoadBtn) {
+      attLoadBtn.addEventListener('click', () => {
+        const branch = document.getElementById('addSubBranch')?.value || '';
+        const sem    = document.getElementById('addSubSemester')?.value || '1';
+        if (!branch) {
+          const el = document.getElementById('addSubBranch');
+          if (el) { el.style.borderColor = '#f87171'; setTimeout(() => el.style.borderColor = '', 1500); }
+          return;
+        }
+        loadSubjectsForBranchSem(branch, sem);
+      });
+    }
+
+    function loadSubjectsForBranchSem(branch, sem) {
+      if (!branch) return;
+      if (attLoadBtn) { attLoadBtn.textContent = 'Loading…'; attLoadBtn.disabled = true; }
+
+      fetch(`/api/subjects?branch=${encodeURIComponent(branch)}&semester=${sem}`, { credentials: 'include' })
+        .then(r => r.json())
+        .then(subjects => {
+          if (attLoadBtn) { attLoadBtn.textContent = 'Load Subjects'; attLoadBtn.disabled = false; }
+          if (!Array.isArray(subjects)) subjects = [];
+          if (attCourseBanner) attCourseBanner.style.display = 'flex';
+          if (attCourseLabel)  attCourseLabel.textContent = `${branch} — Semester ${sem} (${subjects.length} subjects)`;
+
+          // Fetch saved attendance to merge
+          fetch('/api/attendance/me', { credentials: 'include' })
+            .then(r2 => r2.json())
+            .then(myAtt => {
+              if (!Array.isArray(myAtt)) myAtt = [];
+              const attMap = {};
+              myAtt.forEach(a => { attMap[a.id] = a; });
+              subjectsData = subjects.map(s => ({
+                id: s.id, name: s.name,
+                conducted: attMap[s.id]?.conducted || 0,
+                attended:  attMap[s.id]?.attended  || 0
+              }));
+              buildSubjects();
+              subjectsData.forEach(updateSubjectView);
+              updateOverall();
+            })
+            .catch(() => {
+              subjectsData = subjects.map(s => ({ id: s.id, name: s.name, conducted: 0, attended: 0 }));
+              buildSubjects();
+              subjectsData.forEach(updateSubjectView);
+              updateOverall();
+            });
+        })
+        .catch(() => {
+          if (attLoadBtn) { attLoadBtn.textContent = 'Load Subjects'; attLoadBtn.disabled = false; }
+        });
+    }
+
+    function loadAttendanceFromApi() {
+      const branch = document.getElementById('addSubBranch')?.value || (currentUser?.branch || '');
+      const sem    = document.getElementById('addSubSemester')?.value || (currentUser?.semester || 1);
+      if (branch) {
+        loadSubjectsForBranchSem(branch, sem);
+      } else {
+        subjectsData = [];
+        buildSubjects();
+        updateOverall();
+      }
+    }
+
+    function buildSubjects() {
+      if (!subjectListEl) return;
+      subjectListEl.innerHTML = '';
+      Object.keys(subjectViews).forEach(k => delete subjectViews[k]);
+
+      if (!subjectsData.length) {
+        subjectListEl.innerHTML = '<div style="padding:16px;color:rgba(255,255,255,0.45);font-size:14px;">Select branch and semester above, then click Load Subjects.</div>';
+        return;
+      }
+
+      subjectsData.forEach(sub => {
+        const row = document.createElement('div');
+        row.className = 'subject-row';
+        row.innerHTML = `
+          <div class="subject-header" style="display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;">
+            <span class="subject-name" style="flex:1;font-weight:600;">${sub.name}</span>
+            <div class="bar-wrap" style="width:80px;height:6px;border-radius:99px;background:rgba(255,255,255,0.08);overflow:hidden;">
+              <div class="bar-fill" style="height:100%;border-radius:99px;width:0%;background:#22c55e;transition:width .3s ease,background .3s ease;"></div>
+            </div>
+            <span class="pct-label" style="font-size:13px;font-weight:700;width:40px;text-align:right;">--%</span>
+          </div>
+          <div class="subject-body" style="display:none;padding:0 16px 14px;gap:16px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:140px;">
+              <div class="stepper-label">Classes Conducted</div>
+              <div class="stepper-ctrl">
+                <button class="stepper-btn step-minus" type="button">&#8722;</button>
+                <input class="stepper-input step-input-conducted" type="number" min="0" value="${sub.conducted}" style="width:70px;text-align:center;">
+                <button class="stepper-btn step-plus"  type="button">+</button>
+              </div>
+            </div>
+            <div style="flex:1;min-width:140px;">
+              <div class="stepper-label">Classes Attended</div>
+              <div class="stepper-ctrl">
+                <button class="stepper-btn step-minus" type="button">&#8722;</button>
+                <input class="stepper-input step-input-attended" type="number" min="0" value="${sub.attended}" style="width:70px;text-align:center;">
+                <button class="stepper-btn step-plus"  type="button">+</button>
+              </div>
+            </div>
+            <div class="chip-row">
+              <div class="chip"><i class="ph ph-arrow-up"></i><span>Need </span><span class="num attend-num">0</span></div>
+              <div class="chip"><i class="ph ph-arrow-down"></i><span>Can skip </span><span class="num skip-num">0</span></div>
+            </div>
+          </div>`;
+
+        // Toggle expand
+        const header  = row.querySelector('.subject-header');
+        const body    = row.querySelector('.subject-body');
+        header.addEventListener('click', () => {
+          const open = row.classList.toggle('open');
+          body.style.display = open ? 'flex' : 'none';
+        });
+
+        const barFill   = row.querySelector('.bar-fill');
+        const pctLabel  = row.querySelector('.pct-label');
+        const inputCond = row.querySelector('.step-input-conducted');
+        const inputAtt  = row.querySelector('.step-input-attended');
+        const minusBtns = row.querySelectorAll('.step-minus');
+        const plusBtns  = row.querySelectorAll('.step-plus');
+        const attendNum = row.querySelector('.attend-num');
+        const skipNum   = row.querySelector('.skip-num');
+
+        subjectViews[sub.id] = { row, barFill, pctLabel, inputCond, inputAtt, attendNum, skipNum };
+
+        function applyChange() {
+          let c = Math.max(0, parseInt(inputCond.value || '0', 10) || 0);
+          let a = Math.max(0, parseInt(inputAtt.value  || '0', 10) || 0);
+          sub.conducted = Math.max(c, a);
+          sub.attended  = Math.min(a, sub.conducted);
+          inputCond.value = sub.conducted;
+          inputAtt.value  = sub.attended;
+          updateSubjectView(sub);
+          updateOverall();
+          if (currentUser && !currentUser._isGuest && window.unicloud) {
+            window.unicloud.put('/api/attendance', { subject_id: sub.id, conducted: sub.conducted, attended: sub.attended }).catch(() => {});
+          }
+        }
+
+        inputCond.addEventListener('input', applyChange);
+        inputAtt.addEventListener('input',  applyChange);
+        minusBtns[0].addEventListener('click', e => { e.stopPropagation(); inputCond.value = Math.max(0, parseInt(inputCond.value||'0',10)-1); applyChange(); });
+        plusBtns[0].addEventListener('click',  e => { e.stopPropagation(); inputCond.value = Math.max(0, parseInt(inputCond.value||'0',10)+1); applyChange(); });
+        minusBtns[1].addEventListener('click', e => { e.stopPropagation(); inputAtt.value  = Math.max(0, parseInt(inputAtt.value||'0',10)-1);  applyChange(); });
+        plusBtns[1].addEventListener('click',  e => { e.stopPropagation(); inputAtt.value  = Math.max(0, parseInt(inputAtt.value||'0',10)+1);  applyChange(); });
+
+        subjectListEl.appendChild(row);
+      });
+    }
+
+    function updateSubjectView(sub) {
+      const req  = clamp(parseFloat(requiredPctInput?.value || '75'), 0, 100);
+      const view = subjectViews[sub.id];
+      if (!view) return;
+      const p     = pct(sub.attended, sub.conducted);
+      const state = riskState(p, req);
+      const color = stateColor(state);
+
+      view.barFill.style.width      = `${clamp(p, 0, 100)}%`;
+      view.barFill.style.background = color;
+      view.pctLabel.textContent     = sub.conducted <= 0 ? '--%' : `${Math.round(p)}%`;
+
+      const toAtt  = classesToAttendToReach(sub.attended, sub.conducted, req);
+      const canSkp = classesCanSkipNow(sub.attended, sub.conducted, req);
+      if (view.attendNum) view.attendNum.textContent = Number.isFinite(toAtt)  ? String(toAtt)  : '∞';
+      if (view.skipNum)   view.skipNum.textContent   = canSkp === Infinity     ? '∞'            : String(canSkp);
+    }
+
+    function updateOverall() {
+      const req = clamp(parseFloat(requiredPctInput?.value || '75'), 0, 100);
+      if (overallRefLabel) overallRefLabel.textContent = `Required ${Math.round(req)}%`;
+
+      let totalAtt = 0, totalCond = 0;
+      subjectsData.forEach(s => { totalAtt += s.attended; totalCond += s.conducted; });
+
+      const perWeek  = clamp(parseInt(classesPerWeekEl?.value || '3', 10) || 3, 1, 10);
+      const weeks    = clamp(parseInt(weeksRemainingEl?.value || '10', 10) || 10, 1, 20);
+      if (classesPerWeekValEl) classesPerWeekValEl.textContent = String(perWeek);
+      if (weeksRemainingValEl) weeksRemainingValEl.textContent = String(weeks);
+
+      const remaining  = perWeek * weeks;
+      const simActive  = simPanel && simPanel.classList.contains('open');
+      const pDisplay   = simActive ? pct(totalAtt + remaining, totalCond + remaining) : pct(totalAtt, totalCond);
+      const state      = riskState(pDisplay, req);
+      const color      = stateColor(state);
+
+      if (overallStateLabel) { overallStateLabel.textContent = state === 'DANGER' ? 'AT RISK' : state; overallStateLabel.style.color = color; }
+      if (overallPctLabel)   overallPctLabel.textContent = totalCond <= 0 ? '—' : `${Math.round(pDisplay)}%`;
+      if (overallStroke) {
+        overallStroke.style.stroke = color;
+        overallStroke.style.strokeDasharray  = OVERALL_CIRC.toFixed(2);
+        overallStroke.style.strokeDashoffset = (OVERALL_CIRC * (1 - clamp(pDisplay,0,100)/100)).toFixed(2);
+      }
+
+      const noteEl = document.getElementById('overallNote');
+      if (noteEl && totalCond > 0) {
+        const toGo   = classesToAttendToReach(totalAtt, totalCond, req);
+        const canSkp = classesCanSkipNow(totalAtt, totalCond, req);
+        if (state === 'SAFE')
+          noteEl.innerHTML = `<span style="color:#22c55e;font-weight:700;">✅ You're safe!</span> You can skip up to <b>${canSkp}</b> more class${canSkp !== 1 ? 'es' : ''} and stay above ${Math.round(req)}%.`;
+        else if (state === 'WARNING')
+          noteEl.innerHTML = `<span style="color:#eab308;font-weight:700;"><i class="ph ph-warning"></i> Warning!</span> Very close to minimum. Attend the next <b>${toGo}</b> class${toGo !== 1 ? 'es' : ''} without missing any.`;
+        else
+          noteEl.innerHTML = `<span style="color:#ef4444;font-weight:700;"><i class="ph ph-warning-circle"></i> At Risk!</span> Attend at least <b>${toGo}</b> consecutive class${toGo !== 1 ? 'es' : ''} to reach ${Math.round(req)}%.`;
+      } else if (noteEl) {
+        noteEl.textContent = 'Select branch & semester above, then enter classes for each subject.';
+      }
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       SAVED RESOURCES
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    function renderSavedResources() {
+      if (!savedListEl) return;
+      savedListEl.innerHTML = '<div style="padding:16px;color:rgba(255,255,255,0.4);">Loading…</div>';
+
+      if (!window.unicloud || (currentUser && currentUser._isGuest)) {
+        savedListEl.innerHTML = '<div class="subject-row"><div style="padding:14px;color:rgba(255,255,255,0.45);">Sign in to see saved resources.</div></div>';
+        return;
+      }
+
+      window.unicloud.get('/api/saved').then(list => {
+        savedListEl.innerHTML = '';
+        if (!Array.isArray(list) || !list.length) {
+          savedListEl.innerHTML = '<div class="subject-row"><div style="padding:14px;color:rgba(255,255,255,0.45);">No saved resources yet. Browse subjects and save PDFs.</div></div>';
+          return;
+        }
+        list.forEach(item => {
+          const row = document.createElement('div');
+          row.className = 'subject-row';
+          row.innerHTML = `<div class="subject-header" style="display:flex;align-items:center;gap:10px;padding:14px 16px;">
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:14px;">${item.name}</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:2px;">${item.subject} — ${item.resource_type}</div>
+            </div>
+            <a href="${item.link}" target="_blank" rel="noopener" style="padding:7px 14px;border-radius:999px;background:linear-gradient(90deg,rgba(160,120,255,0.32),rgba(140,100,220,0.28));color:#fff;font-size:12px;font-weight:600;text-decoration:none;">Open</a>
+            <button class="rem-btn" type="button" style="padding:7px 14px;border-radius:999px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:rgba(252,165,165,0.9);font-size:12px;cursor:pointer;">Remove</button>
+          </div>`;
+          row.querySelector('.rem-btn').addEventListener('click', () => {
+            window.unicloud.del('/api/saved/' + item.id).then(() => renderSavedResources()).catch(() => {});
+          });
+          savedListEl.appendChild(row);
+        });
+      }).catch(() => {
+        savedListEl.innerHTML = '<div class="subject-row"><div style="padding:14px;color:rgba(255,255,255,0.45);">Sign in to see saved resources.</div></div>';
+      });
+    }
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       ATTENDANCE TAB RANGE INPUTS
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    if (subjectListEl && requiredPctInput) {
+      requiredPctInput.addEventListener('input', () => { subjectsData.forEach(updateSubjectView); updateOverall(); });
+    }
+    if (classesPerWeekEl) classesPerWeekEl.addEventListener('input', updateOverall);
+    if (weeksRemainingEl) weeksRemainingEl.addEventListener('input', updateOverall);
+    if (simToggle) simToggle.addEventListener('click', () => { simPanel.classList.toggle('open'); updateOverall(); });
+
+    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       INIT
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    const initialHash = window.location.hash.replace('#', '');
+
+    loadUser().then(() => loadBranches()).then(() => {
+      refreshProfileView();
+      updateGoogleConnectStatus();
+      buildSubjects();
+      updateOverall();
+      renderSavedResources();
+
+      if      (initialHash === 'attendance') { setView('attendance'); loadAttendanceFromApi(); }
+      else if (initialHash === 'saved')      { setView('saved');      renderSavedResources(); }
+      else if (initialHash === 'settings')   { setView('settings');   refreshSettingsFields(); updateGoogleConnectStatus(); }
+      else if (initialHash === 'timetable')  { setView('timetable'); }
+      else if (initialHash === 'qa')         { setView('qa'); }
+      else if (initialHash === 'reviews')    { setView('reviews'); }
+      else                                   { setView('profile'); }
+    });
+  </script>
+  <script>
+  /* â”€â”€ THEME â”€â”€ */
+  const _themeBtn   = document.getElementById('themeToggle');
+  const _themeIcon  = document.getElementById('themeIcon');
+  const _themeLabel = document.getElementById('themeLabel');
+  let _isDark = localStorage.getItem('unicloudTheme') !== 'light';
+  function _applyTheme() {
+    document.body.classList.toggle('light', !_isDark);
+    _themeIcon.className   = _isDark ? 'ph ph-sun' : 'ph ph-moon';
+    _themeLabel.textContent = _isDark ? 'Light Mode' : 'Dark Mode';
+    const mobileThemeIcon = document.getElementById('mobileThemeIcon');
+    if (mobileThemeIcon) mobileThemeIcon.className = _isDark ? 'ph ph-sun' : 'ph ph-moon';
+    localStorage.setItem('unicloudTheme', _isDark ? 'dark' : 'light');
+  }
+  _applyTheme();
+  _themeBtn?.addEventListener('click', () => { _isDark = !_isDark; _applyTheme(); });
+  document.getElementById('mobileThemeBtn')?.addEventListener('click', () => { _isDark = !_isDark; _applyTheme(); });
+
+  /* â”€â”€ NOTIFICATIONS â”€â”€ */
+  const _notifyBtn   = document.getElementById('notifyToggle');
+  const _notifyIcon  = document.getElementById('notifyIcon');
+  const _notifyLabel = document.getElementById('notifyLabel');
+  let _notifOn = localStorage.getItem('unicloudNotif') === 'on';
+  function _applyNotif() {
+    _notifyIcon.className   = _notifOn ? 'ph ph-bell-slash' : 'ph ph-bell';
+    _notifyLabel.textContent = _notifOn ? 'Disable Alerts' : 'Enable Alerts';
+    const mobileNotifyIcon = document.getElementById('mobileNotifyIcon');
+    if (mobileNotifyIcon) mobileNotifyIcon.className = _notifOn ? 'ph ph-bell-slash' : 'ph ph-bell';
+  }
+  _applyNotif();
+  async function _checkAttendance() {
+    if (!_notifOn || !window.unicloud || Notification.permission !== 'granted') return;
+    const data = await window.unicloud.get('/api/attendance/me').catch(() => null);
+    if (!Array.isArray(data)) return;
+    const low = data.filter(s => s.conducted > 0 && (s.attended / s.conducted) * 100 < 75);
+    if (low.length > 0) {
+      new Notification('Low Attendance — uniCLOUD', {
+        body: low.map(s => s.name + ': ' + Math.round((s.attended/s.conducted)*100) + '%').join(', '),
+        icon: '/logo.png'
+      });
+    }
+  }
+  _notifyBtn?.addEventListener('click', async () => {
+    if (_notifOn) { _notifOn = false; localStorage.setItem('unicloudNotif','off'); _applyNotif(); return; }
+    const perm = await Notification.requestPermission();
+    if (perm !== 'granted') { alert('Please allow notifications in your browser.'); return; }
+    _notifOn = true; localStorage.setItem('unicloudNotif','on'); _applyNotif(); _checkAttendance();
+  });
+  document.getElementById('mobileNotifyBtn')?.addEventListener('click', () => _notifyBtn?.click());
+  if (_notifOn && Notification.permission === 'granted') _checkAttendance();
+
+  /* â”€â”€ TIMETABLE â”€â”€ */
+  const _DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat'];
+  const _DAY_FULL = { Mon:'Monday', Tue:'Tuesday', Wed:'Wednesday', Thu:'Thursday', Fri:'Friday', Sat:'Saturday' };
+  let _ttData = [];
+  let _ttNotifiedKeys = new Set();
+
+  function _ttLoadingHtml() {
+    return '<div class="loading-state"><span class="loading-spinner"></span> Loading schedule…</div>';
+  }
+
+  function _loadTTNotifiedKeys() {
+    try {
+      const raw = JSON.parse(localStorage.getItem('unicloudTTNotified') || '{}');
+      const today = new Date().toISOString().slice(0, 10);
+      if (raw.date === today && Array.isArray(raw.keys)) {
+        _ttNotifiedKeys = new Set(raw.keys);
+      } else {
+        _ttNotifiedKeys = new Set();
+      }
+    } catch {
+      _ttNotifiedKeys = new Set();
+    }
+  }
+
+  function _saveTTNotifiedKeys() {
+    localStorage.setItem('unicloudTTNotified', JSON.stringify({
+      date: new Date().toISOString().slice(0, 10),
+      keys: [..._ttNotifiedKeys]
+    }));
+  }
+
+  function _ttReminderKey(c) {
+    return `${new Date().toISOString().slice(0, 10)}|${c.id}|${c.time}`;
+  }
+
+  function _checkClassReminders() {
+    if (!_notifOn || !window.unicloud || Notification.permission !== 'granted') return;
+    if (!_ttData.length) return;
+    _loadTTNotifiedKeys();
+
+    const now = new Date();
+    const todayKey = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][now.getDay()];
+    const targetMs = now.getTime() + 10 * 60 * 1000;
+
+    for (const c of _ttData) {
+      if (c.day !== todayKey) continue;
+      const key = _ttReminderKey(c);
+      if (_ttNotifiedKeys.has(key)) continue;
+
+      const [h, m] = c.time.split(':').map(Number);
+      const classMs = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0).getTime();
+      const diff = classMs - targetMs;
+      if (diff >= 0 && diff < 60 * 1000) {
+        new Notification('Class in 10 minutes — uniCLOUD', {
+          body: `${c.subject}${c.room ? ' · Room ' + c.room : ''} at ${c.time}`,
+          icon: '/logo.png'
+        });
+        _ttNotifiedKeys.add(key);
+        _saveTTNotifiedKeys();
+      }
+    }
+  }
+
+  _loadTTNotifiedKeys();
+  setInterval(_checkClassReminders, 60 * 1000);
+  setTimeout(_checkClassReminders, 3000);
+
+  async function loadTimetable() {
+    if (!window.unicloud) return;
+    const grid = document.getElementById('ttGrid');
+    const todayEl = document.getElementById('todayClasses');
+    if (grid) grid.innerHTML = _ttLoadingHtml();
+    if (todayEl) todayEl.innerHTML = _ttLoadingHtml();
+    const data = await window.unicloud.get('/api/timetable').catch(() => []);
+    _ttData = Array.isArray(data) ? data : [];
+    _renderToday();
+    _renderWeek();
+  }
+
+  function _ttTimeLabel(c) {
+    return c.end_time ? `${c.time} – ${c.end_time}` : c.time;
+  }
+
+  function _ttActionBtns(id) {
+    return `
+      <button class="tt-edit" onclick="_editTT(${id})" title="Edit" aria-label="Edit class"><i class="ph ph-pencil-simple"></i></button>
+      <button class="tt-del" onclick="_delTT(${id})" title="Delete" aria-label="Delete class"><i class="ph ph-trash"></i></button>`;
+  }
+
+  function _renderToday() {
+    const jsDay = new Date().getDay();
+    const todayKey = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][jsDay];
+    const todayEl  = document.getElementById('todayName');
+    const listEl   = document.getElementById('todayClasses');
+    if (todayEl) todayEl.textContent = _DAY_FULL[todayKey] || 'Sunday';
+    if (!listEl) return;
+    const classes = _ttData.filter(c => c.day === todayKey).sort((a,b) => a.time.localeCompare(b.time));
+    if (classes.length === 0) {
+      listEl.innerHTML = '<div style="color:rgba(255,255,255,0.35);font-size:14px;padding:4px 0;">No classes today</div>';
+      return;
+    }
+    listEl.innerHTML = classes.map(c => `
+      <div class="tt-today-card">
+        <div class="tt-today-time">${_ttTimeLabel(c)}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="tt-today-subj">${escHtml(c.subject)}</div>
+          ${c.room ? `<div class="tt-today-room"><i class="ph ph-map-pin" style="margin-right:3px;"></i>${escHtml(c.room)}</div>` : ''}
+        </div>
+        <div class="tt-today-actions">${_ttActionBtns(c.id)}</div>
+      </div>`).join('');
+  }
+
+  function _renderSlotHtml(s) {
+    return `
+      <div class="tt-slot">
+        <div class="tt-time">${_ttTimeLabel(s)}</div>
+        <div class="tt-subj">${escHtml(s.subject)}</div>
+        ${s.room ? `<div class="tt-room">${escHtml(s.room)}</div>` : ''}
+        ${_ttActionBtns(s.id)}
+      </div>`;
+  }
+
+  function _renderWeek() {
+    const grid = document.getElementById('ttGrid');
+    const jsDay = new Date().getDay();
+    const todayKey = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][jsDay];
+
+    if (!grid) return;
+    grid.innerHTML = _DAYS.map(day => {
+      const slots = _ttData.filter(c => c.day === day).sort((a,b) => a.time.localeCompare(b.time));
+      const isToday = day === todayKey;
+      return `
+        <div class="tt-day-col${isToday ? ' today' : ''}">
+          <div class="tt-day-header">${day}</div>
+          ${slots.length === 0
+            ? '<div style="text-align:center;padding:10px 0;font-size:11px;color:rgba(255,255,255,0.18);">—</div>'
+            : slots.map(_renderSlotHtml).join('')}
+        </div>`;
+    }).join('');
+  }
+
+  let _ttDeleteId = null;
+
+  function _delTT(id) {
+    _ttDeleteId = id;
+    document.getElementById('ttDeleteModal')?.classList.add('open');
+  }
+
+  async function _confirmDelTT() {
+    const id = _ttDeleteId;
+    if (!id) return;
+    const btn = document.getElementById('ttDeleteConfirm');
+    if (btn) { btn.textContent = 'Deleting…'; btn.disabled = true; }
+    try {
+      const res = await window.unicloud.del('/api/timetable/' + id).catch(() => null);
+      if (res?.error) {
+        showToast('Could not delete: ' + res.error, 'error');
+        return;
+      }
+      _ttData = _ttData.filter(c => c.id !== id);
+      _renderToday();
+      _renderWeek();
+      document.getElementById('ttDeleteModal')?.classList.remove('open');
+      _ttDeleteId = null;
+    } finally {
+      if (btn) { btn.textContent = 'Delete'; btn.disabled = false; }
+    }
+  }
+
+  document.getElementById('ttDeleteCancel')?.addEventListener('click', () => {
+    _ttDeleteId = null;
+    document.getElementById('ttDeleteModal')?.classList.remove('open');
+  });
+  document.getElementById('ttDeleteConfirm')?.addEventListener('click', _confirmDelTT);
+  document.getElementById('ttDeleteModal')?.addEventListener('click', (e) => {
+    if (e.target.id === 'ttDeleteModal') {
+      _ttDeleteId = null;
+      e.target.classList.remove('open');
+    }
+  });
+
+  function _editTT(id) {
+    const entry = _ttData.find(c => c.id === id);
+    if (!entry) return;
+    document.getElementById('ttEditId').value = id;
+    document.getElementById('ttEditDay').value = entry.day;
+    document.getElementById('ttEditTime').value = entry.time;
+    document.getElementById('ttEditEndTime').value = entry.end_time || '';
+    document.getElementById('ttEditSubject').value = entry.subject;
+    document.getElementById('ttEditRoom').value = entry.room || '';
+    document.getElementById('ttEditModal')?.classList.add('open');
+  }
+
+  document.getElementById('ttEditCancel')?.addEventListener('click', () => {
+    document.getElementById('ttEditModal')?.classList.remove('open');
+  });
+
+  document.getElementById('ttEditModal')?.addEventListener('click', (e) => {
+    if (e.target.id === 'ttEditModal') e.target.classList.remove('open');
+  });
+
+  document.getElementById('ttEditSave')?.addEventListener('click', async () => {
+    const id = parseInt(document.getElementById('ttEditId').value, 10);
+    const day = document.getElementById('ttEditDay').value;
+    const time = document.getElementById('ttEditTime').value;
+    const end_time = document.getElementById('ttEditEndTime').value;
+    const subject = document.getElementById('ttEditSubject').value.trim();
+    const room = document.getElementById('ttEditRoom').value.trim();
+    if (!time || !subject) { alert('Start time and subject are required.'); return; }
+    const btn = document.getElementById('ttEditSave');
+    btn.textContent = 'Saving…'; btn.disabled = true;
+    try {
+      const updated = await window.unicloud.put('/api/timetable/' + id, { day, time, end_time, subject, room }).catch(() => null);
+      if (updated?.error) { alert('Could not save: ' + updated.error); return; }
+      if (updated?.id) {
+        const idx = _ttData.findIndex(c => c.id === id);
+        if (idx >= 0) _ttData[idx] = updated;
+        _renderToday(); _renderWeek();
+        document.getElementById('ttEditModal')?.classList.remove('open');
+      }
+    } finally {
+      btn.textContent = 'Save'; btn.disabled = false;
+    }
+  });
+
+  document.getElementById('ttAddBtn')?.addEventListener('click', async () => {
+    const day     = document.getElementById('ttDay').value;
+    const time    = document.getElementById('ttTime').value;
+    const end_time = document.getElementById('ttEndTime').value;
+    const subject = document.getElementById('ttSubject').value.trim();
+    const room    = document.getElementById('ttRoom').value.trim();
+    if (!time) { alert('Please select a start time.'); return; }
+    if (!subject) { alert('Please enter a subject name.'); return; }
+    const btn = document.getElementById('ttAddBtn');
+    btn.textContent = 'Adding…'; btn.disabled = true;
+    try {
+      const entry = await window.unicloud.post('/api/timetable', { day, time, end_time, subject, room });
+      if (entry && entry.id) {
+        _ttData.push(entry);
+        _renderToday(); _renderWeek();
+        document.getElementById('ttSubject').value = '';
+        document.getElementById('ttRoom').value    = '';
+        document.getElementById('ttTime').value    = '';
+        document.getElementById('ttEndTime').value = '';
+      } else if (entry && entry.error) {
+        alert('Could not add: ' + entry.error);
+      }
+    } catch(e) {
+      alert('Failed to add class. Are you logged in?');
+    } finally {
+      btn.textContent = '+ Add'; btn.disabled = false;
+    }
+  });
+
+  document.querySelectorAll('.nav-item[data-nav="timetable"]').forEach(item => {
+    item.addEventListener('click', () => loadTimetable());
+  });
+
+  (async () => {
+    const user = await window.unicloud?.checkAuth();
+    if (user) await loadTimetable();
+  })();
+
+  /* ── Q&A ── */
+  let _qaSubject = '', _qaBranch = '', _qaQuestions = [];
+
+  async function _loadQA() {
+    _qaSubject = document.getElementById('qaSubjectInput').value.trim();
+    _qaBranch  = document.getElementById('qaBranchInput').value.trim();
+    if (!_qaSubject) { alert('Enter a subject name.'); return; }
+    const list = document.getElementById('qaList');
+    if (list) list.innerHTML = '<div class="loading-state"><span class="loading-spinner"></span> Loading questions…</div>';
+    const btn = document.getElementById('qaLoadBtn');
+    if (btn) { btn.textContent = 'Loading…'; btn.disabled = true; }
+    try {
+      const data = await window.unicloud.get('/api/qa?subject=' + encodeURIComponent(_qaSubject) + '&branch=' + encodeURIComponent(_qaBranch)).catch(() => []);
+      _qaQuestions = Array.isArray(data) ? data : [];
+      _renderQA();
+    } finally {
+      if (btn) { btn.textContent = 'Load'; btn.disabled = false; }
+    }
+  }
+
+  function _renderQA() {
+    const list = document.getElementById('qaList');
+    if (!list) return;
+    if (_qaQuestions.length === 0) {
+      list.innerHTML = '<div style="color:rgba(255,255,255,0.35);font-size:14px;">No questions yet — be the first!</div>';
+      return;
+    }
+    list.innerHTML = _qaQuestions.map(q => `
+      <div style="padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.06);" id="q-${q.id}">
+        <div style="font-size:15px;font-weight:700;margin-bottom:6px;">${escHtml(q.content)}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:10px;">${new Date(q.created_at).toLocaleDateString()} · ${q.answer_count} answer${q.answer_count!=1?'s':''}</div>
+        <div id="ans-${q.id}" style="padding-left:14px;border-left:2px solid rgba(160,120,255,0.3);margin-bottom:10px;"></div>
+        <div style="display:flex;gap:8px;">
+          <input id="ansInput-${q.id}" type="text" placeholder="Answer anonymously…" style="flex:1;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.08);color:#fff;outline:none;font-size:13px;font-family:Montserrat,sans-serif;">
+          <button onclick="_postAnswer(${q.id})" style="padding:8px 14px;border-radius:10px;border:none;background:rgba(160,120,255,0.3);color:#e9d5ff;font-size:12px;font-weight:700;cursor:pointer;font-family:Montserrat,sans-serif;">Post</button>
+          <button onclick="_loadAnswers(${q.id})" style="padding:8px 12px;border-radius:10px;border:none;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.4);font-size:12px;cursor:pointer;font-family:Montserrat,sans-serif;">Show</button>
+        </div>
+      </div>`).join('');
+  }
+
+  async function _loadAnswers(qid) {
+    const data = await window.unicloud.get('/api/qa/' + qid + '/answers').catch(() => []);
+    const el = document.getElementById('ans-' + qid);
+    if (!el) return;
+    if (!data?.length) { el.innerHTML = '<div style="color:rgba(255,255,255,0.3);font-size:13px;">No answers yet.</div>'; return; }
+    el.innerHTML = data.map(a => `<div style="margin-bottom:8px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.03);font-size:13px;">${escHtml(a.content)}<span style="display:block;font-size:10px;color:rgba(255,255,255,0.2);margin-top:3px;">${new Date(a.created_at).toLocaleDateString()}</span></div>`).join('');
+  }
+
+  async function _postAnswer(qid) {
+    const input = document.getElementById('ansInput-' + qid);
+    const content = input?.value.trim();
+    if (!content) return;
+    await window.unicloud.post('/api/qa/' + qid + '/answers', {content}).catch(() => null);
+    input.value = '';
+    _loadAnswers(qid);
+  }
+
+  async function _postQuestion() {
+    const content = document.getElementById('qaQuestion').value.trim();
+    if (!content || !_qaSubject) { alert('Load a subject first, then type a question.'); return; }
+    const q = await window.unicloud.post('/api/qa', {subject: _qaSubject, branch: _qaBranch, content}).catch(() => null);
+    if (q?.id) { _qaQuestions.unshift(q); _renderQA(); document.getElementById('qaQuestion').value = ''; }
+  }
+
+  function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+  document.getElementById('qaLoadBtn')?.addEventListener('click', _loadQA);
+  document.getElementById('qaAskBtn')?.addEventListener('click', _postQuestion);
+  </script>
+
+</body>
+</html>
+
+
