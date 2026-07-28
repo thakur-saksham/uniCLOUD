@@ -1607,6 +1607,7 @@
 
     /* LOGOUT */
     function logout() {
+      sessionStorage.removeItem('intro_done');
       if (window.unicloud) {
         window.unicloud.logout();
       } else {
@@ -1698,9 +1699,10 @@
           }
         }
 
-        if (currentUser && currentUser.intro_seen) {
+        if (currentUser && (currentUser.intro_seen || sessionStorage.getItem('intro_done'))) {
           intro.remove();
         } else {
+          sessionStorage.setItem('intro_done', '1');
           runIntro();
         }
       }).catch(() => { window.location.href = '/login.html'; });
