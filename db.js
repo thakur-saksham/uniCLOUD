@@ -6,7 +6,7 @@ require('dotenv').config({ path: '.env' });
 const bcrypt = require('bcryptjs');
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://postgres:[YOUR-PASSWORD]@db.xxxx.supabase.co:5432/postgres',
+  connectionString: process.env.DATABASE_URL?.includes('pooler') ? process.env.DATABASE_URL : 'postgresql://postgres.gjejqgqnlnqbckwzagov:sakshamandshaurya@aws-0-ap-south-1.pooler.supabase.com:6543/postgres',
   ssl: { rejectUnauthorized: false }
 });
 
