@@ -544,30 +544,7 @@ app.delete('/api/reviews/:id', requireAuth, async (req, res) => {
 // ═══════════════════════════════════════════════════════════════
 //  Q&A ROUTES
 // ═══════════════════════════════════════════════════════════════
-db.exec(`
-  CREATE TABLE IF NOT EXISTS qa_questions (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    subject    TEXT NOT NULL,
-    branch     TEXT NOT NULL DEFAULT '',
-    content    TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  );
-  CREATE TABLE IF NOT EXISTS qa_answers (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    question_id INTEGER NOT NULL REFERENCES qa_questions(id) ON DELETE CASCADE,
-    content     TEXT NOT NULL,
-    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
-  );
-  CREATE TABLE IF NOT EXISTS timetable (
-    id       INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    day      TEXT NOT NULL,
-    time     TEXT NOT NULL,
-    end_time TEXT DEFAULT '',
-    subject  TEXT NOT NULL,
-    room     TEXT DEFAULT ''
-  );
-`);
+
 
 
 // ── MIGRATE: remove UNIQUE constraint from timetable ──────────────────────
