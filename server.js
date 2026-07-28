@@ -132,15 +132,15 @@ const USER_COLS = `id, email, full_name, student_id, branch, semester,
                    academic_year, phone, profile_picture_url,
                    intro_seen, default_branch, default_semester, google_id`;
 
-function getUser(id)    { return db.prepare(`SELECT ${USER_COLS} FROM users WHERE id = ?`).get(id); }
-function getByEmail(em) { return db.prepare(`SELECT ${USER_COLS} FROM users WHERE email = ?`).get(em.trim().toLowerCase()); }
+async function getUser(id) { return (await db.query(`SELECT ${USER_COLS} FROM users WHERE id = ?`, [id])).rows[0]; }
+async function getByEmail(em) { return (await db.query(`SELECT ${USER_COLS} FROM users WHERE email = ?`, [em.trim().toLowerCase()])).rows[0]; }
 
 // ═══════════════════════════════════════════════════════════════
 //  AUTH ROUTES
 // ═══════════════════════════════════════════════════════════════
 
 // ── POST /auth/signup ─────────────────────────────────────────
-app.post('/auth/signup', (req, res) => {
+app.post('/auth/signup', async (req, res) => {
   const {
     email, password, full_name, student_id,
     branch, semester, academic_year, phone
@@ -159,22 +159,20 @@ app.post('/auth/signup', (req, res) => {
   const hash = bcrypt.hashSync(password, 12);
 
   try {
-    db.prepare(
+    (await db.query(
       `INSERT INTO users
          (email, password_hash, full_name, student_id, branch, semester, academic_year, phone)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-    ).run(
-      email.trim().toLowerCase(),
+    , [email.trim().toLowerCase(),
       hash,
       full_name    || null,
       student_id   || null,
       branch       || null,
       semester     ? parseInt(semester, 10) : 1,
       academic_year || null,
-      phone        || null
-    );
+      phone        || null]));
 
-    const user = getByEmail(email);
+    const user = await getByEmail(email);
     req.session.userId = user.id;
     req.session.save(() => res.status(201).json({ user }));
   } catch (e) {
@@ -186,25 +184,25 @@ app.post('/auth/signup', (req, res) => {
 });
 
 // ── POST /auth/login ──────────────────────────────────────────
-app.post('/auth/login', (req, res) => {
+app.post('/auth/login', async (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password)
     return res.status(400).json({ error: 'Email and password are required.' });
 
-  const row = db.prepare(
+  const row = (await db.query(
     `SELECT id, password_hash FROM users WHERE email = ?`
-  ).get(email.trim().toLowerCase());
+  , [email.trim().toLowerCase()])).rows[0];
 
   if (!row || !bcrypt.compareSync(password, row.password_hash))
     return res.status(401).json({ error: 'Incorrect password.' });
 
-  const user = getUser(row.id);
+  const user = await getUser(row.id);
   req.session.userId = user.id;
   req.session.save(() => res.json({ user }));
 });
 
 // ── POST /auth/logout ─────────────────────────────────────────
-app.post('/auth/logout', (req, res) => {
+app.post('/auth/logout', async (req, res) => {
   req.session.destroy(() => res.json({ ok: true }));
 });
 
@@ -215,19 +213,19 @@ async function signInWithGoogleToken(token) {
 
   if (!email) throw new Error('No email in Google token.');
 
-  let user = db.prepare(
+  let user = (await db.query(
     `SELECT id, google_id, email, profile_picture_url FROM users WHERE email = ? OR google_id = ?`
-  ).get(email.trim().toLowerCase(), googleId);
+  , [email.trim().toLowerCase(), googleId])).rows[0];
 
   if (!user) {
     const dummyHash = bcrypt.hashSync(Math.random().toString(36) + Date.now(), 10);
-    const info = db.prepare(
+    const info = (await db.query(
       `INSERT INTO users
          (email, password_hash, full_name, profile_picture_url, google_id, semester)
        VALUES (?, ?, ?, ?, ?, 1)`
-    ).run(email.trim().toLowerCase(), dummyHash, name || null, picture || null, googleId);
+    , [email.trim().toLowerCase(), dummyHash, name || null, picture || null, googleId]));
 
-    user = getUser(info.lastInsertRowid);
+    user = await getUser(info.rows[0]?.id);
   } else {
     const updates = [];
     const vals    = [];
@@ -238,10 +236,10 @@ async function signInWithGoogleToken(token) {
     }
     if (updates.length) {
       vals.push(user.id);
-      db.prepare(`UPDATE users SET ${updates.join(', ')} WHERE id = ?`).run(...vals);
-      user = getUser(user.id);
+      (await db.query(`UPDATE users SET ${updates.join(', ')} WHERE id = ?`, [...vals]));
+      user = await getUser(user.id);
     } else {
-      user = getUser(user.id);
+      user = await getUser(user.id);
     }
   }
 
@@ -281,9 +279,9 @@ app.post('/auth/google/callback', async (req, res) => {
 });
 
 // ── GET /auth/me ──────────────────────────────────────────────
-app.get('/auth/me', (req, res) => {
+app.get('/auth/me', async (req, res) => {
   if (!req.session?.userId) return res.json({ user: null });
-  const user = getUser(req.session.userId);
+  const user = await getUser(req.session.userId);
   res.json({ user: user || null });
 });
 
@@ -291,11 +289,11 @@ app.get('/auth/me', (req, res) => {
 //  USER / PROFILE ROUTES
 // ═══════════════════════════════════════════════════════════════
 
-app.get('/api/users/me', requireAuth, (req, res) => {
-  res.json(getUser(req.session.userId) || {});
+app.get('/api/users/me', requireAuth, async (req, res) => {
+  res.json(await getUser(req.session.userId) || {});
 });
 
-app.patch('/api/users/me', requireAuth, (req, res) => {
+app.patch('/api/users/me', requireAuth, async (req, res) => {
   const allowed = {
     full_name:           req.body.full_name,
     student_id:          req.body.student_id,
@@ -319,36 +317,36 @@ app.patch('/api/users/me', requireAuth, (req, res) => {
     }
   }
 
-  if (sets.length === 0) return res.json(getUser(req.session.userId));
+  if (sets.length === 0) return res.json(await getUser(req.session.userId));
 
   vals.push(req.session.userId);
-  db.prepare(`UPDATE users SET ${sets.join(', ')} WHERE id = ?`).run(...vals);
-  res.json(getUser(req.session.userId));
+  (await db.query(`UPDATE users SET ${sets.join(', ')} WHERE id = ?`, [...vals]));
+  res.json(await getUser(req.session.userId));
 });
 
 // legacy route used by profile.html
-app.get('/api/user/profile', requireAuth, (req, res) => {
-  res.json(getUser(req.session.userId) || {});
+app.get('/api/user/profile', requireAuth, async (req, res) => {
+  res.json(await getUser(req.session.userId) || {});
 });
-app.post('/api/user/update', requireAuth, (req, res) => {
+app.post('/api/user/update', requireAuth, async (req, res) => {
   const { name, email, branch, semester } = req.body || {};
   const sets = []; const vals = [];
   if (name)     { sets.push('full_name = ?'); vals.push(name); }
   if (email)    { sets.push('email = ?');     vals.push(email.trim().toLowerCase()); }
   if (branch)   { sets.push('branch = ?');    vals.push(branch); }
   if (semester) { sets.push('semester = ?');  vals.push(parseInt(semester, 10)); }
-  if (sets.length) { vals.push(req.session.userId); db.prepare(`UPDATE users SET ${sets.join(', ')} WHERE id = ?`).run(...vals); }
-  res.json(getUser(req.session.userId));
+  if (sets.length) { vals.push(req.session.userId); (await db.query(`UPDATE users SET ${sets.join(', ')} WHERE id = ?`, [...vals])); }
+  res.json(await getUser(req.session.userId));
 });
 
 // DELETE /api/users/me — permanently delete account
-app.delete('/api/users/me', requireAuth, (req, res) => {
+app.delete('/api/users/me', requireAuth, async (req, res) => {
   const uid = req.session.userId;
   try {
-    db.prepare('DELETE FROM attendance      WHERE user_id = ?').run(uid);
-    db.prepare('DELETE FROM saved_resources WHERE user_id = ?').run(uid);
-    db.prepare('DELETE FROM reviews         WHERE user_id = ?').run(uid);
-    db.prepare('DELETE FROM users           WHERE id = ?').run(uid);
+    (await db.query('DELETE FROM attendance      WHERE user_id = ?', [uid]));
+    (await db.query('DELETE FROM saved_resources WHERE user_id = ?', [uid]));
+    (await db.query('DELETE FROM reviews         WHERE user_id = ?', [uid]));
+    (await db.query('DELETE FROM users           WHERE id = ?', [uid]));
     req.session.destroy(() => res.json({ ok: true }));
   } catch (e) {
     console.error('Delete account error:', e);
@@ -360,21 +358,21 @@ app.delete('/api/users/me', requireAuth, (req, res) => {
 //  BRANCHES & SUBJECTS
 // ═══════════════════════════════════════════════════════════════
 
-app.get('/api/branches', (req, res) => {
-  res.json(db.prepare('SELECT id, name FROM branches ORDER BY name').all());
+app.get('/api/branches', async (req, res) => {
+  res.json((await db.query('SELECT id, name FROM branches ORDER BY name', [])).rows);
 });
 
-app.get('/api/subjects', (req, res) => {
+app.get('/api/subjects', async (req, res) => {
   const { branch, semester } = req.query;
   if (!branch) return res.status(400).json({ error: 'branch required' });
 
-  const b = db.prepare('SELECT id FROM branches WHERE name = ?').get(branch);
+  const b = (await db.query('SELECT id FROM branches WHERE name = ?', [branch])).rows[0];
   if (!b) return res.json([]);
 
   const sem = semester ? parseInt(semester, 10) : null;
   const rows = sem
-    ? db.prepare('SELECT id, name, semester FROM subjects WHERE branch_id = ? AND semester = ? ORDER BY name').all(b.id, sem)
-    : db.prepare('SELECT id, name, semester FROM subjects WHERE branch_id = ? ORDER BY semester, name').all(b.id);
+    ? (await db.query('SELECT id, name, semester FROM subjects WHERE branch_id = ? AND semester = ? ORDER BY name', [b.id, sem])).rows
+    : (await db.query('SELECT id, name, semester FROM subjects WHERE branch_id = ? ORDER BY semester, name', [b.id])).rows;
 
   res.json(rows);
 });
@@ -384,18 +382,17 @@ app.get('/api/subjects', (req, res) => {
 // ═══════════════════════════════════════════════════════════════
 
 // GET all attendance records for current user's branch+semester
-app.get('/api/attendance', requireAuth, (req, res) => {
+app.get('/api/attendance', requireAuth, async (req, res) => {
   const { branch, semester } = req.query;
   if (!branch || !semester) return res.status(400).json({ error: 'branch and semester required' });
 
-  const b = db.prepare('SELECT id FROM branches WHERE name = ?').get(branch);
+  const b = (await db.query('SELECT id FROM branches WHERE name = ?', [branch])).rows[0];
   if (!b) return res.json([]);
 
   const sem      = parseInt(semester, 10);
-  const subjects = db.prepare('SELECT id, name FROM subjects WHERE branch_id = ? AND semester = ? ORDER BY name').all(b.id, sem);
+  const subjects = (await db.query('SELECT id, name FROM subjects WHERE branch_id = ? AND semester = ? ORDER BY name', [b.id, sem])).rows;
   const attMap   = {};
-  db.prepare('SELECT subject_id, conducted, attended FROM attendance WHERE user_id = ?')
-    .all(req.session.userId)
+  (await db.query('SELECT subject_id, conducted, attended FROM attendance WHERE user_id = ?', [req.session.userId])).rows
     .forEach(a => { attMap[a.subject_id] = a; });
 
   res.json(subjects.map(s => ({
@@ -407,21 +404,21 @@ app.get('/api/attendance', requireAuth, (req, res) => {
 });
 
 // GET /api/attendance/me — all saved attendance rows for this user
-app.get('/api/attendance/me', requireAuth, (req, res) => {
-  const rows = db.prepare(`
+app.get('/api/attendance/me', requireAuth, async (req, res) => {
+  const rows = (await db.query(`
     SELECT s.id, s.name, s.semester, a.conducted, a.attended, br.name AS branch
     FROM   attendance a
     JOIN   subjects   s  ON a.subject_id  = s.id
     JOIN   branches   br ON s.branch_id   = br.id
     WHERE  a.user_id = ?
     ORDER  BY s.name
-  `).all(req.session.userId);
+  `, [req.session.userId])).rows;
 
   res.json(rows);
 });
 
 // PUT /api/attendance — upsert one subject
-app.put('/api/attendance', requireAuth, (req, res) => {
+app.put('/api/attendance', requireAuth, async (req, res) => {
   const { subject_id, conducted, attended } = req.body || {};
   if (subject_id == null) return res.status(400).json({ error: 'subject_id required' });
 
@@ -429,18 +426,18 @@ app.put('/api/attendance', requireAuth, (req, res) => {
   const con = Math.max(0, parseInt(conducted, 10) || 0);
   if (att > con) return res.status(400).json({ error: 'Attended cannot exceed conducted.' });
 
-  db.prepare(`
+  (await db.query(`
     INSERT INTO attendance (user_id, subject_id, conducted, attended)
     VALUES (?, ?, ?, ?)
     ON CONFLICT(user_id, subject_id)
     DO UPDATE SET conducted = excluded.conducted, attended = excluded.attended
-  `).run(req.session.userId, subject_id, con, att);
+  `, [req.session.userId, subject_id, con, att]));
 
   res.json({ ok: true });
 });
 
 // POST /api/attendance/calculate — calculate without saving
-app.post('/api/attendance/calculate', requireAuth, (req, res) => {
+app.post('/api/attendance/calculate', requireAuth, async (req, res) => {
   const attended  = Math.max(0, parseInt(req.body.attended,  10) || 0);
   const total     = Math.max(0, parseInt(req.body.total,     10) || 0);
   if (total === 0) return res.status(400).json({ error: 'Total classes cannot be zero.' });
@@ -458,28 +455,28 @@ app.post('/api/attendance/calculate', requireAuth, (req, res) => {
 //  SUBJECT RESOURCES
 // ═══════════════════════════════════════════════════════════════
 
-app.get('/api/subject-resources', (req, res) => {
+app.get('/api/subject-resources', async (req, res) => {
   const { branch, subject, subject_id, sem } = req.query;
   let sid = subject_id ? parseInt(subject_id, 10) : null;
 
   if (!sid) {
     if (!branch || !subject)
       return res.status(400).json({ error: 'branch and subject required' });
-    const b = db.prepare('SELECT id FROM branches WHERE LOWER(name) = LOWER(?)').get(branch);
+    const b = (await db.query('SELECT id FROM branches WHERE LOWER(name) = LOWER(?)', [branch])).rows[0];
     if (!b) return res.json({ syllabus: [], notes: [], lab: [], pyq: [], tutorial: [] });
     
     let s;
     if (sem) {
-        s = db.prepare('SELECT id FROM subjects WHERE branch_id = ? AND LOWER(name) = LOWER(?) AND semester = ?').get(b.id, subject, parseInt(sem, 10));
+        s = (await db.query('SELECT id FROM subjects WHERE branch_id = ? AND LOWER(name) = LOWER(?) AND semester = ?', [b.id, subject, parseInt(sem, 10)])).rows[0];
     } else {
-        s = db.prepare('SELECT id FROM subjects WHERE branch_id = ? AND LOWER(name) = LOWER(?)').get(b.id, subject);
+        s = (await db.query('SELECT id FROM subjects WHERE branch_id = ? AND LOWER(name) = LOWER(?)', [b.id, subject])).rows[0];
     }
     
     if (!s) return res.json({ syllabus: [], notes: [], lab: [], pyq: [], tutorial: [] });
     sid = s.id;
   }
 
-  const rows   = db.prepare('SELECT id, type, name, link FROM subject_resources WHERE subject_id = ?').all(sid);
+  const rows   = (await db.query('SELECT id, type, name, link FROM subject_resources WHERE subject_id = ?', [sid])).rows;
   const result = { syllabus: [], notes: [], lab: [], pyq: [], tutorial: [] };
   rows.forEach(r => { if (result[r.type]) result[r.type].push(r); });
   res.json(result);
@@ -489,29 +486,29 @@ app.get('/api/subject-resources', (req, res) => {
 //  SAVED RESOURCES
 // ═══════════════════════════════════════════════════════════════
 
-app.get('/api/saved', requireAuth, (req, res) => {
-  const rows = db.prepare(
+app.get('/api/saved', requireAuth, async (req, res) => {
+  const rows = (await db.query(
     'SELECT id, branch, subject, resource_type, name, link FROM saved_resources WHERE user_id = ? ORDER BY id DESC'
-  ).all(req.session.userId);
+  , [req.session.userId])).rows;
   res.json(rows);
 });
 
-app.post('/api/saved', requireAuth, (req, res) => {
+app.post('/api/saved', requireAuth, async (req, res) => {
   const { branch, subject, resource_type, name, link } = req.body || {};
   if (!name || !link) return res.status(400).json({ error: 'name and link required' });
 
-  const info = db.prepare(
+  const info = (await db.query(
     'INSERT INTO saved_resources (user_id, branch, subject, resource_type, name, link) VALUES (?, ?, ?, ?, ?, ?)'
-  ).run(req.session.userId, branch || '', subject || '', resource_type || 'pdf', name, link);
+  , [req.session.userId, branch || '', subject || '', resource_type || 'pdf', name, link]));
 
-  res.status(201).json({ id: info.lastInsertRowid, branch, subject, resource_type: resource_type || 'pdf', name, link });
+  res.status(201).json({ id: info.rows[0]?.id, branch, subject, resource_type: resource_type || 'pdf', name, link });
 });
 
-app.delete('/api/saved/:id', requireAuth, (req, res) => {
-  const info = db.prepare(
+app.delete('/api/saved/:id', requireAuth, async (req, res) => {
+  const info = (await db.query(
     'DELETE FROM saved_resources WHERE id = ? AND user_id = ?'
-  ).run(parseInt(req.params.id, 10), req.session.userId);
-  if (info.changes === 0) return res.status(404).json({ error: 'Not found.' });
+  , [parseInt(req.params.id, 10), req.session.userId]));
+  if (info.rowCount === 0) return res.status(404).json({ error: 'Not found.' });
   res.json({ ok: true });
 });
 
@@ -519,29 +516,28 @@ app.delete('/api/saved/:id', requireAuth, (req, res) => {
 //  REVIEWS
 // ═══════════════════════════════════════════════════════════════
 
-app.get('/api/reviews/user', requireAuth, (req, res) => {
-  res.json(db.prepare('SELECT * FROM reviews WHERE user_id = ? ORDER BY created_at DESC').all(req.session.userId));
+app.get('/api/reviews/user', requireAuth, async (req, res) => {
+  res.json((await db.query('SELECT * FROM reviews WHERE user_id = ? ORDER BY created_at DESC', [req.session.userId])).rows);
 });
 
-app.get('/api/reviews', (req, res) => {
-  res.json(db.prepare('SELECT r.*, u.full_name, u.branch FROM reviews r JOIN users u ON r.user_id = u.id ORDER BY r.created_at DESC LIMIT 50').all());
+app.get('/api/reviews', async (req, res) => {
+  res.json((await db.query('SELECT r.*, u.full_name, u.branch FROM reviews r JOIN users u ON r.user_id = u.id ORDER BY r.created_at DESC LIMIT 50', [])).rows);
 });
 
-app.post('/api/reviews', requireAuth, (req, res) => {
+app.post('/api/reviews', requireAuth, async (req, res) => {
   const { subject, content, rating } = req.body || {};
   if (!content || !rating) return res.status(400).json({ error: 'content and rating required' });
 
-  const info = db.prepare(
+  const info = (await db.query(
     'INSERT INTO reviews (user_id, subject, content, rating) VALUES (?, ?, ?, ?)'
-  ).run(req.session.userId, subject || '', content, parseInt(rating, 10));
+  , [req.session.userId, subject || '', content, parseInt(rating, 10)]));
 
-  res.status(201).json(db.prepare('SELECT * FROM reviews WHERE id = ?').get(info.lastInsertRowid));
+  res.status(201).json((await db.query('SELECT * FROM reviews WHERE id = ?', [info.rows[0]?.id])).rows[0]);
 });
 
-app.delete('/api/reviews/:id', requireAuth, (req, res) => {
-  const info = db.prepare('DELETE FROM reviews WHERE id = ? AND user_id = ?')
-    .run(parseInt(req.params.id, 10), req.session.userId);
-  if (info.changes === 0) return res.status(404).json({ error: 'Not found.' });
+app.delete('/api/reviews/:id', requireAuth, async (req, res) => {
+  const info = (await db.query('DELETE FROM reviews WHERE id = ? AND user_id = ?', [parseInt(req.params.id, 10), req.session.userId]));
+  if (info.rowCount === 0) return res.status(404).json({ error: 'Not found.' });
   res.json({ ok: true });
 });
 
@@ -575,58 +571,34 @@ db.exec(`
 
 
 // ── MIGRATE: remove UNIQUE constraint from timetable ──────────────────────
-try {
-  const cols = db.prepare("PRAGMA table_info(timetable)").all();
-  if (cols.length > 0) {
-    db.exec(`
-      CREATE TABLE IF NOT EXISTS timetable_new (
-        id       INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        day      TEXT NOT NULL,
-        time     TEXT NOT NULL,
-        subject  TEXT NOT NULL,
-        room     TEXT DEFAULT ''
-      );
-      INSERT OR IGNORE INTO timetable_new SELECT id,user_id,day,time,subject,room FROM timetable;
-      DROP TABLE timetable;
-      ALTER TABLE timetable_new RENAME TO timetable;
-    `);
-  }
-} catch(e) { /* already migrated */ }
 
-try {
-  const ttCols = db.prepare('PRAGMA table_info(timetable)').all();
-  if (ttCols.length > 0 && !ttCols.some(c => c.name === 'end_time')) {
-    db.exec('ALTER TABLE timetable ADD COLUMN end_time TEXT DEFAULT ""');
-  }
-} catch (e) { /* column exists */ }
 
-app.get('/api/qa', (req, res) => {
+app.get('/api/qa', async (req, res) => {
   const { subject, branch } = req.query;
   if (!subject) return res.status(400).json({ error: 'subject required' });
-  const rows = db.prepare(
+  const rows = (await db.query(
     'SELECT q.id, q.content, q.created_at, COUNT(a.id) as answer_count FROM qa_questions q LEFT JOIN qa_answers a ON a.question_id = q.id WHERE q.subject = ? AND q.branch = ? GROUP BY q.id ORDER BY q.created_at DESC'
-  ).all(subject, branch || '');
+  , [subject, branch || ''])).rows;
   res.json(rows);
 });
 
-app.post('/api/qa', (req, res) => {
+app.post('/api/qa', async (req, res) => {
   const { subject, branch, content } = req.body || {};
   if (!subject || !content?.trim()) return res.status(400).json({ error: 'subject and content required' });
-  const info = db.prepare('INSERT INTO qa_questions (subject, branch, content) VALUES (?, ?, ?)').run(subject, branch || '', content.trim());
-  res.status(201).json({ id: info.lastInsertRowid, subject, content: content.trim(), answer_count: 0, created_at: new Date().toISOString() });
+  const info = (await db.query('INSERT INTO qa_questions (subject, branch, content) VALUES (?, ?, ?)', [subject, branch || '', content.trim()]));
+  res.status(201).json({ id: info.rows[0]?.id, subject, content: content.trim(), answer_count: 0, created_at: new Date().toISOString() });
 });
 
-app.get('/api/qa/:id/answers', (req, res) => {
-  const rows = db.prepare('SELECT * FROM qa_answers WHERE question_id = ? ORDER BY created_at ASC').all(parseInt(req.params.id));
+app.get('/api/qa/:id/answers', async (req, res) => {
+  const rows = (await db.query('SELECT * FROM qa_answers WHERE question_id = ? ORDER BY created_at ASC', [parseInt(req.params.id)])).rows;
   res.json(rows);
 });
 
-app.post('/api/qa/:id/answers', (req, res) => {
+app.post('/api/qa/:id/answers', async (req, res) => {
   const { content } = req.body || {};
   if (!content?.trim()) return res.status(400).json({ error: 'content required' });
-  const info = db.prepare('INSERT INTO qa_answers (question_id, content) VALUES (?, ?)').run(parseInt(req.params.id), content.trim());
-  res.status(201).json({ id: info.lastInsertRowid, question_id: parseInt(req.params.id), content: content.trim(), created_at: new Date().toISOString() });
+  const info = (await db.query('INSERT INTO qa_answers (question_id, content) VALUES (?, ?)', [parseInt(req.params.id), content.trim()]));
+  res.status(201).json({ id: info.rows[0]?.id, question_id: parseInt(req.params.id), content: content.trim(), created_at: new Date().toISOString() });
 });
 
 // ═══════════════════════════════════════════════════════════════
@@ -672,41 +644,41 @@ function sanitizeTTEntry(entry) {
   return { day, time, end_time, subject, room };
 }
 
-app.get('/api/timetable', requireAuth, (req, res) => {
-  const rows = db.prepare('SELECT * FROM timetable WHERE user_id = ? ORDER BY day, time').all(req.session.userId);
+app.get('/api/timetable', requireAuth, async (req, res) => {
+  const rows = (await db.query('SELECT * FROM timetable WHERE user_id = ? ORDER BY day, time', [req.session.userId])).rows;
   res.json(rows);
 });
 
-app.post('/api/timetable', requireAuth, (req, res) => {
+app.post('/api/timetable', requireAuth, async (req, res) => {
   const clean = sanitizeTTEntry(req.body || {});
   if (!clean) return res.status(400).json({ error: 'Valid day, time, and subject required' });
   try {
-    const info = db.prepare(
+    const info = (await db.query(
       'INSERT INTO timetable (user_id, day, time, end_time, subject, room) VALUES (?, ?, ?, ?, ?, ?)'
-    ).run(req.session.userId, clean.day, clean.time, clean.end_time, clean.subject, clean.room);
-    res.status(201).json({ id: info.lastInsertRowid, ...clean });
+    , [req.session.userId, clean.day, clean.time, clean.end_time, clean.subject, clean.room]));
+    res.status(201).json({ id: info.rows[0]?.id, ...clean });
   } catch (e) {
     res.status(400).json({ error: e.message });
   }
 });
 
-app.put('/api/timetable/:id', requireAuth, (req, res) => {
+app.put('/api/timetable/:id', requireAuth, async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (!Number.isFinite(id)) return res.status(400).json({ error: 'Invalid id' });
   const clean = sanitizeTTEntry(req.body || {});
   if (!clean) return res.status(400).json({ error: 'Valid day, time, and subject required' });
-  const info = db.prepare(
+  const info = (await db.query(
     'UPDATE timetable SET day = ?, time = ?, end_time = ?, subject = ?, room = ? WHERE id = ? AND user_id = ?'
-  ).run(clean.day, clean.time, clean.end_time, clean.subject, clean.room, id, req.session.userId);
-  if (info.changes === 0) return res.status(404).json({ error: 'Not found' });
+  , [clean.day, clean.time, clean.end_time, clean.subject, clean.room, id, req.session.userId]));
+  if (info.rowCount === 0) return res.status(404).json({ error: 'Not found' });
   res.json({ id, ...clean });
 });
 
-app.delete('/api/timetable/:id', requireAuth, (req, res) => {
+app.delete('/api/timetable/:id', requireAuth, async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (!Number.isFinite(id)) return res.status(400).json({ error: 'Invalid id' });
-  const info = db.prepare('DELETE FROM timetable WHERE id = ? AND user_id = ?').run(id, req.session.userId);
-  if (info.changes === 0) return res.status(404).json({ error: 'Not found' });
+  const info = (await db.query('DELETE FROM timetable WHERE id = ? AND user_id = ?', [id, req.session.userId]));
+  if (info.rowCount === 0) return res.status(404).json({ error: 'Not found' });
   res.json({ ok: true });
 });
 
