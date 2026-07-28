@@ -134,26 +134,53 @@
     color:#bbf7d0;
   }
 
-  /* small responsive */
   @media (max-width:880px){
     .right{display:none}
     .top-row{flex-direction:column;align-items:center}
-    .subject-panel{padding:16px}
+    .subject-panel{padding:16px; width:94%; border-radius:18px;}
     .header{padding:20px 16px}
-    .header h1{font-size:clamp(1.6rem,6vw,2.2rem)}
+    .header h1{font-size:clamp(1.8rem,7vw,2.4rem)}
+    .header div[style*="display:flex"] { flex-direction:column; align-items:flex-start !important; gap:12px; }
+    #setDefaultBtn { width: 100%; padding: 12px; }
   }
 
   @media (max-width:768px){
-    .header{padding:16px}
-    .subject-panel{width:100%;margin:16px 0;border-radius:0;border-left:none;border-right:none}
-    .tab{padding:10px 14px;font-size:13px;min-height:44px}
-    .file-row{flex-direction:column;align-items:flex-start;gap:10px}
-    .file-actions{width:100%;flex-wrap:wrap}
-    .pill-btn{min-height:44px;padding:10px 16px;flex:1;text-align:center}
-    .subject-tabs{justify-content:flex-start;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;padding-bottom:4px}
+    .header{padding:16px 20px 0}
+    .subject-panel{
+      width:calc(100% - 24px); 
+      margin:16px auto 30px; 
+      border-radius:20px; 
+      background:rgba(20,20,25,0.7);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 0 10px rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 20px 16px;
+    }
+    .tab{padding:12px 18px;font-size:13px;min-height:44px;white-space:nowrap;background:rgba(255,255,255,0.06);}
+    .file-row{
+      flex-direction:column;
+      align-items:flex-start;
+      gap:14px;
+      padding: 16px;
+      background:rgba(255,255,255,0.04);
+      border-radius:14px;
+    }
+    .file-row span { font-size: 14px; line-height: 1.4; }
+    .file-actions{width:100%;flex-wrap:nowrap; gap:10px;}
+    .pill-btn{min-height:44px;padding:12px 16px;flex:1;text-align:center;font-size:13px;font-weight:600;}
+    .subject-tabs{
+      justify-content:flex-start;
+      width:100%;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      flex-wrap:nowrap;
+      padding-bottom:8px;
+      gap:8px;
+    }
+    .subject-tabs::-webkit-scrollbar { display: none; }
   }
 
   @media (max-width:380px){
+    .file-actions{flex-wrap:wrap;}
     .pill-btn{flex:1 1 100%}
   }
 
