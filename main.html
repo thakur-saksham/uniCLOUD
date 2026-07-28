@@ -1053,9 +1053,13 @@
         width: 100%;
         gap: 6px;
         flex-wrap: nowrap;
-        justify-content: center;
+        justify-content: flex-start;
+        padding-right: 50px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
         flex: none;
       }
+      .nav-area::-webkit-scrollbar { display: none; }
       .nav-item {
         font-size: 12px;
         padding: 10px 11px;
@@ -1293,42 +1297,68 @@
       CSE: {
         sem1: [
           { icon: "ph-code", name: "C" },
-          { icon: "ph-terminal", name: "LINUX" },
+          { icon: "ph-terminal", name: "Linux" },
           { icon: "ph-math-operations", name: "AEM1" },
-          { icon: "ph-user", name: "MANAGING SELF" },
+          { icon: "ph-user", name: "Managing Self" },
           { icon: "ph-leaf", name: "EVS" },
-          { icon: "ph-lightbulb", name: "PROBLEM SOLVING" }
+          { icon: "ph-lightbulb", name: "Problem Solving" }
         ],
         sem2: [
           { icon: "ph-math-operations", name: "AEM2" },
-          { icon: "ph-tree-structure", name: "DSA IN C" },
-          { icon: "ph-cpu", name: "DE" },
-          { icon: "ph-robot", name: "ELEMENTS OF AIML" },
+          { icon: "ph-tree-structure", name: "DSA In C" },
+          { icon: "ph-cpu", name: "De" },
+          { icon: "ph-robot", name: "Elements Of Aiml" },
           { icon: "ph-leaf", name: "EVS" },
-          { icon: "ph-atom", name: "PHYSICS" },
-          { icon: "ph-file-code", name: "PYTHON" },
-          { icon: "ph-clock", name: "TIME AND PRIORITY MANAGEMENT" }
+          { icon: "ph-atom", name: "Physics" },
+          { icon: "ph-file-code", name: "Python" },
+          { icon: "ph-clock", name: "Time And Priority Management" }
         ],
         sem3: [
           { icon: "ph-desktop", name: "Operating Systems" },
-          { icon: "ph-chart-line-up", name: "Design and Analysis of Algorithms" },
+          { icon: "ph-chart-line-up", name: "Design And Analysis Of Algorithms" },
           { icon: "ph-users", name: "Leading Conversations" },
-          { icon: "ph-cpu", name: "Computer organization and Architecture" },
-          { icon: "ph-brain", name: "EDGE Aptitude Fundamentals" },
-          { icon: "ph-graph", name: "Data communication and Networks" }
+          { icon: "ph-cpu", name: "Computer Organization And Architecture" },
+          { icon: "ph-brain", name: "Edge Aptitude Fundamentals" },
+          { icon: "ph-graph", name: "Data Communication And Networks" }
         ]
       },
 
       Civil: {
         sem1: [
-          { icon: "ph-math-operations", name: "Mathematics I" },
-          { icon: "ph-pencil-line", name: "Engineering Drawing" },
-          { icon: "ph-wave-sine", name: "Physics" }
+          { icon: "ph-pencil-line", name: "Engineering Graphics" },
+          { icon: "ph-atom", name: "Physics" },
+          { icon: "ph-code", name: "OOP" },
+          { icon: "ph-math-operations", name: "AEM I" },
+          { icon: "ph-leaf", name: "EVS" }
         ],
         sem2: [
-          { icon: "ph-bridge", name: "Strength of Materials" },
-          { icon: "ph-map-trifold", name: "Surveying" },
-          { icon: "ph-mountains", name: "Geology" }
+          { icon: "ph-gear", name: "Engineering Mechanics" },
+          { icon: "ph-users", name: "Living Conversations" },
+          { icon: "ph-flask", name: "Chemistry" },
+          { icon: "ph-lightning", name: "Basic Electrical And Electronics Eng" },
+          { icon: "ph-wrench", name: "Basic Of Mechanical" },
+          { icon: "ph-math-operations", name: "AEM II" },
+          { icon: "ph-leaf", name: "EVS" }
+        ],
+        sem3: [
+          { icon: "ph-flask", name: "Intro To Chemical Eng" },
+          { icon: "ph-mountains", name: "Engineering Geology And Groundwater" },
+          { icon: "ph-building", name: "Building Materials And Concrete Technology" },
+          { icon: "ph-map-trifold", name: "Surveying And Remote Sensing" },
+          { icon: "ph-drop", name: "Elements Of Fluid Mechanics" },
+          { icon: "ph-lightbulb", name: "Design Thinking" }
+        ],
+        sem4: [
+          { icon: "ph-brain", name: "Edge" },
+          { icon: "ph-file-code", name: "Python" },
+          { icon: "ph-database", name: "Working With Data" },
+          { icon: "ph-drop", name: "Elements Of Hydraulic Eng" },
+          { icon: "ph-pipe", name: "Water Supply And Sanitation" },
+          { icon: "ph-leaf", name: "Green Building And Energy Efficiency" },
+          { icon: "ph-tent", name: "Survey Camp" },
+          { icon: "ph-desktop", name: "Computer Aided Civil Eng Design Lab" },
+          { icon: "ph-cube", name: "Solid Mechanics Lab" },
+          { icon: "ph-bridge", name: "Strength Of Material" }
         ]
       },
       Aerospace: {
@@ -1339,8 +1369,8 @@
         ],
         sem2: [
           { icon: "ph-rocket-launch", name: "Engineering Mechanics" },
-          { icon: "ph-gear", name: "Basic Electrical and Electronics Engineering" },
-          { icon: "ph-fire", name: "Introduction to Aerospace Engineering" }
+          { icon: "ph-gear", name: "Basic Electrical And Electronics Engineering" },
+          { icon: "ph-fire", name: "Introduction To Aerospace Engineering" }
         ],
         sem3: [
           { icon: "ph-airplane", name: "Aircraft System & Instruments" },
@@ -1356,20 +1386,20 @@
         sem1: [
           { icon: "ph-math-operations", name: "AEM1" },
           { icon: "ph-test-tube", name: "Basic Chemistry" },
-          { icon: "ph-lightning", name: "Basic Electrical and Electronics Engineering" },
+          { icon: "ph-lightning", name: "Basic Electrical And Electronics Engineering" },
           { icon: "ph-leaf", name: "EVS" },
           { icon: "ph-user", name: "Managing Self" },
-          { icon: "ph-code", name: "Programming for Engineers" }
+          { icon: "ph-code", name: "Programming For Engineers" }
         ],
         sem2: [
           { icon: "ph-math-operations", name: "AEM2" },
-          { icon: "ph-hammer", name: "Design and Build Lab" },
+          { icon: "ph-hammer", name: "Design And Build Lab" },
           { icon: "ph-pencil-line", name: "Engineering Graphics" },
-          { icon: "ph-leaf", name: "EVS (Living)" },
-          { icon: "ph-calculator", name: "Materials and Energy Balance Calculations" },
+          { icon: "ph-leaf", name: "EVS (living)" },
+          { icon: "ph-calculator", name: "Materials And Energy Balance Calculations" },
           { icon: "ph-atom", name: "Physics" },
           { icon: "ph-flask", name: "Process Chemistry" },
-          { icon: "ph-clock", name: "Time and Priority Management" },
+          { icon: "ph-clock", name: "Time And Priority Management" },
           { icon: "ph-wrench", name: "Workshop Practices" }
         ],
         sem3: [
@@ -1382,11 +1412,11 @@
         ],
         sem4: [
           { icon: "ph-flask", name: "Chemical Reaction Engineering" },
-          { icon: "ph-chart-bar", name: "Data Analysis and Machine Learning" },
-          { icon: "ph-brain", name: "EDGE Softskills" },
+          { icon: "ph-chart-bar", name: "Data Analysis And Machine Learning" },
+          { icon: "ph-brain", name: "Edge Softskills" },
           { icon: "ph-arrows-out", name: "Mass Transfer" },
-          { icon: "ph-calculator", name: "Numerical Method in ChE" },
-          { icon: "ph-pen-nib", name: "Writing with Impact" }
+          { icon: "ph-calculator", name: "Numerical Method In Che" },
+          { icon: "ph-pen-nib", name: "Writing With Impact" }
         ]
       },
 
@@ -1412,7 +1442,7 @@
         sem2: [
           { icon: "ph-wrench", name: "Manufacturing Processes" },
           { icon: "ph-fire", name: "Thermodynamics" },
-          { icon: "ph-cube", name: "Strength of Materials" }
+          { icon: "ph-cube", name: "Strength Of Materials" }
         ]
       },
 
@@ -1423,7 +1453,7 @@
           { icon: "ph-wave-sine", name: "Physics" }
         ],
         sem2: [
-          { icon: "ph-math-operations", name: "Mathematics II" },
+          { icon: "ph-math-operations", name: "Mathematics Ii" },
           { icon: "ph-fire-extinguisher", name: "Engineering Mechanics" },
           { icon: "ph-first-aid", name: "Programming For Problem Solving" }
         ],
@@ -1452,7 +1482,7 @@
 
       BCA: {
         sem1: [
-          { icon: "ph-code", name: "Programming in C" },
+          { icon: "ph-code", name: "Programming In C" },
           { icon: "ph-math-operations", name: "Discrete Mathematics" },
           { icon: "ph-monitor", name: "Computer Fundamentals" }
         ],
@@ -1471,7 +1501,7 @@
         ],
         sem2: [
           { icon: "ph-pen-nib", name: "Typography" },
-          { icon: "ph-cube", name: "3D Design Basics" },
+          { icon: "ph-cube", name: "3d Design Basics" },
           { icon: "ph-devices", name: "Digital Design Tools" }
         ]
       }
@@ -1495,27 +1525,24 @@
         resourcesPanel.style.display === "block" ? "none" : "block";
     };
 
-    /* Course subjects from API (branch -> { sem1: [], sem2: [] }) */
-    let branchSubjectsCache = {};
+    /* Global cache: { "CSE": { sem1: [], sem2: [] }, "Mechanical": ... } */
+    let globalSubjectsCache = null;
+
+    // Prefetch all subjects for all branches in the background on load
+    if (window.unicloud) {
+      window.unicloud.get("/api/subjects/all")
+        .then(data => {
+          globalSubjectsCache = data || {};
+          // Fallback static data is used until this completes
+        }).catch(() => {
+          globalSubjectsCache = {};
+        });
+    }
 
     function ensureBranchSubjectsLoaded(branch, cb) {
-      if (branchSubjectsCache[branch]) {
-        if (cb) cb();
-        return;
-      }
-      if (!window.unicloud) {
-        if (cb) cb();
-        return;
-      }
-      // Single bulk API call — instant load, no multiple cold starts
-      window.unicloud.get("/api/subjects/all?branch=" + encodeURIComponent(branch))
-        .then(data => {
-          branchSubjectsCache[branch] = data || {};
-          if (cb) cb();
-        }).catch(() => {
-          branchSubjectsCache[branch] = {};
-          if (cb) cb();
-        });
+      // With global prefetching, we just use the cache if it's there
+      // If it's not ready yet, we will fallback to static data in renderSubjects
+      if (cb) cb();
     }
 
     /* COURSE CLICK */
@@ -1555,8 +1582,8 @@
       semContent.innerHTML = "";
       const semNum = parseInt(currentSem.replace('sem', ''), 10);
       let list = [];
-      if (branchSubjectsCache[currentBranch] && branchSubjectsCache[currentBranch][currentSem]) {
-        list = branchSubjectsCache[currentBranch][currentSem];
+      if (globalSubjectsCache && globalSubjectsCache[currentBranch] && globalSubjectsCache[currentBranch][currentSem]) {
+        list = globalSubjectsCache[currentBranch][currentSem];
       } else if (branchData[currentBranch] && branchData[currentBranch][currentSem]) {
         list = branchData[currentBranch][currentSem];
       }

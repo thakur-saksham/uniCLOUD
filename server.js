@@ -368,24 +368,39 @@ app.get('/api/subjects', async (req, res) => {
   res.json(rows);
 });
 
-// Bulk endpoint: returns ALL subjects for a branch grouped by semester in ONE call
+// Bulk endpoint: returns ALL subjects. If ?branch= is provided, only that branch. If omitted, ALL branches.
 app.get('/api/subjects/all', async (req, res) => {
   const { branch } = req.query;
-  if (!branch) return res.status(400).json({ error: 'branch required' });
-
-  const b = (await db.query('SELECT id FROM branches WHERE name = ?', [branch])).rows[0];
-  if (!b) return res.json({});
-
-  const rows = (await db.query('SELECT id, name, semester FROM subjects WHERE branch_id = ? ORDER BY semester, name', [b.id])).rows;
   
-  // Group by semester: { sem1: [...], sem2: [...], ... }
+  if (branch) {
+    const b = (await db.query('SELECT id FROM branches WHERE name = ?', [branch])).rows[0];
+    if (!b) return res.json({});
+    const rows = (await db.query('SELECT id, name, semester FROM subjects WHERE branch_id = ? ORDER BY semester, name', [b.id])).rows;
+    const grouped = {};
+    rows.forEach(r => {
+      const key = 'sem' + r.semester;
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(r);
+    });
+    return res.json(grouped);
+  }
+
+  // Fetch all branches at once
+  const rows = (await db.query(`
+    SELECT b.name as branch_name, s.id, s.name, s.semester 
+    FROM subjects s 
+    JOIN branches b ON s.branch_id = b.id 
+    ORDER BY b.name, s.semester, s.name
+  `)).rows;
+
   const grouped = {};
   rows.forEach(r => {
+    if (!grouped[r.branch_name]) grouped[r.branch_name] = {};
     const key = 'sem' + r.semester;
-    if (!grouped[key]) grouped[key] = [];
-    grouped[key].push(r);
+    if (!grouped[r.branch_name][key]) grouped[r.branch_name][key] = [];
+    grouped[r.branch_name][key].push({ id: r.id, name: r.name, semester: r.semester });
   });
-  
+
   res.json(grouped);
 });
 
