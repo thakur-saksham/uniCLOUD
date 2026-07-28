@@ -19,13 +19,13 @@
     }
 
     #orb-canvas {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.9;
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.3; /* Dimmed */
     }
 
 
@@ -1050,11 +1050,10 @@
         display: none !important;
       }
       .nav-area {
-        width: 100%;
+        width: calc(100% - 65px); /* Leave room for avatar */
         gap: 6px;
         flex-wrap: nowrap;
         justify-content: flex-start;
-        padding-right: 50px;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         flex: none;
