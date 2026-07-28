@@ -25,7 +25,7 @@
       height: 100%;
       pointer-events: none;
       z-index: 0;
-      opacity: 0.3; /* Dimmed */
+      opacity: 0.9;
     }
 
 
@@ -1050,7 +1050,7 @@
         display: none !important;
       }
       .nav-area {
-        width: calc(100% - 65px); /* Leave room for avatar */
+        width: 100%;
         gap: 6px;
         flex-wrap: nowrap;
         justify-content: flex-start;
@@ -1068,6 +1068,9 @@
         white-space: nowrap;
       }
       .nav-item::after { display: none; }
+      #attendanceNav {
+        margin-right: 45px;
+      }
       .profile-wrapper {
         position: absolute;
         top: 8px;
