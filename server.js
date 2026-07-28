@@ -22,7 +22,7 @@ require('dotenv').config({ path: '.env' });
 
 const express      = require('express');
 const cors         = require('cors');
-const session      = require('express-session');
+const session      = require('cookie-session');
 const cookieParser = require('cookie-parser');
 const path         = require('path');
 const https        = require('https');
@@ -82,16 +82,7 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
-app.use(session({
-  secret:            process.env.SESSION_SECRET || 'unicloud-secret-CHANGE-IN-PRODUCTION',
-  resave:            false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    sameSite: 'lax',
-    maxAge:   7 * 24 * 60 * 60 * 1000  // 7 days
-  }
-}));
+app.use(session({ name: 'session', keys: [process.env.SESSION_SECRET || 'unicloud-secret'], maxAge: 30 * 24 * 60 * 60 * 1000 }));
 
 function requirePageAuth(req, res, next) {
   if (req.session?.userId) return next();
@@ -174,7 +165,7 @@ app.post('/auth/signup', async (req, res) => {
 
     const user = await getByEmail(email);
     req.session.userId = user.id;
-    req.session.save(() => res.status(201).json({ user }));
+    res.status(201).json({ user });
   } catch (e) {
     if (e.message?.includes('UNIQUE'))
       return res.status(409).json({ error: 'An account with this email already exists.' });
@@ -198,12 +189,12 @@ app.post('/auth/login', async (req, res) => {
 
   const user = await getUser(row.id);
   req.session.userId = user.id;
-  req.session.save(() => res.json({ user }));
+  res.json({ user });
 });
 
 // ── POST /auth/logout ─────────────────────────────────────────
 app.post('/auth/logout', async (req, res) => {
-  req.session.destroy(() => res.json({ ok: true }));
+  req.session = null; res.json({ ok: true });
 });
 
 // ── Shared Google sign-in logic ───────────────────────────────
@@ -255,7 +246,7 @@ app.post('/auth/google', async (req, res) => {
   try {
     const user = await signInWithGoogleToken(token);
     req.session.userId = user.id;
-    req.session.save(() => res.json({ user }));
+    res.json({ user });
   } catch (e) {
     console.error('Google auth error:', e.message);
     res.status(401).json({ error: 'Google sign-in failed: ' + e.message });
@@ -271,7 +262,7 @@ app.post('/auth/google/callback', async (req, res) => {
   try {
     const user = await signInWithGoogleToken(token);
     req.session.userId = user.id;
-    req.session.save(() => res.redirect('/main.html'));
+    res.redirect('/main.html');
   } catch (e) {
     console.error('Google callback error:', e.message);
     res.redirect('/login.html?error=google');
@@ -347,7 +338,7 @@ app.delete('/api/users/me', requireAuth, async (req, res) => {
     (await db.query('DELETE FROM saved_resources WHERE user_id = ?', [uid]));
     (await db.query('DELETE FROM reviews         WHERE user_id = ?', [uid]));
     (await db.query('DELETE FROM users           WHERE id = ?', [uid]));
-    req.session.destroy(() => res.json({ ok: true }));
+    req.session = null; res.json({ ok: true });
   } catch (e) {
     console.error('Delete account error:', e);
     res.status(500).json({ error: 'Failed to delete account.' });
