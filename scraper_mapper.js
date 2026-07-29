@@ -116,14 +116,17 @@ const mappingRules = {
   'BCA': {
     1: [
       { canonical: 'Mathematics', variants: ['basic mathematics', 'mathematics', 'mathematics-i'] },
-      { canonical: 'Programming in C / Problem Solving', variants: ['programming in c / problem solving', 'programming in c', 'problem solving using c', 'programming and data structure'] },
+      { canonical: 'Programming in C', variants: ['programming in c', 'programming and data structure'] },
+      { canonical: 'Problem Solving Using C', variants: ['problem solving using c'] },
       { canonical: 'Computer Fundamentals', variants: ['computer fundamentals', 'fundamentals of computer'] },
       { canonical: 'Database Management Systems / SQL', variants: ['database management systems / sql', 'database management systems', 'dbms', 'introduction to sql', 'database management system'] },
       { canonical: 'Web Technologies', variants: ['web technologies'] },
       { canonical: 'English Communication', variants: ['english communication'] }
     ],
     2: [
-      { canonical: 'Mathematics II / Discrete Mathematics', variants: ['mathematics ii / discrete mathematics', 'basic mathematics ii', 'statistics numerical methods & algorithms', 'discrete mathematical structures', 'mathematics ii'] },
+      { canonical: 'Mathematics II', variants: ['basic mathematics ii', 'mathematics ii'] },
+      { canonical: 'Discrete Mathematics', variants: ['discrete mathematical structures', 'discrete mathematics'] },
+      { canonical: 'Statistics Numerical Methods & Algorithms', variants: ['statistics numerical methods & algorithms'] },
       { canonical: 'Data Structures', variants: ['data structures', 'databases'] },
       { canonical: 'Object-Oriented Analysis & Design (OOPs with C++)', variants: ['object-oriented analysis & design (oops with c++)', 'object-oriented analysis and design', 'object oriented analysis and design (using uml)', 'oops with c++', 'object oriented analysis and design'] },
       { canonical: 'Operating Systems (incl. Linux/Shell)', variants: ['operating systems (incl. linux/shell)', 'operating systems', 'linux os and shell programming'] },
@@ -147,7 +150,8 @@ const mappingRules = {
       { canonical: 'Database Management Systems', variants: ['database management systems', 'database management systems and data modelling', 'pl/sql and dba'] },
       { canonical: 'Java Programming', variants: ['java programming', 'java se programming', 'java iot developer'] },
       { canonical: 'Operating Systems', variants: ['operating systems'] },
-      { canonical: 'Design and Analysis of Algorithms / Computer System Architecture', variants: ['design and analysis of algorithms / computer system architecture', 'design and analysis of algorithms', 'computer system architecture'] }
+      { canonical: 'Design and Analysis of Algorithms', variants: ['design and analysis of algorithms'] },
+      { canonical: 'Computer System Architecture', variants: ['computer system architecture'] }
     ]
   }
 };

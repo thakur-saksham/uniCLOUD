@@ -2,7 +2,7 @@ const db = require('./db');
 
 async function run() {
   try {
-    const res = await db.query(`SELECT id FROM branches WHERE name IN ('Chemical', 'Mechanical', 'Fire & Safety', 'BCA')`);
+    const res = await db.query(`SELECT id FROM branches WHERE name IN ('BCA')`);
     const branchIds = res.rows.map(r => r.id);
     for (let id of branchIds) {
       await db.query(`DELETE FROM subject_resources WHERE subject_id IN (SELECT id FROM subjects WHERE branch_id = $1)`, [id]);

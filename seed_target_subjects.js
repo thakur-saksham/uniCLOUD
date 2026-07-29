@@ -20,10 +20,10 @@ const seedData = {
     4: ['Strength of Materials', 'Heat Transfer', 'Applied Thermodynamics', 'Fluid Mechanics & Fluid Machines', 'Manufacturing Technology', 'Theory of Machines', 'Instrumentation & Control / Mechanical Measurement & Metrology']
   },
   'BCA': {
-    1: ['Mathematics', 'Programming in C / Problem Solving', 'Computer Fundamentals', 'Database Management Systems / SQL', 'Web Technologies', 'English Communication'],
-    2: ['Mathematics II / Discrete Mathematics', 'Data Structures', 'Object-Oriented Analysis & Design (OOPs with C++)', 'Operating Systems (incl. Linux/Shell)', 'Advanced DBMS / PL-SQL', 'Computer System Architecture / Digital Electronics', 'Business Communication / Accounting'],
+    1: ['Mathematics', 'Programming in C', 'Problem Solving Using C', 'Computer Fundamentals', 'Database Management Systems / SQL', 'Web Technologies', 'English Communication'],
+    2: ['Mathematics II', 'Discrete Mathematics', 'Statistics Numerical Methods & Algorithms', 'Data Structures', 'Object-Oriented Analysis & Design (OOPs with C++)', 'Operating Systems (incl. Linux/Shell)', 'Advanced DBMS / PL-SQL', 'Computer System Architecture / Digital Electronics', 'Business Communication / Accounting'],
     3: ['Computer Networks', 'Java Programming', 'Python Programming / Scripting', 'Database Management Systems (Advanced)', 'Design and Analysis of Algorithms', 'Statistics & Discrete Mathematics', 'Operating Systems'],
-    4: ['Software Engineering (incl. Project Management / Agile)', 'Computer Networks / Data Communication', 'Web Technologies (Front-end / PHP / Django)', 'Database Management Systems', 'Java Programming', 'Operating Systems', 'Design and Analysis of Algorithms / Computer System Architecture']
+    4: ['Software Engineering (incl. Project Management / Agile)', 'Computer Networks / Data Communication', 'Web Technologies (Front-end / PHP / Django)', 'Database Management Systems', 'Java Programming', 'Operating Systems', 'Design and Analysis of Algorithms', 'Computer System Architecture']
   }
 };
 
