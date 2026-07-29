@@ -11,7 +11,7 @@
 <style>
   *{box-sizing:border-box}
   html,body{min-height:100vh;margin:0;padding-bottom:40px;font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:
-    radial-gradient(1400px circle at 0% 0%,#4b3f63 0%,#2f2a3a 30%,#17171c 55%,#0e0e13 100%);color:#fff;background-attachment:fixed;}
+    radial-gradient(1400px circle at 0% 0%, rgba(76, 29, 149, 0.15) 0%, rgba(76, 29, 149, 0.05) 30%, #17171c 55%, #0e0e13 100%);color:#fff;background-attachment:fixed;}
   body::after{content:"";position:fixed;inset:0;background-image:url("https://www.transparenttextures.com/patterns/asfalt-light.png");opacity:0.05;pointer-events:none}
 
   /* header */
@@ -212,7 +212,22 @@
   }
   .toast i { font-size: 18px; }
 
-</style>
+    /* Skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+      background-size: 400% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+      color: transparent !important;
+    }
+    @keyframes shimmer {
+      0% { background-position: 100% 0; }
+      100% { background-position: -100% 0; }
+    }
+    .skeleton * {
+      visibility: hidden;
+    }
+  </style>
 </head>
 <body>
 
@@ -257,7 +272,12 @@
 
     <h2 id="semesterHeading">Semester 1 – <span id="subjectSmall">Subject</span></h2>
 
-    <div id="fileList" aria-live="polite"></div>
+    <div id="fileList" aria-live="polite">
+      <!-- Initial Skeletons -->
+      <div class="file-row skeleton" style="height:76px; margin-bottom:14px; background:rgba(255,255,255,0.04);"></div>
+      <div class="file-row skeleton" style="height:76px; margin-bottom:14px; background:rgba(255,255,255,0.04);"></div>
+      <div class="file-row skeleton" style="height:76px; margin-bottom:14px; background:rgba(255,255,255,0.04);"></div>
+    </div>
   </div>
 
   <script src="js/api.js"></script>
