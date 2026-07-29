@@ -74,42 +74,18 @@ async function scrapeUrl(target) {
           
           let insertedCount = 0;
 
+const mapper = require('./scraper_mapper');
+
           for (let pyq of pyqsToInsert) {
             const AUTO_BRANCHES = ['BCA', 'Mechanical', 'Fire & Safety', 'Chemical'];
-            if (AUTO_BRANCHES.includes(target.branch) && pyq.name.toLowerCase().includes('iot')) {
-               continue;
-            }
-
-            let normalizedName = pyq.name;
+            
             if (AUTO_BRANCHES.includes(target.branch)) {
-               let n = pyq.name.toLowerCase();
-               if (n.includes('dbms') || n.includes('database management')) normalizedName = 'DBMS';
-               else if (n.includes('mathematics') && !n.includes('ii') && !n.includes('discrete')) normalizedName = 'Mathematics I';
-               else if (n.includes('mathematics ii') || n.includes('basic mathematics ii') || n.includes('advanced engineering mathematics-ii') || n.includes('engineering mathematics-ii')) normalizedName = 'Mathematics II';
-               else if (n.includes('data structure')) normalizedName = 'Data Structures';
-               else if (n.includes('object oriented') || n.includes('oops')) normalizedName = 'OOP';
-               else if (n.includes('programming in c') || n.includes('using c')) normalizedName = 'Programming in C';
-               else if (n.includes('digital el')) normalizedName = 'Digital Electronics';
-               else if (n.includes('front-end')) normalizedName = 'Front-end Web Application';
-               else if (n.includes('java')) normalizedName = 'Java Programming';
-               else if (n.includes('operating system')) normalizedName = 'Operating Systems';
-               else if (n.includes('routing & switching') || n.includes('routing and switching')) normalizedName = 'Routing and Switching Essentials';
-               else if (n.includes('r&s') || n.includes('r & s')) normalizedName = 'R&S Connecting Networks';
-               else if (n.includes('python')) normalizedName = 'Python Programming';
-               else if (n.includes('fundamentals of computer') || n.includes('computer fundamentals')) normalizedName = 'Computer Fundamentals';
-               else if (n.includes('advanced engineering mathematics-i') || n.includes('engineering mathematics-i') || n.includes('advanced engineering mathematics - 1')) normalizedName = 'Mathematics I';
-               else if (n.includes('physics')) normalizedName = 'Physics';
-               else if (n.includes('chemistry')) normalizedName = 'Chemistry';
-               else if (n.includes('mechanics')) normalizedName = 'Engineering Mechanics';
-               else if (n.includes('electrical')) normalizedName = 'Basic Electrical Engineering';
-               else if (n.includes('graphics')) normalizedName = 'Engineering Graphics';
-               else if (n.includes('environment')) normalizedName = 'Environmental Studies';
-               else if (n.includes('mechanical measurement')) normalizedName = 'Mechanical Measurement & Metrology';
-               else if (n.includes('theory of machine')) normalizedName = 'Theory of Machines';
-               else if (n.includes('t & m') || n.includes('t&m') || n.includes('time and measur')) normalizedName = 'Time And Measuring';
-               else if (n.includes('thermodynamics') && !n.includes('ii') && !n.includes('iii')) normalizedName = 'Thermodynamics I';
-               
-               pyq.name = normalizedName;
+               const mappedName = mapper.normalizeName(target.branch, pyq.semester, pyq.name);
+               if (mappedName === null) {
+                  // Drop this PYQ completely (it's an elective or unmapped)
+                  continue;
+               }
+               pyq.name = mappedName;
             }
 
             const ALIASES = {
@@ -161,14 +137,12 @@ async function scrapeUrl(target) {
               return false;
             });
 
-            if (!matchedSubject && AUTO_BRANCHES.includes(target.branch)) {
-              const newSubjRes = await db.query("INSERT INTO subjects (branch_id, name, semester) VALUES ($1, $2, $3) ON CONFLICT (branch_id, name, semester) DO UPDATE SET name=EXCLUDED.name RETURNING id", [branchId, pyq.name, pyq.semester]);
-              matchedSubject = { id: newSubjRes.rows[0].id, name: pyq.name, semester: pyq.semester };
-              subjects.push(matchedSubject);
+            if (!matchedSubject) {
+              console.log(`Missing subject in DB for ${pyq.name} (Sem ${pyq.semester}), dropping PYQ...`);
+              continue;
             }
-
-            if (matchedSubject) {
-              const subjectIdToUse = matchedSubject.id;
+            
+            const subjectIdToUse = matchedSubject.id;
               const check = await db.query("SELECT id FROM subject_resources WHERE subject_id = $1 AND link = $2", [subjectIdToUse, pyq.link]);
               if (check.rows.length === 0) {
                 const resourceName = `${pyq.year} - ${pyq.name}`;
@@ -178,9 +152,6 @@ async function scrapeUrl(target) {
                 );
                 insertedCount++;
               }
-            } else {
-              // Ignore PYQ if no matching subject is found
-            }
           }
           console.log(`Inserted ${insertedCount} new PYQs for ${target.branch}.`);
           resolve();
