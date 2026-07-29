@@ -369,6 +369,22 @@
 
     // render file rows
     fileList.innerHTML = "";
+
+    if (branch !== 'CSE' && type !== 'pyqs') {
+      const comingSoon = document.createElement('div');
+      comingSoon.style.padding = "60px 20px";
+      comingSoon.style.textAlign = "center";
+      comingSoon.style.color = "rgba(255,255,255,0.7)";
+      comingSoon.style.fontSize = "24px";
+      comingSoon.style.fontWeight = "600";
+      comingSoon.style.letterSpacing = "2px";
+      comingSoon.style.background = "linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent)";
+      comingSoon.style.borderRadius = "12px";
+      comingSoon.innerHTML = 'COMING SOON';
+      fileList.appendChild(comingSoon);
+      return;
+    }
+
     const arr = fileData[type] || [];
     if(arr.length === 0){
       const no = document.createElement('div');
