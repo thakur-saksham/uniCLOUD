@@ -14,6 +14,16 @@
   <link href="https://unpkg.com/phosphor-icons@1.4.2/src/css/icons.css" rel="stylesheet">
 
   <style>
+    @keyframes shimmer {
+      0% { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+    .skeleton {
+      background: #1e1e24;
+      background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.06) 40px, rgba(255, 255, 255, 0.02) 80px);
+      background-size: 800px 100%;
+      animation: shimmer 1.8s infinite linear;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
 
     body {
@@ -2264,11 +2274,20 @@
       if (!branch) return;
       if (attLoadBtn) { attLoadBtn.textContent = 'Loading…'; attLoadBtn.disabled = true; }
       
+      const gauge = document.querySelector('.overall-gauge');
+      if (gauge) {
+        gauge.classList.add('skeleton');
+        gauge.style.borderRadius = '50%';
+      }
+      if (document.getElementById('overallStateLabel')) document.getElementById('overallStateLabel').textContent = '...';
+      if (document.getElementById('overallPctLabel')) document.getElementById('overallPctLabel').textContent = '—';
+      if (document.getElementById('overallStroke')) document.getElementById('overallStroke').style.strokeDashoffset = 565.48;
+
       if (subjectListEl) {
         subjectListEl.innerHTML = '';
         for(let i=0; i<4; i++) {
           subjectListEl.innerHTML += `
-            <div class="subject-row skeleton" style="height: 52px; margin-bottom: 12px; border-radius: 12px; border: none; background: rgba(255,255,255,0.05);"></div>
+            <div class="subject-row skeleton" style="height: 52px; margin-bottom: 12px; border-radius: 12px; border: none;"></div>
           `;
         }
       }
@@ -2277,6 +2296,10 @@
         .then(r => r.json())
         .then(subjects => {
           if (attLoadBtn) { attLoadBtn.textContent = 'Load Subjects'; attLoadBtn.disabled = false; }
+          if (gauge) {
+            gauge.classList.remove('skeleton');
+            gauge.style.borderRadius = '';
+          }
           if (!Array.isArray(subjects)) subjects = [];
           if (attCourseBanner) attCourseBanner.style.display = 'flex';
           if (attCourseLabel)  attCourseLabel.textContent = `${branch} — Semester ${sem} (${subjects.length} subjects)`;
