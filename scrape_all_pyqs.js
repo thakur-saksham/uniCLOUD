@@ -104,6 +104,10 @@ async function scrapeUrl(target) {
                else if (n.includes('electrical')) normalizedName = 'Basic Electrical Engineering';
                else if (n.includes('graphics')) normalizedName = 'Engineering Graphics';
                else if (n.includes('environment')) normalizedName = 'Environmental Studies';
+               else if (n.includes('mechanical measurement')) normalizedName = 'Mechanical Measurement & Metrology';
+               else if (n.includes('theory of machine')) normalizedName = 'Theory of Machines';
+               else if (n.includes('t & m') || n.includes('t&m') || n.includes('time and measur')) normalizedName = 'Time And Measuring';
+               else if (n.includes('thermodynamics') && !n.includes('ii') && !n.includes('iii')) normalizedName = 'Thermodynamics I';
                
                pyq.name = normalizedName;
             }
