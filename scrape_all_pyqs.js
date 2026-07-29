@@ -3,21 +3,24 @@ const https = require('https');
 const db = require('./db');
 
 const TARGETS = [
+  { url: 'https://library.ddn.upes.ac.in/questionbank/soc/btech_AI.html', branch: 'CSE' },
   { url: 'https://library.ddn.upes.ac.in/questionbank/soe/btech_ase.html', branch: 'Aerospace' },
   { url: 'https://library.ddn.upes.ac.in/questionbank/soe/btech_civil.html', branch: 'Civil' },
   { url: 'https://library.ddn.upes.ac.in/questionbank/soe/btech_chemical.html', branch: 'Chemical' },
-  { url: 'https://library.ddn.upes.ac.in/questionbank/soe/btech_fse.html', branch: 'Fire & Safety' }
+  { url: 'https://library.ddn.upes.ac.in/questionbank/soe/btech_fse.html', branch: 'Fire & Safety' },
+  { url: 'https://library.ddn.upes.ac.in/questionbank/soc/bca.html', branch: 'BCA' }
 ];
 
 function parseSemester(text) {
-  if (text.includes('SEM-I') || text.includes('SEM-1')) return 1;
-  if (text.includes('SEM-II') || text.includes('SEM-2')) return 2;
-  if (text.includes('SEM-III') || text.includes('SEM-3')) return 3;
-  if (text.includes('SEM-IV') || text.includes('SEM-4')) return 4;
-  if (text.includes('SEM-V') || text.includes('SEM-5')) return 5;
-  if (text.includes('SEM-VI') || text.includes('SEM-6')) return 6;
-  if (text.includes('SEM-VII') || text.includes('SEM-7')) return 7;
-  if (text.includes('SEM-VIII') || text.includes('SEM-8')) return 8;
+  const t = text.toUpperCase();
+  if (t.includes('SEM-VIII') || t.includes('SEM-8')) return 8;
+  if (t.includes('SEM-VII') || t.includes('SEM-7')) return 7;
+  if (t.includes('SEM-VI') || t.includes('SEM-6')) return 6;
+  if (t.includes('SEM-IV') || t.includes('SEM-4')) return 4;
+  if (t.includes('SEM-V') || t.includes('SEM-5')) return 5;
+  if (t.includes('SEM-III') || t.includes('SEM-3')) return 3;
+  if (t.includes('SEM-II') || t.includes('SEM-2')) return 2;
+  if (t.includes('SEM-I') || t.includes('SEM-1')) return 1;
   return null;
 }
 
@@ -26,15 +29,25 @@ function titleCase(str) {
 }
 
 async function scrapeUrl(target) {
-  return new Promise((resolve, reject) => {
-    https.get(target.url, (res) => {
-      let data = '';
-      res.on('data', chunk => { data += chunk; });
-      res.on('end', async () => {
-        try {
-          const $ = cheerio.load(data);
-          let currentSemester = null;
-          let pyqsToInsert = [];
+  return new Promise(async (resolve, reject) => {
+    try {
+      const branchRes = await db.query("SELECT id FROM branches WHERE name = $1", [target.branch]);
+      if (branchRes.rows.length === 0) {
+          console.log(`${target.branch} branch not found`);
+          return resolve();
+      }
+      const branchId = branchRes.rows[0].id;
+      const subjectsRes = await db.query("SELECT id, name, semester FROM subjects WHERE branch_id = $1", [branchId]);
+      let subjects = subjectsRes.rows;
+
+      https.get(target.url, (res) => {
+        let data = '';
+        res.on('data', chunk => { data += chunk; });
+        res.on('end', async () => {
+          try {
+            const $ = cheerio.load(data);
+            let currentSemester = null;
+            let pyqsToInsert = [];
 
           $('tr').each((i, el) => {
             const text = $(el).text();
@@ -58,39 +71,102 @@ async function scrapeUrl(target) {
 
           console.log(`Extracted ${pyqsToInsert.length} PYQs for ${target.branch}.`);
           
-          const branchRes = await db.query("SELECT id FROM branches WHERE name = $1", [target.branch]);
-          if (branchRes.rows.length === 0) throw new Error(`${target.branch} branch not found`);
-          const branchId = branchRes.rows[0].id;
-
-          const subjectsRes = await db.query("SELECT id, name, semester FROM subjects WHERE branch_id = $1", [branchId]);
-          const subjects = subjectsRes.rows;
-
           let insertedCount = 0;
 
           for (let pyq of pyqsToInsert) {
-            let matchedSubject = subjects.find(s => 
-              s.semester === pyq.semester &&
-              (pyq.name.toLowerCase().includes(s.name.toLowerCase()) || s.name.toLowerCase().includes(pyq.name.toLowerCase()))
-            );
-
-            let subjectIdToUse;
-
-            if (matchedSubject) {
-              subjectIdToUse = matchedSubject.id;
-            } else {
-              const newSubjRes = await db.query("INSERT INTO subjects (branch_id, name, semester) VALUES ($1, $2, $3) ON CONFLICT (branch_id, name, semester) DO UPDATE SET name=EXCLUDED.name RETURNING id", [branchId, pyq.name, pyq.semester]);
-              subjectIdToUse = newSubjRes.rows[0].id;
-              subjects.push({ id: subjectIdToUse, name: pyq.name, semester: pyq.semester });
+            if (target.branch === 'BCA' && pyq.name.toLowerCase().includes('iot')) {
+               continue;
             }
 
-            const check = await db.query("SELECT id FROM subject_resources WHERE subject_id = $1 AND link = $2", [subjectIdToUse, pyq.link]);
-            if (check.rows.length === 0) {
-              const resourceName = `${pyq.year} - ${pyq.name}`;
-              await db.query(
-                "INSERT INTO subject_resources (subject_id, type, name, link) VALUES ($1, 'pyq', $2, $3)",
-                [subjectIdToUse, resourceName, pyq.link]
-              );
-              insertedCount++;
+            let normalizedName = pyq.name;
+            if (target.branch === 'BCA') {
+               let n = pyq.name.toLowerCase();
+               if (n.includes('dbms') || n.includes('database management')) normalizedName = 'DBMS';
+               else if (n.includes('mathematics') && !n.includes('ii') && !n.includes('discrete')) normalizedName = 'Mathematics I';
+               else if (n.includes('mathematics ii') || n.includes('basic mathematics ii')) normalizedName = 'Mathematics II';
+               else if (n.includes('data structure')) normalizedName = 'Data Structures';
+               else if (n.includes('object oriented') || n.includes('oops')) normalizedName = 'OOP';
+               else if (n.includes('programming in c') || n.includes('using c')) normalizedName = 'Programming in C';
+               else if (n.includes('digital el')) normalizedName = 'Digital Electronics';
+               else if (n.includes('front-end')) normalizedName = 'Front-end Web Application';
+               else if (n.includes('java')) normalizedName = 'Java Programming';
+               else if (n.includes('operating system')) normalizedName = 'Operating Systems';
+               else if (n.includes('routing & switching') || n.includes('routing and switching')) normalizedName = 'Routing and Switching Essentials';
+               else if (n.includes('r&s') || n.includes('r & s')) normalizedName = 'R&S Connecting Networks';
+               else if (n.includes('python')) normalizedName = 'Python Programming';
+               else if (n.includes('fundamentals of computer') || n.includes('computer fundamentals')) normalizedName = 'Computer Fundamentals';
+               
+               pyq.name = normalizedName;
+            }
+
+            const ALIASES = {
+              "aem1": ["advanced engineering mathematics-i", "advanced engineering mathematics - 1", "advanced engineering mathematics -1", "advanced engineering mathematics", "engineering mathematics-i", "engineering mathematics - i", "engineering mathematics - 1"],
+              "aem2": ["advanced engineering mathematics-ii", "advanced engineering mathematics - 2", "advanced engineering mathematics -2", "engineering mathematics-ii", "engineering mathematics - ii", "engineering mathematics - 2", "engineering mathematics ii"],
+              "aem i": ["advanced engineering mathematics-i", "advanced engineering mathematics - 1", "advanced engineering mathematics -1", "advanced engineering mathematics", "engineering mathematics-i", "engineering mathematics - i", "engineering mathematics - 1"],
+              "aem ii": ["advanced engineering mathematics-ii", "advanced engineering mathematics - 2", "advanced engineering mathematics -2", "engineering mathematics-ii", "engineering mathematics - ii", "engineering mathematics - 2", "engineering mathematics ii"],
+              "c": ["programming in c", "principles of programming languages"],
+              "de": ["digital electronics"],
+              "evs": ["environmental", "environment studies"],
+              "physics": ["physics for computer", "engineering physics", "physics"],
+              "dsa in c": ["data structure", "data structures"],
+              "python": ["programming with python", "python programming"],
+              "elements of aiml": ["elements of ai", "artificial intelligence"],
+              "computer organization and architecture": ["computer organization"],
+              "design and analysis of algorithms": ["design and analysis"],
+              "operating systems": ["operating system"],
+              "programming for engineers": ["programming in c", "principles of programming languages", "programming for engineers"],
+              "basic electrical and electronics eng": ["basic electrical", "electrical and electronics"],
+              "intro to aerospace eng": ["introduction to aerospace", "intro to aerospace"],
+              "aircraft system and instruments": ["aircraft system"],
+              "computation techniques": ["computational techniques", "computation techniques"],
+              "intro to thermo": ["thermodynamics"],
+              "heat transfer for aerospace": ["heat transfer"],
+              "workshop practice": ["workshop practice"],
+              "oop": ["object oriented programming"],
+              "elements of hydraulic eng": ["hydraulic engineering", "hydraulic eng"],
+              "water supply and sanitation": ["water supply"],
+              "green building and energy efficiency": ["green building"],
+              "computer aided civil eng design lab": ["computer aided civil"],
+              "strength of material": ["strength of material", "strength of materials"],
+              "intro to chemical eng": ["introduction to chemical", "intro to chemical"],
+              "surveying and remote sensing": ["surveying", "remote sensing"]
+            };
+
+            let matchedSubject = subjects.find(s => {
+              if (s.semester !== pyq.semester) return false;
+              let dbName = s.name.toLowerCase();
+              let pyqName = pyq.name.toLowerCase();
+              
+              if (pyqName === dbName) return true;
+              if (dbName.length > 3 && pyqName.includes(dbName)) return true;
+              
+              if (ALIASES[dbName]) {
+                for (let alias of ALIASES[dbName]) {
+                  if (pyqName.includes(alias)) return true;
+                }
+              }
+              return false;
+            });
+
+            if (!matchedSubject && target.branch === 'BCA') {
+              const newSubjRes = await db.query("INSERT INTO subjects (branch_id, name, semester) VALUES ($1, $2, $3) ON CONFLICT (branch_id, name, semester) DO UPDATE SET name=EXCLUDED.name RETURNING id", [branchId, pyq.name, pyq.semester]);
+              matchedSubject = { id: newSubjRes.rows[0].id, name: pyq.name, semester: pyq.semester };
+              subjects.push(matchedSubject);
+            }
+
+            if (matchedSubject) {
+              const subjectIdToUse = matchedSubject.id;
+              const check = await db.query("SELECT id FROM subject_resources WHERE subject_id = $1 AND link = $2", [subjectIdToUse, pyq.link]);
+              if (check.rows.length === 0) {
+                const resourceName = `${pyq.year} - ${pyq.name}`;
+                await db.query(
+                  "INSERT INTO subject_resources (subject_id, type, name, link) VALUES ($1, 'pyq', $2, $3)",
+                  [subjectIdToUse, resourceName, pyq.link]
+                );
+                insertedCount++;
+              }
+            } else {
+              // Ignore PYQ if no matching subject is found
             }
           }
           console.log(`Inserted ${insertedCount} new PYQs for ${target.branch}.`);
@@ -100,6 +176,9 @@ async function scrapeUrl(target) {
         }
       });
     }).on('error', reject);
+    } catch(err) {
+       reject(err);
+    }
   });
 }
 
