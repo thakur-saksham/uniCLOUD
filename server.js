@@ -503,7 +503,7 @@ app.get('/api/subject-resources', async (req, res) => {
     sid = s.id;
   }
 
-  const rows   = (await db.query('SELECT id, type, name, link FROM subject_resources WHERE subject_id = ?', [sid])).rows;
+  const rows   = (await db.query('SELECT id, type, name, link FROM subject_resources WHERE subject_id = ? ORDER BY name DESC', [sid])).rows;
   const result = { syllabus: [], notes: [], lab: [], pyq: [], tutorial: [] };
   rows.forEach(r => { if (result[r.type]) result[r.type].push(r); });
   res.json(result);
