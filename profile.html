@@ -2521,6 +2521,9 @@
        INIT
     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
     const initialHash = window.location.hash.replace('#', '');
+    if (initialHash && ['profile', 'attendance', 'saved', 'settings', 'timetable', 'qa', 'reviews'].includes(initialHash)) {
+       setView(initialHash);
+    }
 
     loadUser().then(() => loadBranches()).then(() => {
       refreshProfileView();

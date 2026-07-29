@@ -471,8 +471,20 @@
 
   /* default on load */
   document.addEventListener('DOMContentLoaded', () => {
+    // Instantly set the active tab UI to feel faster
+    const defaultTabType = (branch === 'CSE') ? 'syllabus' : 'pyqs';
+    tabs.forEach(t => {
+      if(t.dataset.type === defaultTabType){
+        t.classList.add('active');
+        t.setAttribute('aria-selected','true');
+      } else {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected','false');
+      }
+    });
+
     Promise.all([fetchSaved(), fetchResources()]).then(() => {
-        loadFiles('syllabus');
+        loadFiles(defaultTabType);
     });
 
     // "Set as Default" button logic

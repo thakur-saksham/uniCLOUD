@@ -8,7 +8,8 @@ const TARGETS = [
   { url: 'https://library.ddn.upes.ac.in/questionbank/soe/btech_civil.html', branch: 'Civil' },
   { url: 'https://library.ddn.upes.ac.in/questionbank/soe/btech_chemical.html', branch: 'Chemical' },
   { url: 'https://library.ddn.upes.ac.in/questionbank/soe/btech_fse.html', branch: 'Fire & Safety' },
-  { url: 'https://library.ddn.upes.ac.in/questionbank/soc/bca.html', branch: 'BCA' }
+  { url: 'https://library.ddn.upes.ac.in/questionbank/soc/bca.html', branch: 'BCA' },
+  { url: 'https://library.ddn.upes.ac.in/questionbank/soe/btech_mechanical.html', branch: 'Mechanical' }
 ];
 
 function parseSemester(text) {
@@ -74,16 +75,17 @@ async function scrapeUrl(target) {
           let insertedCount = 0;
 
           for (let pyq of pyqsToInsert) {
-            if (target.branch === 'BCA' && pyq.name.toLowerCase().includes('iot')) {
+            const AUTO_BRANCHES = ['BCA', 'Mechanical', 'Fire & Safety', 'Chemical'];
+            if (AUTO_BRANCHES.includes(target.branch) && pyq.name.toLowerCase().includes('iot')) {
                continue;
             }
 
             let normalizedName = pyq.name;
-            if (target.branch === 'BCA') {
+            if (AUTO_BRANCHES.includes(target.branch)) {
                let n = pyq.name.toLowerCase();
                if (n.includes('dbms') || n.includes('database management')) normalizedName = 'DBMS';
                else if (n.includes('mathematics') && !n.includes('ii') && !n.includes('discrete')) normalizedName = 'Mathematics I';
-               else if (n.includes('mathematics ii') || n.includes('basic mathematics ii')) normalizedName = 'Mathematics II';
+               else if (n.includes('mathematics ii') || n.includes('basic mathematics ii') || n.includes('advanced engineering mathematics-ii') || n.includes('engineering mathematics-ii')) normalizedName = 'Mathematics II';
                else if (n.includes('data structure')) normalizedName = 'Data Structures';
                else if (n.includes('object oriented') || n.includes('oops')) normalizedName = 'OOP';
                else if (n.includes('programming in c') || n.includes('using c')) normalizedName = 'Programming in C';
@@ -95,6 +97,13 @@ async function scrapeUrl(target) {
                else if (n.includes('r&s') || n.includes('r & s')) normalizedName = 'R&S Connecting Networks';
                else if (n.includes('python')) normalizedName = 'Python Programming';
                else if (n.includes('fundamentals of computer') || n.includes('computer fundamentals')) normalizedName = 'Computer Fundamentals';
+               else if (n.includes('advanced engineering mathematics-i') || n.includes('engineering mathematics-i') || n.includes('advanced engineering mathematics - 1')) normalizedName = 'Mathematics I';
+               else if (n.includes('physics')) normalizedName = 'Physics';
+               else if (n.includes('chemistry')) normalizedName = 'Chemistry';
+               else if (n.includes('mechanics')) normalizedName = 'Engineering Mechanics';
+               else if (n.includes('electrical')) normalizedName = 'Basic Electrical Engineering';
+               else if (n.includes('graphics')) normalizedName = 'Engineering Graphics';
+               else if (n.includes('environment')) normalizedName = 'Environmental Studies';
                
                pyq.name = normalizedName;
             }
@@ -148,7 +157,7 @@ async function scrapeUrl(target) {
               return false;
             });
 
-            if (!matchedSubject && target.branch === 'BCA') {
+            if (!matchedSubject && AUTO_BRANCHES.includes(target.branch)) {
               const newSubjRes = await db.query("INSERT INTO subjects (branch_id, name, semester) VALUES ($1, $2, $3) ON CONFLICT (branch_id, name, semester) DO UPDATE SET name=EXCLUDED.name RETURNING id", [branchId, pyq.name, pyq.semester]);
               matchedSubject = { id: newSubjRes.rows[0].id, name: pyq.name, semester: pyq.semester };
               subjects.push(matchedSubject);
