@@ -11,6 +11,28 @@
   <link href="https://unpkg.com/phosphor-icons@1.4.2/src/css/icons.css" rel="stylesheet">
 
   <style>
+    /* FOOTER */
+    .footer-left, .footer-right {
+      position: absolute;
+      bottom: 20px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.4);
+      font-weight: 500;
+      letter-spacing: 1px;
+      z-index: 1000;
+    }
+    .footer-left { left: 30px; }
+    .footer-right { right: 30px; }
+    .footer-right a {
+      color: rgba(255, 255, 255, 0.6);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-right a:hover { color: white; }
+    @media (max-width: 768px) {
+      .footer-left, .footer-right { display: none; }
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -1903,6 +1925,13 @@
     initOrb('orb-canvas');
   </script>
 
+  <!-- FOOTER -->
+  <div class="footer-left">Made by S&S</div>
+  <div class="footer-right">
+    &copy; 2026 uniCLOUD &nbsp;|&nbsp; 
+    <a href="privacy.html" target="_blank">Privacy</a> &bull; 
+    <a href="terms.html" target="_blank">Terms</a> &bull; 
+    <a href="mailto:unicloud.one@gmail.com">Contact</a>
+  </div>
 </body>
-
 </html>
