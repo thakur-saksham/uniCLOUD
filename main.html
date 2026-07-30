@@ -1256,17 +1256,17 @@
     <h3>Browse By</h3>
 
     <div class="resource-grid">
-      <div class="resource-card"><i class="ph ph-drop"></i><span>Petroleum</span></div>
-      <div class="resource-card"><i class="ph ph-airplane-takeoff"></i><span>Aerospace</span></div>
-      <div class="resource-card"><i class="ph ph-flask"></i><span>Chemical</span></div>
-      <div class="resource-card"><i class="ph ph-buildings"></i><span>Civil</span></div>
-      <div class="resource-card"><i class="ph ph-lightning"></i><span>Electrical</span></div>
-      <div class="resource-card"><i class="ph ph-gear"></i><span>Mechanical</span></div>
-      <div class="resource-card"><i class="ph ph-code"></i><span>CSE</span></div>
-      <div class="resource-card"><i class="ph ph-fire"></i><span>Fire & Safety</span></div>
-      <div class="resource-card"><i class="ph ph-atom"></i><span>B.Sc</span></div>
-      <div class="resource-card"><i class="ph ph-monitor"></i><span>BCA</span></div>
-      <div class="resource-card"><i class="ph ph-pen-nib"></i><span>B.Des</span></div>
+      <div class="resource-card" data-branch="B.Tech Applied Petroleum Engineering – Gas Stream"><i class="ph ph-drop"></i><span>Petroleum</span></div>
+      <div class="resource-card" data-branch="Aerospace"><i class="ph ph-airplane-takeoff"></i><span>Aerospace</span></div>
+      <div class="resource-card" data-branch="Chemical"><i class="ph ph-flask"></i><span>Chemical</span></div>
+      <div class="resource-card" data-branch="Civil"><i class="ph ph-buildings"></i><span>Civil</span></div>
+      <div class="resource-card" data-branch="Electrical"><i class="ph ph-lightning"></i><span>Electrical</span></div>
+      <div class="resource-card" data-branch="Mechanical"><i class="ph ph-gear"></i><span>Mechanical</span></div>
+      <div class="resource-card" data-branch="CSE"><i class="ph ph-code"></i><span>CSE</span></div>
+      <div class="resource-card" data-branch="Fire & Safety"><i class="ph ph-fire"></i><span>Fire & Safety</span></div>
+      <div class="resource-card" data-category="bsc"><i class="ph ph-atom"></i><span>B.Sc</span></div>
+      <div class="resource-card" data-branch="BCA"><i class="ph ph-monitor"></i><span>BCA</span></div>
+      <div class="resource-card" data-branch="B.Des"><i class="ph ph-pen-nib"></i><span>B.Des</span></div>
     </div>
   </div>
 
@@ -1276,7 +1276,12 @@
   <div class="semester-panel" id="semesterPanel">
     <h3 id="branchTitle"></h3>
 
-    <div class="semester-tabs">
+    <!-- B.Sc Branches Tabs (hidden by default) -->
+    <div class="sub-branch-tabs" id="subBranchTabs" style="display: none;">
+      <!-- Dynamically inserted -->
+    </div>
+
+    <div class="semester-tabs" id="semesterTabs">
       <div class="sem-tab active" data-sem="1">Semester 1</div>
       <div class="sem-tab" data-sem="2">Semester 2</div>
       <div class="sem-tab" data-sem="3">Semester 3</div>
@@ -1578,13 +1583,66 @@
     }
 
     /* COURSE CLICK */
+    const subBranchTabs = document.getElementById('subBranchTabs');
+    const semesterTabs = document.getElementById('semesterTabs');
+    const bscBranches = [
+      "B.Sc (Hons) - Chemistry",
+      "B.Sc (Hons) - Geology",
+      "B.Sc (Hons) - Mathematics",
+      "B.Sc (Hons) - Physics",
+      "B.Sc (CSE)"
+    ];
+
     document.querySelectorAll(".resource-card").forEach(card => {
       card.onclick = e => {
         e.stopPropagation();
-        currentBranch = card.innerText.trim();
+
+        if (card.dataset.category === 'bsc') {
+          branchTitle.innerText = "B.Sc";
+          subBranchTabs.style.display = "flex";
+          subBranchTabs.style.gap = "8px";
+          subBranchTabs.style.flexWrap = "wrap";
+          subBranchTabs.style.marginBottom = "20px";
+          semesterTabs.style.display = "none";
+          semContent.innerHTML = "";
+          
+          subBranchTabs.innerHTML = bscBranches.map(b => 
+            `<div class="sem-tab" data-subbranch="${b}">${b.replace('B.Sc (Hons) - ', '').replace('B.Sc ', '')}</div>`
+          ).join('');
+          
+          subBranchTabs.querySelectorAll('.sem-tab').forEach(st => {
+            st.onclick = ev => {
+              ev.stopPropagation();
+              subBranchTabs.querySelectorAll('.sem-tab').forEach(t => t.classList.remove('active'));
+              st.classList.add('active');
+              
+              currentBranch = st.dataset.subbranch;
+              currentSem = "sem1";
+              
+              semesterTabs.style.display = "flex";
+              semTabs.forEach(t => t.classList.remove("active"));
+              semTabs[0].classList.add("active");
+              
+              ensureBranchSubjectsLoaded(currentBranch, () => {
+                renderSubjects();
+              });
+            };
+          });
+          
+          if (window.innerWidth <= 768) {
+            document.getElementById('resourcesPanel').style.display = "none";
+          }
+          semesterPanel.style.display = "block";
+          return;
+        }
+
+        currentBranch = card.dataset.branch || card.innerText.trim();
         currentSem = "sem1";
 
-        branchTitle.innerText = currentBranch;
+        subBranchTabs.style.display = "none";
+        semesterTabs.style.display = "flex";
+
+        branchTitle.innerText = card.innerText.trim();
         semTabs.forEach(t => t.classList.remove("active"));
         semTabs[0].classList.add("active");
 
