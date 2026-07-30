@@ -1859,7 +1859,7 @@
     <div class="feedback-content" id="feedbackContent">
       <h2>Help us improve</h2>
       <p>We'd love to hear your feedback!</p>
-      <form action="mailto:unicloud.one@gmail.com" method="POST" enctype="text/plain">
+      <form id="feedbackForm" onsubmit="event.preventDefault(); const msg = this.feedback.value; window.location.href = 'mailto:unicloud.one@gmail.com?subject=Feedback%20for%20uniCLOUD&body=' + encodeURIComponent(msg); this.closest('.feedback-modal').style.display='none'; this.reset();">
         <textarea name="feedback" placeholder="Write your feedback here..." required rows="4" style="width:100%; border-radius:8px; padding:10px; margin-top:10px; background:rgba(255,255,255,0.05); color:white; border:1px solid rgba(255,255,255,0.1); resize:vertical; font-family:inherit;"></textarea>
         <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
           <button type="button" id="closeFeedbackBtn" style="padding:8px 16px; background:rgba(255,255,255,0.1); border:none; color:white; border-radius:8px; cursor:pointer;">Cancel</button>
