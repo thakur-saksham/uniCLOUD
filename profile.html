@@ -2509,7 +2509,11 @@
     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
     function renderSavedResources() {
       if (!savedListEl) return;
-      savedListEl.innerHTML = '<div style="padding:16px;color:rgba(255,255,255,0.4);">Loading…</div>';
+      savedListEl.innerHTML = `
+        <div class="subject-row skeleton" style="height:76px; margin-bottom:14px; background:rgba(255,255,255,0.04);"></div>
+        <div class="subject-row skeleton" style="height:76px; margin-bottom:14px; background:rgba(255,255,255,0.04);"></div>
+        <div class="subject-row skeleton" style="height:76px; margin-bottom:14px; background:rgba(255,255,255,0.04);"></div>
+      `;
 
       if (!window.unicloud || (currentUser && currentUser._isGuest)) {
         savedListEl.innerHTML = '<div class="subject-row"><div style="padding:14px;color:rgba(255,255,255,0.45);">Sign in to see saved resources.</div></div>';
