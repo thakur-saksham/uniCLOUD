@@ -9,7 +9,13 @@ const TARGETS = [
   { url: 'https://library.ddn.upes.ac.in/questionbank/soe/btech_chemical.html', branch: 'Chemical' },
   { url: 'https://library.ddn.upes.ac.in/questionbank/soe/btech_fse.html', branch: 'Fire & Safety' },
   { url: 'https://library.ddn.upes.ac.in/questionbank/soc/bca.html', branch: 'BCA' },
-  { url: 'https://library.ddn.upes.ac.in/questionbank/soe/btech_mechanical.html', branch: 'Mechanical' }
+  { url: 'https://library.ddn.upes.ac.in/questionbank/soe/btech_mechanical.html', branch: 'Mechanical' },
+  { url: 'https://library.ddn.upes.ac.in/questionbank/soe/btech_ape_gas.html', branch: 'B.Tech Applied Petroleum Engineering – Gas Stream' },
+  { url: 'https://library.ddn.upes.ac.in/questionbank/soe/bsc_chemistry.html', branch: 'B.Sc (Hons) - Chemistry' },
+  { url: 'https://library.ddn.upes.ac.in/questionbank/soe/bsc_geology.html', branch: 'B.Sc (Hons) - Geology' },
+  { url: 'https://library.ddn.upes.ac.in/questionbank/soe/bsc_mathematics.html', branch: 'B.Sc (Hons) - Mathematics' },
+  { url: 'https://library.ddn.upes.ac.in/questionbank/soe/bsc_physics.html', branch: 'B.Sc (Hons) - Physics' },
+  { url: 'https://library.ddn.upes.ac.in/questionbank/soc/bsc_cs.html', branch: 'B.Sc (CSE)' }
 ];
 
 function parseSemester(text) {
@@ -77,7 +83,7 @@ async function scrapeUrl(target) {
 const mapper = require('./scraper_mapper');
 
           for (let pyq of pyqsToInsert) {
-            const AUTO_BRANCHES = ['BCA', 'Mechanical', 'Fire & Safety', 'Chemical'];
+            const AUTO_BRANCHES = ['BCA', 'Mechanical', 'Fire & Safety', 'Chemical', 'B.Tech Applied Petroleum Engineering – Gas Stream', 'B.Sc (Hons) - Chemistry', 'B.Sc (Hons) - Geology', 'B.Sc (Hons) - Mathematics', 'B.Sc (Hons) - Physics', 'B.Sc (CSE)'];
             
             if (AUTO_BRANCHES.includes(target.branch)) {
                const mappedName = mapper.normalizeName(target.branch, pyq.semester, pyq.name);

@@ -153,6 +153,215 @@ const mappingRules = {
       { canonical: 'Design and Analysis of Algorithms', variants: ['design and analysis of algorithms'] },
       { canonical: 'Computer System Architecture', variants: ['computer system architecture'] }
     ]
+  },
+  'B.Tech Applied Petroleum Engineering – Gas Stream': {
+    1: [
+      { canonical: 'Mathematics I', variants: ['advanced engineering mathematics-i', 'mathematics i', 'mathematics-i'] },
+      { canonical: 'Physics I', variants: ['physics', 'physics i'] },
+      { canonical: 'Chemistry I', variants: ['chemistry', 'chemistry i'] },
+      { canonical: 'Programming for Engineers', variants: ['programming for engineers', 'object oriented programming', 'programming for problem solving'] },
+      { canonical: 'Basic Electrical & Electronics Engineering', variants: ['basic electrical and electronics engineering', 'basic electronics engineering', 'basic electrical & electronics engineering'] },
+      { canonical: 'Workshop Practices', variants: ['workshop practices', 'workshop technology'] }
+    ],
+    2: [
+      { canonical: 'Mathematics II', variants: ['advanced engineering mathematics ii', 'engineering mathematics ii', 'mathematics ii', 'mathematics-ii'] },
+      { canonical: 'Physics II', variants: ['physics-i'] },
+      { canonical: 'Chemistry', variants: ['chemistry'] },
+      { canonical: 'Engineering Graphics', variants: ['engineering graphics'] },
+      { canonical: 'Workshop Practices', variants: ['workshop practices'] },
+      { canonical: 'Basic Electrical & Electronics Engineering', variants: ['basic electrical & electronics engineering', 'basic electrical engineering', 'basic electrical and electronics engineering'] },
+      { canonical: 'Introduction to Geology', variants: ['introduction to geology'] }
+    ],
+    3: [
+      { canonical: 'Engineering Thermodynamics', variants: ['engineering thermodynamics', 'chemical engineering thermodynamics-i', 'thermodynamics and heat engines'] },
+      { canonical: 'Fluid Mechanics', variants: ['fluid mechanics'] },
+      { canonical: 'Material & Energy Balance Computations', variants: ['material & energy balance computations', 'material and energy balance computations', 'chemical process calculations'] },
+      { canonical: 'Petroleum Engineering Fundamentals', variants: ['petroleum engineering fundamentals', 'introduction to oil & gas operations', 'introduction to petroleum engineering', 'introduction to petroleum operations', 'petroleum exploration', 'fundamentals of drilling/reservoir/production engineering'] },
+      { canonical: 'Sedimentary and Petroleum Geology', variants: ['sedimentary and petroleum geology'] },
+      { canonical: 'Mathematics III', variants: ['mathematics iii', 'statistical and numerical methods'] },
+      { canonical: 'Engineering Mechanics', variants: ['engineering mechanics'] }
+    ],
+    4: [
+      { canonical: 'Natural Gas Engineering', variants: ['natural gas engineering'] },
+      { canonical: 'Mass Transfer', variants: ['mass transfer', 'mass transfer operations'] },
+      { canonical: 'Heat Transfer', variants: ['heat transfer'] },
+      { canonical: 'Chemical Engineering Thermodynamics-II', variants: ['chemical engineering thermodynamics-ii'] },
+      { canonical: 'Drilling Technology', variants: ['drilling technology', 'drilling engineering & well completion', 'drilling engineering and well completion'] },
+      { canonical: 'Reservoir Engineering I', variants: ['reservoir engineering i'] },
+      { canonical: 'Geophysics', variants: ['geophysics'] }
+    ]
+  },
+  'B.Sc (Hons) - Chemistry': {
+    1: [
+      { canonical: 'Inorganic Chemistry I', variants: ['inorganic chemistry i', 'atomic structure and bonding'] },
+      { canonical: 'Physical Chemistry I', variants: ['physical chemistry i', 'states of matter and ionic equilibria'] },
+      { canonical: 'Linear Algebra', variants: ['linear algebra', 'matrices'] },
+      { canonical: 'Geology GE', variants: ['geology ge', 'fundamental of geology', 'rocks and minerals', 'essentials of geology'] },
+      { canonical: 'Physics GE', variants: ['physics ge', 'introductory mathematical physics', 'electricity & magnetism'] },
+      { canonical: 'Environmental Science', variants: ['environmental science'] }
+    ],
+    2: [
+      { canonical: 'Organic Chemistry-I', variants: ['organic chemistry-i', 'fundamentals of organic chemistry', 'organic chemistry i'] },
+      { canonical: 'Physical Chemistry-II', variants: ['physical chemistry-ii', 'chemical thermodynamics & solution'] },
+      { canonical: 'Analytical Chemistry', variants: ['analytical chemistry', 'principles of analytical chemistry', 'pharmaceutical compounds'] },
+      { canonical: 'Calculus', variants: ['calculus'] },
+      { canonical: 'Physics GE', variants: ['physics ge', 'nuclear and particle physics', 'solid state physics', 'physics and chemistry of earth'] },
+      { canonical: 'Constitution and Indian Polity', variants: ['constitution and indian polity'] },
+      { canonical: 'English Communication', variants: ['english communication'] }
+    ],
+    3: [
+      { canonical: 'Physical Chemistry III', variants: ['physical chemistry iii', 'solutions/phase equilibrium – chemistry ii', 'solutions/phase equilibrium'] },
+      { canonical: 'Organic Chemistry II', variants: ['organic chemistry ii'] },
+      { canonical: 'Inorganic Chemistry II', variants: ['inorganic chemistry ii'] },
+      { canonical: 'Fuel/Pesticide Chemistry', variants: ['fuel/pesticide chemistry', 'fuel chemistry', 'pesticide chemistry'] },
+      { canonical: 'Elements of Modern Physics', variants: ['elements of modern physics'] },
+      { canonical: 'Differential Equations', variants: ['differential equations'] }
+    ],
+    4: [
+      { canonical: 'Physical Chemistry IV', variants: ['physical chemistry iv'] },
+      { canonical: 'Organic Chemistry III', variants: ['organic chemistry iii'] },
+      { canonical: 'Inorganic Chemistry-III', variants: ['inorganic chemistry-iii'] },
+      { canonical: 'Pharmaceutical/Analytical Chemistry', variants: ['pharmaceutical/analytical chemistry', 'pharmaceutical chemistry', 'basic analytical chemistry'] },
+      { canonical: 'Nuclear and Particle Physics', variants: ['nuclear and particle physics'] },
+      { canonical: 'Numerical Methods / Probability & Statistics', variants: ['numerical methods / probability & statistics', 'numerical methods', 'probability & statistics'] }
+    ]
+  },
+  'B.Sc (Hons) - Geology': {
+    1: [
+      { canonical: 'Mineral Science', variants: ['mineral science', 'economic geology'] },
+      { canonical: 'Earth System Science', variants: ['earth system science'] },
+      { canonical: 'Chemistry GE', variants: ['chemistry ge', 'inorganic chemistry', 'atomic structure/bonding/general organic chemistry'] },
+      { canonical: 'Linear Algebra', variants: ['linear algebra', 'matrices'] },
+      { canonical: 'Physics GE', variants: ['physics ge', 'introductory mathematical physics', 'electricity & magnetism'] },
+      { canonical: 'Information Security / Computer Programming', variants: ['information security / computer programming', 'information security', 'computer programming'] }
+    ],
+    2: [
+      { canonical: 'Igneous Petrology', variants: ['igneous petrology'] },
+      { canonical: 'Sedimentary Petrology', variants: ['sedimentary petrology'] },
+      { canonical: 'Structural Geology / Elements of Geochemistry', variants: ['structural geology / elements of geochemistry', 'structural geology', 'elements of geochemistry'] },
+      { canonical: 'Chemistry GE', variants: ['chemistry ge', 'organic chemistry', 'chemical energetics/equilibria & fgoc-i'] },
+      { canonical: 'Physics GE', variants: ['physics ge', 'nuclear and particle physics', 'solid state physics', 'foundational mechanics'] },
+      { canonical: 'Calculus', variants: ['calculus'] },
+      { canonical: 'Environmental Science', variants: ['environmental science'] }
+    ],
+    3: [
+      { canonical: 'Metamorphic Petrology', variants: ['metamorphic petrology'] },
+      { canonical: 'Structural Geology', variants: ['structural geology'] },
+      { canonical: 'Elements of Geochemistry', variants: ['elements of geochemistry'] },
+      { canonical: 'Palaeontology', variants: ['palaeontology', 'paleontology'] },
+      { canonical: 'Chemistry GE', variants: ['chemistry ge', 'physical chemistry', 'spece & fgoc', 'solutions/phase equilibrium'] },
+      { canonical: 'Physics GE', variants: ['physics ge', 'introduction to electricity & magnetism', 'elements of modern physics'] },
+      { canonical: 'Differential Equations', variants: ['differential equations'] }
+    ],
+    4: [
+      { canonical: 'Hydrogeology', variants: ['hydrogeology'] },
+      { canonical: 'Remote Sensing and GIS', variants: ['remote sensing and gis'] },
+      { canonical: 'Stratigraphic Principles and Indian Stratigraphy', variants: ['stratigraphic principles and indian stratigraphy', 'stratigraphic principles', 'indian stratigraphy'] },
+      { canonical: 'Paleontology / Metamorphic Petrology', variants: ['paleontology / metamorphic petrology', 'paleontology', 'metamorphic petrology'] },
+      { canonical: 'Chemistry GE', variants: ['chemistry ge', 'analytical chemistry', 'chemistry of d-block elements', 's&p-block elements/states of matter/chemical kinetics'] },
+      { canonical: 'Physics GE', variants: ['physics ge', 'thermodynamics', 'nuclear and particle physics'] },
+      { canonical: 'Math GE', variants: ['math ge', 'partial differential equations', 'numerical methods', 'probability and statistics', 'probability & statistics'] }
+    ]
+  },
+  'B.Sc (Hons) - Mathematics': {
+    1: [
+      { canonical: 'Differential Calculus', variants: ['differential calculus', 'calculus', 'calculus and analytical geometry'] },
+      { canonical: 'Linear Algebra I', variants: ['linear algebra i', 'algebra'] },
+      { canonical: 'Chemistry GE', variants: ['chemistry ge', 'inorganic chemistry', 'atomic structure/bonding/general organic chemistry'] },
+      { canonical: 'Physics GE', variants: ['physics ge', 'introductory mathematical physics', 'electricity & magnetism'] },
+      { canonical: 'Geology GE', variants: ['geology ge', 'fundamental of geology'] },
+      { canonical: 'Environmental Science', variants: ['environmental science'] }
+    ],
+    2: [
+      { canonical: 'Real Analysis I', variants: ['real analysis i', 'real analysis'] },
+      { canonical: 'Linear Algebra-II', variants: ['linear algebra-ii', 'linear algebra ii', 'linear algebra'] },
+      { canonical: 'Analytical Geometry', variants: ['analytical geometry'] },
+      { canonical: 'Integral Calculus', variants: ['integral calculus'] },
+      { canonical: 'Chemistry GE', variants: ['chemistry ge', 'organic chemistry', 'chemical energetics/equilibria & fgoc-i'] },
+      { canonical: 'Physics GE', variants: ['physics ge', 'nuclear and particle physics', 'solid state physics', 'foundational mechanics'] },
+      { canonical: 'Constitution and Indian Polity / English Communication', variants: ['constitution and indian polity / english communication', 'constitution and indian polity', 'english communication'] }
+    ],
+    3: [
+      { canonical: 'Ordinary Differential Equations', variants: ['ordinary differential equations'] },
+      { canonical: 'Complex Analysis', variants: ['complex analysis'] },
+      { canonical: 'Analytical Geometry', variants: ['analytical geometry'] },
+      { canonical: 'Logic and Sets', variants: ['logic and sets'] },
+      { canonical: 'Group Theory I', variants: ['group theory i'] },
+      { canonical: 'Theory of Real Functions', variants: ['theory of real functions'] },
+      { canonical: 'Chemistry/Physics GE', variants: ['chemistry/physics ge', 'physical chemistry', 'introduction to electricity & magnetism', 'elements of modern physics', 'spece & fgoc', 'solutions/phase equilibrium'] }
+    ],
+    4: [
+      { canonical: 'Real Analysis II', variants: ['real analysis ii', 'riemann integration and series of functions'] },
+      { canonical: 'Partial Differential Equations', variants: ['partial differential equations', 'pde and system of ode', 'function of several variables and pdes'] },
+      { canonical: 'Graph Theory', variants: ['graph theory'] },
+      { canonical: 'Probability & Statistics', variants: ['probability & statistics'] },
+      { canonical: 'Ring Theory and Linear Algebra I', variants: ['ring theory and linear algebra i'] },
+      { canonical: 'Complex Analysis', variants: ['complex analysis'] },
+      { canonical: 'Chemistry/Physics/Geology GE', variants: ['chemistry/physics/geology ge', 'introduction to structural geology', 'mechanics', 'analytical chemistry', 'thermodynamics', 's&p-block elements', 'nuclear and particle physics', 'fossils & their applications', 'chemistry of d-block elements'] }
+    ]
+  },
+  'B.Sc (Hons) - Physics': {
+    1: [
+      { canonical: 'Mathematical Physics-I', variants: ['mathematical physics-i'] },
+      { canonical: 'Mechanics', variants: ['mechanics'] },
+      { canonical: 'Linear Algebra I', variants: ['linear algebra i', 'matrices'] },
+      { canonical: 'Chemistry GE', variants: ['chemistry ge', 'inorganic chemistry', 'atomic structure/bonding/general organic chemistry'] },
+      { canonical: 'Geology GE', variants: ['geology ge', 'fundamental of geology', 'rocks and minerals', 'essentials of geology'] },
+      { canonical: 'Introduction to Metrology', variants: ['introduction to metrology'] },
+      { canonical: 'Environmental Science', variants: ['environmental science'] }
+    ],
+    2: [
+      { canonical: 'Mathematical Physics II', variants: ['mathematical physics ii'] },
+      { canonical: 'Thermal Physics', variants: ['thermal physics'] },
+      { canonical: 'Electricity and Magnetism', variants: ['electricity and magnetism'] },
+      { canonical: 'Waves & Optics', variants: ['waves & optics'] },
+      { canonical: 'Chemistry GE', variants: ['chemistry ge', 'organic chemistry', 'chemical energetics/equilibria & fgoc-i'] },
+      { canonical: 'Calculus', variants: ['calculus'] },
+      { canonical: 'Constitution and Indian Polity / English Communication', variants: ['constitution and indian polity / english communication', 'constitution and indian polity', 'english communication'] }
+    ],
+    3: [
+      { canonical: 'Waves & Optics', variants: ['waves & optics'] },
+      { canonical: 'Elements of Modern Physics', variants: ['elements of modern physics'] },
+      { canonical: 'Analog & Digital Systems and Applications', variants: ['analog & digital systems and applications', 'analog systems and applications', 'digital systems and applications'] },
+      { canonical: 'Computational Physics', variants: ['computational physics', 'operating system: linux'] },
+      { canonical: 'Thermal Physics', variants: ['thermal physics'] },
+      { canonical: 'Differential Equations', variants: ['differential equations', 'ordinary differential equations'] },
+      { canonical: 'Chemistry GE', variants: ['chemistry ge', 'physical chemistry', 'spece & fgoc', 'solutions/phase equilibrium'] }
+    ],
+    4: [
+      { canonical: 'Mathematical Physics III', variants: ['mathematical physics iii'] },
+      { canonical: 'Solid State Physics', variants: ['solid state physics'] },
+      { canonical: 'Statistical Physics', variants: ['statistical physics'] },
+      { canonical: 'Radiation Safety', variants: ['radiation safety', 'renewable energy and energy harvesting'] },
+      { canonical: 'Math GE', variants: ['math ge', 'partial differential equations', 'numerical methods', 'probability and statistics'] },
+      { canonical: 'Chemistry GE', variants: ['chemistry ge', 's&p-block elements/states of matter/chemical kinetics', 'fossils & their applications'] },
+      { canonical: 'Digital Systems / MATLAB', variants: ['digital systems / matlab', 'digital system and application', 'introduction to matlab programming', 'mechanical drawing'] }
+    ]
+  },
+  'B.Sc (CSE)': {
+    1: [
+      { canonical: 'Mathematical Sciences-I', variants: ['mathematical sciences-i'] },
+      { canonical: 'Digital Electronics', variants: ['digital electronics'] },
+      { canonical: 'Programming in C', variants: ['programming in c'] }
+    ],
+    2: [
+      { canonical: 'Mathematical Sciences-II', variants: ['mathematical sciences-ii'] },
+      { canonical: 'OOPs Using C++', variants: ['oops using c++'] }
+    ],
+    3: [
+      { canonical: 'Databases', variants: ['databases'] },
+      { canonical: 'Discrete Mathematics & Linear Algebra', variants: ['discrete mathematics & linear algebra'] },
+      { canonical: 'Design and Analysis of Algorithms', variants: ['design and analysis of algorithms'] },
+      { canonical: 'Elements of AIML', variants: ['elements of aiml'] }
+    ],
+    4: [
+      { canonical: 'Information Technology and Cyber Security', variants: ['information technology and cyber security'] },
+      { canonical: 'Fundamentals of Data Science', variants: ['fundamentals of data science'] },
+      { canonical: 'Applied Machine Learning', variants: ['applied machine learning'] },
+      { canonical: 'Probability, Computing and Statistics', variants: ['probability, computing and statistics'] },
+      { canonical: 'Operating Systems', variants: ['operating systems'] },
+      { canonical: 'Computer Organization and Architecture', variants: ['computer organization and architecture'] }
+    ]
   }
 };
 
