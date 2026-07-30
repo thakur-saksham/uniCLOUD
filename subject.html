@@ -278,11 +278,8 @@
 
       <!-- right: preview box -->
       <div class="right">
-        <div class="preview" id="previewBox" style="padding:0; overflow:hidden; display:flex; flex-direction:column; height: 100%; min-height: 500px;">
-          <div class="text" id="previewTextContainer" style="padding:14px; background:rgba(255,255,255,0.02); display:block;">
-            <p id="previewText">Syllabus content goes here</p>
-          </div>
-          <iframe id="pdfPreviewFrame" src="" style="width:100%; flex:1; border:none; background:#fff; border-radius:0 0 12px 12px; display:none;"></iframe>
+        <div class="preview" id="previewBox">
+          <div class="text"><p id="previewText">Syllabus content goes here</p></div>
         </div>
       </div>
     </div>
@@ -415,28 +412,11 @@
       r.innerHTML = `
         <span>${f.name}</span>
         <div class="file-actions">
-          <button class="pill-btn preview-btn" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff;" data-link="${f.link}">Preview</button>
           <a href="${f.link}" target="_blank" rel="noopener noreferrer">
             <button class="pill-btn download-btn">Download</button>
           </a>
           <button class="pill-btn save-btn">Save</button>
         </div>`;
-      
-      const previewBtn = r.querySelector('.preview-btn');
-      previewBtn.addEventListener('click', (e) => {
-         e.preventDefault();
-         const iframe = document.getElementById('pdfPreviewFrame');
-         const txtCont = document.getElementById('previewTextContainer');
-         if(iframe) {
-            let previewUrl = f.link;
-            if(previewUrl.includes('drive.google.com') && previewUrl.includes('/view')) {
-                previewUrl = previewUrl.replace('/view', '/preview');
-            }
-            iframe.src = previewUrl;
-            iframe.style.display = 'block';
-            if(txtCont) txtCont.style.display = 'none';
-         }
-      });
       
       const saveBtn = r.querySelector('.save-btn');
       
@@ -491,26 +471,6 @@
 
       fileList.appendChild(r);
     });
-
-    if(arr.length > 0) {
-       const firstLink = arr[0].link;
-       const iframe = document.getElementById('pdfPreviewFrame');
-       const txtCont = document.getElementById('previewTextContainer');
-       if(iframe) {
-          let previewUrl = firstLink;
-          if(previewUrl.includes('drive.google.com') && previewUrl.includes('/view')) {
-              previewUrl = previewUrl.replace('/view', '/preview');
-          }
-          iframe.src = previewUrl;
-          iframe.style.display = 'block';
-          if(txtCont) txtCont.style.display = 'none';
-       }
-    } else {
-       const iframe = document.getElementById('pdfPreviewFrame');
-       const txtCont = document.getElementById('previewTextContainer');
-       if(iframe) iframe.style.display = 'none';
-       if(txtCont) txtCont.style.display = 'block';
-    }
   }
 
   /* tab handlers */
