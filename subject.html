@@ -624,15 +624,35 @@ previewEl.textContent = previewText[type] || "";
 
     if (type === 'videos') {
         const sName = subject.trim().toLowerCase();
-        if (sName === 'aem i' || sName === 'aem 1' || sName === 'mathematics i' || sName.includes('aem i')) {
+        if (sName === 'aem i' || sName === 'aem 1' || sName === 'mathematics i' || sName === 'mathematical sciences-i' || sName.includes('aem i')) {
             renderAEMVideoRoadmap(fileList);
             return;
         }
-        if (sName === 'aem ii' || sName === 'aem 2' || sName === 'mathematics ii' || sName.includes('aem ii') || sName.includes('aem 2')) {
+        if (sName === 'aem ii' || sName === 'aem 2' || sName === 'aem2' || sName === 'mathematics ii' || sName.includes('aem ii') || sName.includes('aem 2')) {
             renderAEM2VideoRoadmap(fileList);
             return;
         }
-        if (sName.includes('programming') || sName === 'c language' || sName === 'c programming' || sName === 'c' || sName.includes('problem solving')) {
+        if (sName.includes('python') || sName === 'computing with python' || sName === 'python programming / scripting') {
+            renderPythonVideoRoadmap(fileList);
+            return;
+        }
+        if (sName === 'de' || sName.includes('digital electronics') || sName.includes('eceg1012') || sName.includes('digital circuits') || sName.includes('digital logic') || sName.includes('computer system architecture')) {
+            renderDEVideoRoadmap(fileList);
+            return;
+        }
+        if (sName.includes('aiml') || sName.includes('artificial intelligence') || sName.includes('machine learning') || sName === 'ai & ml basics' || sName.includes('elements of ai')) {
+            renderAIMLVideoRoadmap(fileList);
+            return;
+        }
+        if (sName === 'physics' || sName.includes('engineering physics') || sName.includes('physics')) {
+            renderPhysicsVideoRoadmap(fileList);
+            return;
+        }
+        if (sName.includes('dsa') || sName.includes('data structures') || sName.includes('cseg1043')) {
+            renderDSAVideoRoadmap(fileList);
+            return;
+        }
+        if (sName.includes('c programming') || sName === 'c language' || sName === 'programming in c' || sName === 'c' || sName.includes('problem solving') || sName.includes('programming')) {
             renderCVideoRoadmap(fileList);
             return;
         }
@@ -653,7 +673,24 @@ previewEl.textContent = previewText[type] || "";
       return;
     }
 
-    const arr = fileData[type] || [];
+    let arr = [...(fileData[type] || [])];
+    if (type === 'notes') {
+      const hwOrder = ["linked list", "stack", "queue", "tree", "heap", "graph", "sorting"];
+      arr.sort((a, b) => {
+        const aName = (a.name || '').toLowerCase();
+        const bName = (b.name || '').toLowerCase();
+        const aHW = aName.includes('handwritten');
+        const bHW = bName.includes('handwritten');
+        if (aHW && !bHW) return -1;
+        if (!aHW && bHW) return 1;
+        if (aHW && bHW) {
+          const aIdx = hwOrder.findIndex(key => aName.includes(key));
+          const bIdx = hwOrder.findIndex(key => bName.includes(key));
+          if (aIdx !== -1 && bIdx !== -1 && aIdx !== bIdx) return aIdx - bIdx;
+        }
+        return 0;
+      });
+    }
     if(arr.length === 0){
       const no = document.createElement('div');
       no.className = 'file-row';
@@ -1011,45 +1048,59 @@ previewEl.textContent = previewText[type] || "";
       container.innerHTML = `
         <div class="video-roadmap-container">
           <!-- Header Overview -->
-          <div class="roadmap-header-box">
-            <h3><i class="ph ph-code" style="color:#38bdf8;"></i> C Language (36 Lectures) — Hindi + English Video Roadmap</h3>
-            <p>Mapped directly to the 6-unit course plan (36 lecture sessions). Structured around two comprehensive master spines: <strong>🇮🇳 CodeWithHarry</strong> (Hindi) and <strong>🇬🇧 Jenny's Lectures CS/IT</strong> (English), augmented by <strong>MySirG (Saurabh Shukla Sir)</strong> and <strong>Neso Academy</strong> for essential fill-in topics.</p>
-            <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;">
-              <a class="card-btn sec" style="width:auto; padding:8px 14px; font-size:12px;" href="https://www.youtube.com/watch?v=ZSPZob_1TOk" target="_blank"><i class="ph ph-play-circle" style="color:#f48fb1;"></i> Hindi Spine: CWH 15-Hour Master Video</a>
-              <a class="card-btn sec" style="width:auto; padding:8px 14px; font-size:12px;" href="https://www.codewithharry.com/notes/" target="_blank"><i class="ph ph-file-text" style="color:#fcd34d;"></i> CWH Chapter Notes & Timestamps PDF</a>
-              <a class="card-btn sec" style="width:auto; padding:8px 14px; font-size:12px;" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-playlist" style="color:#38bdf8;"></i> English Spine: Jenny's 149-Video Playlist</a>
+          <div class="roadmap-header-box" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(6, 182, 212, 0.18));">
+            <h3><i class="ph ph-terminal-window" style="color:#34d399;"></i> C Language (36 Lectures) — Hindi + English Video Resource Guide</h3>
+            <p>Mapped directly to your university course plan (6 units, 36 lecture sessions) leveraging dual verified video spines: <strong>CodeWithHarry (Hindi Spine)</strong> with chapter deep-links & free PDF notes, and <strong>Jenny's Lectures CS/IT (English Spine, C_01–C_149)</strong>, supplemented by Saurabh Shukla Sir (MySirG), Neso Academy, and NPTEL.</p>
+            <div class="spine-quick-links" style="margin-top:12px; display:flex; flex-wrap:wrap; gap:10px;">
+              <a class="spine-pill hindi-pill" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/watch?v=ZSPZob_1TOk" target="_blank"><i class="ph ph-play-circle"></i> CWH 15-Hour Hindi Master Video</a>
+              <a class="spine-pill hindi-pill" style="background:linear-gradient(135deg, #3b82f6, #2563eb); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.codewithharry.com/notes/" target="_blank"><i class="ph ph-file-pdf"></i> Free Chapter PDF Notes & Cheatsheets</a>
+              <a class="spine-pill english-pill" style="background:linear-gradient(135deg, #8b5cf6, #6d28d9); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-list-video"></i> Jenny's 149-Video English Playlist</a>
             </div>
+          </div>
+
+          <!-- Practical Student Notes & Attribution Box -->
+          <div class="roadmap-header-box" style="margin-top:-16px; margin-bottom:8px; background:linear-gradient(135deg, rgba(245, 158, 11, 0.14), rgba(16, 185, 129, 0.14)); border-color:rgba(16, 185, 129, 0.35);">
+            <h3><i class="ph ph-lightbulb" style="color:#fcd34d;"></i> Essential Practical Study & Laboratory Advice</h3>
+            <ul style="margin:8px 0 0 0; padding-left:20px; color:rgba(255,255,255,0.85); font-size:13.5px; line-height:1.65;">
+              <li><strong>Attribution & Creator Support:</strong> We link out directly to original creators' YouTube channels rather than re-hosting or scraping videos. This ensures CodeWithHarry, Jenny's Lectures, and Saurabh Shukla Sir receive proper credit and monetization for their incredible free education!</li>
+              <li><strong>⚡ Inline Deep-Links:</strong> Chapter timestamps below are pulled directly from CWH's verified video description and placed right in front of each chapter title! Click any timestamp link below to jump instantly to that exact second in the 15-hour tutorial!</li>
+              <li><strong>GitHub Laboratory Prep:</strong> Because university computer lab exams require pushing source code to GitHub, check out CodeWithHarry's free Git &amp; GitHub playlist if you haven't mastered basic command-line version control yet!</li>
+              <li><strong>PDF Notes & Practice Sets:</strong> Pair the video with CWH's downloadable free chapter notes (<a href="https://www.codewithharry.com/notes/" target="_blank" style="color:#38bdf8;">codewithharry.com/notes</a>) to get downloadable syntax cheatsheets, practice sets, and solutions without needing to manually scrub through 15 hours of video.</li>
+            </ul>
           </div>
 
           <!-- UNIT I -->
           <div class="unit-section">
             <div class="unit-header-row">
               <h3 class="unit-title">UNIT I — Introduction to Computing</h3>
-              <span class="unit-time"><i class="ph ph-calendar-check"></i> Lectures 1–4</span>
+              <span class="unit-time"><i class="ph ph-clock"></i> Lectures 1–4</span>
             </div>
             <div class="video-cards-grid">
               <div class="video-card">
                 <span class="card-badge badge-primary">🇮🇳 Hindi Spine (CWH)</span>
-                <h4 class="card-title">Ch. 0: Intro to Computing & Setup</h4>
-                <p class="card-desc">Covers basic computer organization, evolution of programming languages, data representation & storage, editors, debuggers, translators, and execution (Lectures 1–2). Reference CWH free notes PDF for specific chapter timestamps!</p>
-                <a class="card-btn" href="https://www.youtube.com/watch?v=ZSPZob_1TOk" target="_blank" rel="noopener noreferrer"><i class="ph ph-play-circle"></i> Watch Course (Ch. 0)</a>
-              </div>
-              <div class="video-card">
-                <span class="card-badge badge-info">🇬🇧 English Spine (Jenny's)</span>
-                <h4 class="card-title">C_01 to C_03 & C_06: Fundamentals</h4>
+                <h4 class="card-title">Course Agenda & Setup [00:00:00 – 00:22:30]</h4>
+                <p class="card-desc">Covers L1 Basic Computer Organization overview and L2 IDE/Compiler Installation & Setup. Note: Content here is relatively thin ("what is programming/what is C"), focusing on compiler setup rather than hardware architecture.</p>
                 <div class="video-links-list">
-                  <a class="video-link-item" href="https://www.youtube.com/watch?v=EjavYOFoJJ0" target="_blank"><i class="ph ph-video-camera"></i> C_01: Intro to Programming in C</a>
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-video-camera"></i> C_02: Low vs High Level Languages</a>
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-video-camera"></i> C_03: Language Translators & C_06: Execution</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=0s" target="_blank"><i class="ph ph-play-circle" style="color:#10b981;"></i> Course Contents & Agenda [00:00:00]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=71s" target="_blank"><i class="ph ph-wrench" style="color:#38bdf8;"></i> Installation & Setup [00:01:11]</a>
                 </div>
               </div>
               <div class="video-card">
-                <span class="card-badge badge-warning">⚠️ Gap Fill-In (L3–L4)</span>
-                <h4 class="card-title">Algorithms, Pseudocode & Flowcharts</h4>
-                <p class="card-desc">Neither main spine contains dedicated flowchart/pseudocode lectures for beginners. Best recommended alternatives:</p>
+                <span class="card-badge badge-secondary">🇬🇧 English Spine (Stronger Here)</span>
+                <h4 class="card-title">Jenny's Intro, Translators & Execution</h4>
+                <p class="card-desc">The English side provides substantially stronger foundational depth for L1 & L2, covering language translators, high vs low-level languages, and the internal steps of compiler program execution.</p>
                 <div class="video-links-list">
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLBlnK6fEyqRhX6r2uhhlubuF5QextdCSM" target="_blank"><i class="ph ph-play-circle" style="color:#fcd34d;"></i> Neso Academy: C & Data Structures</a>
-                  <a class="video-link-item" href="https://www.youtube.com/results?search_query=NPTEL+Problem+Solving+through+Programming+in+C+Anupam+Basu+Flowchart" target="_blank"><i class="ph ph-magnifying-glass" style="color:#38bdf8;"></i> NPTEL IIT Kharagpur (Prof. Anupam Basu)</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=EjavYOFoJJ0" target="_blank"><i class="ph ph-video-camera" style="color:#a855f7;"></i> C_01: Intro to Programming in C</a>
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-video-camera" style="color:#a855f7;"></i> C_02, C_03, C_06: Translators & Program Execution</a>
+                </div>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-warning">⚠️ L3–L4 Genuine Gap Fix</span>
+                <h4 class="card-title">Algorithms, Pseudocode & Flowcharts</h4>
+                <p class="card-desc">Neither primary spine covers beginner flowcharts and algorithm problem-solving! Use these vetted academic replacements:</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLBlnK6fEyqRhX6r2uhhlubuF5QextdCSM" target="_blank"><i class="ph ph-tree-structure" style="color:#fcd34d;"></i> Neso Academy: C Programming & Flowchart Basics</a>
+                  <a class="video-link-item" href="https://www.youtube.com/results?search_query=NPTEL+Problem+Solving+through+Programming+in+C+Anupam+Basu+Flowchart" target="_blank"><i class="ph ph-graduation-cap" style="color:#f43f5e;"></i> NPTEL (Prof. Anupam Basu): Flowchart & Pseudocode (L3)</a>
                 </div>
               </div>
             </div>
@@ -1061,28 +1112,41 @@ previewEl.textContent = previewText[type] || "";
           <div class="unit-section">
             <div class="unit-header-row">
               <h3 class="unit-title">UNIT II — C Programming Fundamentals</h3>
-              <span class="unit-time"><i class="ph ph-calendar-check"></i> Lectures 5–11</span>
+              <span class="unit-time"><i class="ph ph-clock"></i> Lectures 5–11</span>
             </div>
             <div class="video-cards-grid">
-              <div class="video-card">
-                <span class="card-badge badge-primary">🇮🇳 Hindi Spine (CWH)</span>
-                <h4 class="card-title">Ch. 1–5: Syntax, Operators & Control Flow</h4>
-                <p class="card-desc">Covers Data types, variables (local/global), keywords (Ch. 1-2), Structure of C program (Ch. 0), Operators, ternary & sizeof, precedence (Ch. 3), Conditional if/else & switch (Ch. 4), Loops while, do-while, for (Ch. 4/5), and break/continue/goto.</p>
-                <a class="card-btn" href="https://www.youtube.com/watch?v=ZSPZob_1TOk" target="_blank" rel="noopener noreferrer"><i class="ph ph-play-circle"></i> Watch Chapters 1–5</a>
-              </div>
-              <div class="video-card">
-                <span class="card-badge badge-info">🇬🇧 English Spine (Jenny's)</span>
-                <h4 class="card-title">C_05 to C_42: Complete Fundamentals</h4>
-                <div class="video-links-list">
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-list-numbers"></i> C_07 to C_12: Constants, Variables & Data Types</a>
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-math-operations"></i> C_13 to C_21: Operators & Precedence</a>
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-git-branch"></i> C_27 to C_32: Conditional Statement & Switch</a>
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-arrows-clockwise"></i> C_33 to C_42: Loops, Break & Continue</a>
+              <div class="video-card" style="grid-column: span 2;">
+                <span class="card-badge badge-primary">🇮🇳 Hindi Spine (CWH Chapters 1–4)</span>
+                <h4 class="card-title">Data Types, Operators, Conditionals & Loops</h4>
+                <p class="card-desc">Complete syllabus alignment covering variables, declaration vs definition, structure of a program, precedence/associativity, conditionals, switch-case, and loops. Verified inline chapter deep-links:</p>
+                <div class="video-links-list" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=1350s" target="_blank"><i class="ph ph-hash" style="color:#10b981;"></i> Ch. 1: Variables, Constants & Keywords [00:22:30]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=4331s" target="_blank"><i class="ph ph-pencil" style="color:#fbbf24;"></i> Ch. 1: Practice Set [01:12:11]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=5524s" target="_blank"><i class="ph ph-math-operations" style="color:#10b981;"></i> Ch. 2: Instructions & Operators [01:32:04]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=8089s" target="_blank"><i class="ph ph-pencil" style="color:#fbbf24;"></i> Ch. 2: Practice Set [02:14:49]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=9292s" target="_blank"><i class="ph ph-git-branch" style="color:#10b981;"></i> Ch. 3: Conditional Instructions & switch [02:34:52]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=12245s" target="_blank"><i class="ph ph-pencil" style="color:#fbbf24;"></i> Ch. 3: Practice Set [03:24:05]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=14118s" target="_blank"><i class="ph ph-repeat" style="color:#10b981;"></i> Ch. 4: Loop Control, break & continue [03:55:18]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=17908s" target="_blank"><i class="ph ph-pencil" style="color:#fbbf24;"></i> Ch. 4: Practice Set [04:58:28]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=19461s" target="_blank" style="grid-column: span 2; background:rgba(16,185,129,0.1);"><i class="ph ph-game-controller" style="color:#4ade80;"></i> Project 1: Guess The Number Game [05:24:21]</a>
                 </div>
               </div>
-            </div>
-            <div class="unit-note-box info">
-              <strong>📌 Note on goto Statement (Lecture 10):</strong> Jenny's playlist does not feature a dedicated standalone video for <code>goto</code>; CodeWithHarry's notes PDF and video chapters cleanly cover <code>goto</code> syntax and jumps! (Lecture 11 is Quiz-1).
+              <div class="video-card">
+                <span class="card-badge badge-secondary">🇬🇧 English Spine (Jenny's)</span>
+                <h4 class="card-title">C_05 to C_42 Syntax & Control</h4>
+                <p class="card-desc">Comprehensive English coverage across single-topic module videos:</p>
+                <div class="video-links-list">
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_05: Structure of a C Program</span>
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_07–C_12: Constants, Variables & Data Types</span>
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_13–C_21: Operators & Precedence</span>
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_27–C_30: Conditional Statements (if/else)</span>
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_31–C_32: switch-case Instructions</span>
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_33–C_42: Loops, break & continue</span>
+                </div>
+                <div class="unit-note-box info" style="margin-top:auto; font-size:12px;">
+                  <strong>ℹ️ L10 goto Gap & L11 Quiz-1:</strong> Jenny's playlist lacks a dedicated video for the <code>goto</code> jump statement. CWH notes briefly demonstrate it. L11 is Quiz-1!
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1092,27 +1156,37 @@ previewEl.textContent = previewText[type] || "";
           <div class="unit-section">
             <div class="unit-header-row">
               <h3 class="unit-title">UNIT III — Array and Function</h3>
-              <span class="unit-time"><i class="ph ph-calendar-check"></i> Lectures 12–16</span>
+              <span class="unit-time"><i class="ph ph-clock"></i> Lectures 12–16</span>
             </div>
             <div class="video-cards-grid">
               <div class="video-card">
-                <span class="card-badge badge-primary">🇮🇳 Hindi Spine (CWH)</span>
-                <h4 class="card-title">Ch. 6–9: Arrays, Strings, Functions & Recursion</h4>
-                <p class="card-desc">Covers 1D Arrays & Strings (Ch. 6-7), 2D/Multidimensional matrix arrays, Functions with argument passing (Call by Value & Call by Reference — Ch. 8), Scope rules, variable lifetime & Recursion (Ch. 8-9).</p>
-                <a class="card-btn" href="https://www.youtube.com/watch?v=ZSPZob_1TOk" target="_blank" rel="noopener noreferrer"><i class="ph ph-play-circle"></i> Watch Chapters 6–9</a>
-              </div>
-              <div class="video-card">
-                <span class="card-badge badge-info">🇬🇧 English Spine (Jenny's)</span>
-                <h4 class="card-title">C_46 to C_108: Modular Programming</h4>
+                <span class="card-badge badge-primary">🇮🇳 Hindi Spine (CWH Ch. 5, 7 & 8)</span>
+                <h4 class="card-title">Functions, Recursion, Arrays & Strings</h4>
+                <p class="card-desc">Covers passing arguments by value/reference, 1D/multidimensional array manipulations, and string handling methods with practice sets. Inline deep-links:</p>
                 <div class="video-links-list">
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-grid-four"></i> C_46 to C_70: 1D Arrays, Strings & 2D Matrices</a>
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-brackets-curly"></i> C_84 to C_91: Functions & Call by Value/Reference</a>
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-tree-structure"></i> C_104 to C_108: Recursion (Tail/Non-Tail & GATE)</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=20358s" target="_blank"><i class="ph ph-function" style="color:#10b981;"></i> Ch. 5: Functions & Recursion [05:39:18]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=23816s" target="_blank"><i class="ph ph-pencil" style="color:#fbbf24;"></i> Ch. 5: Practice Set [06:36:56]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=30399s" target="_blank"><i class="ph ph-squares-four" style="color:#38bdf8;"></i> Ch. 7: Arrays & 2D Matrices [08:26:39]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=34800s" target="_blank"><i class="ph ph-pencil" style="color:#fbbf24;"></i> Ch. 7: Practice Set [09:40:00]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=36874s" target="_blank"><i class="ph ph-text-aa" style="color:#a855f7;"></i> Ch. 8: Strings & Methods [10:14:34]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=39286s" target="_blank"><i class="ph ph-pencil" style="color:#fbbf24;"></i> Ch. 8: Practice Set [10:54:46]</a>
                 </div>
               </div>
-            </div>
-            <div class="unit-note-box info">
-              <strong>📌 Scope Rules Note (Lecture 15):</strong> In Jenny's curriculum, scope rules and variable visibility are folded directly into her Storage Classes videos (C_140 to C_145) rather than existing as a single standalone lecture. (Lecture 16 is Viva-1).
+              <div class="video-card">
+                <span class="card-badge badge-secondary">🇬🇧 English Spine (Jenny's)</span>
+                <h4 class="card-title">C_46–C_70 Arrays & C_84–C_108 Functions</h4>
+                <p class="card-desc">Thorough English coverage of matrix operations and function parameter passing:</p>
+                <div class="video-links-list">
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_46–C_52: 1D Arrays & manipulations</span>
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_53–C_61: 2D Multidimensional & Matrix Programs</span>
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_62–C_70: Strings & Built-in functions</span>
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_84–C_91: Functions, Call by Value & Reference</span>
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_104–C_108: Recursion (Tail/Non-tail & GATE problem)</span>
+                </div>
+                <div class="unit-note-box info" style="margin-top:auto; font-size:12px;">
+                  <strong>ℹ️ L15 Scope Rules Note:</strong> Jenny folds scope rules directly into her Storage Classes videos (C_140–C_145) rather than a standalone lecture. L16 is your Viva-1 assessment!
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1122,32 +1196,38 @@ previewEl.textContent = previewText[type] || "";
           <div class="unit-section">
             <div class="unit-header-row">
               <h3 class="unit-title">UNIT IV — Structures and Pointers</h3>
-              <span class="unit-time"><i class="ph ph-calendar-check"></i> Lectures 17–23</span>
+              <span class="unit-time"><i class="ph ph-clock"></i> Lectures 17–23</span>
             </div>
             <div class="video-cards-grid">
               <div class="video-card">
-                <span class="card-badge badge-primary">🇮🇳 Hindi Spine & Backups</span>
-                <h4 class="card-title">Structures, Unions, Enums & Pointers</h4>
-                <p class="card-desc">Covers structure definition, typedef, Union vs Structure (CWH Ch. 9) and Pointers, pointer arithmetic, double pointers, pointers to functions & arrays (CWH Ch. 10).</p>
+                <span class="card-badge badge-primary">🇮🇳 Hindi Spine (CWH & MySirG)</span>
+                <h4 class="card-title">Pointers & Structures + Enum/Bit-fields Fix</h4>
+                <p class="card-desc">Covers pointer arithmetic, pointers to pointers, structure definitions, typedef, and unions (folded inside Ch. 9). Inline deep-links:</p>
                 <div class="video-links-list">
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLUaNxYlalMECkeFxDNCOFSRj6SLBf9Oi6" target="_blank"><i class="ph ph-playlist" style="color:#f48fb1;"></i> MySirG (Saurabh Shukla Sir): Better Source for Enums</a>
-                  <a class="video-link-item" href="https://www.youtube.com/watch?v=skStERQPrio" target="_blank"><i class="ph ph-video-camera" style="color:#fcd34d;"></i> Standalone Hindi Video: Bit-Fields in C</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=25615s" target="_blank"><i class="ph ph-cursor-click" style="color:#10b981;"></i> Ch. 6: Pointers & Arithmetic [07:06:55]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=28824s" target="_blank"><i class="ph ph-pencil" style="color:#fbbf24;"></i> Ch. 6: Practice Set [08:00:24]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=41381s" target="_blank"><i class="ph ph-brackets-curly" style="color:#38bdf8;"></i> Ch. 9: Structures, Unions & typedef [11:29:41]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=44625s" target="_blank"><i class="ph ph-pencil" style="color:#fbbf24;"></i> Ch. 9: Practice Set [12:23:45]</a>
                 </div>
-                <a class="card-btn" href="https://www.youtube.com/watch?v=ZSPZob_1TOk" target="_blank"><i class="ph ph-play-circle"></i> Watch CWH Chapters 9–10</a>
+                <div class="unit-note-box warning" style="margin-top:8px; font-size:12px;">
+                  <strong>⚠️ Confirmed CWH Gap for L19:</strong> Enum and bit-fields are confirmed absent from CWH (Ch. 9 is followed immediately by File I/O).<br>
+                  &rarr; <a href="https://www.youtube.com/playlist?list=PLUaNxYlalMECkeFxDNCOFSRj6SLBf9Oi6" target="_blank" style="color:#fcd34d;">Use Saurabh Shukla Sir (MySirG) for Enum</a><br>
+                  &rarr; <a href="https://www.youtube.com/watch?v=skStERQPrio" target="_blank" style="color:#4ade80;">Watch Standalone Hindi Video for Bit-Fields</a>
+                </div>
               </div>
               <div class="video-card">
-                <span class="card-badge badge-info">🇬🇧 English Spine (Jenny's)</span>
-                <h4 class="card-title">Advanced Memory Structures & Pointers</h4>
+                <span class="card-badge badge-secondary">🇬🇧 English Spine (Jenny's & Sorber)</span>
+                <h4 class="card-title">C_71–C_77 Pointers & C_109–C_115 Structures</h4>
+                <p class="card-desc">Thorough English treatment of structures, unions, function pointers, and enumerations:</p>
                 <div class="video-links-list">
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-arrow-up-right"></i> C_71 to C_77 & C_99–C_103: Pointers & Arithmetic</a>
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-stack"></i> C_109 to C_115: Structures, typedef & Unions</a>
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-list-checks"></i> C_138 & C_139: Enumeration (Enum)</a>
-                  <a class="video-link-item" href="https://www.youtube.com/watch?v=aMAM5vL7wTs" target="_blank"><i class="ph ph-video-camera" style="color:#38bdf8;"></i> Jacob Sorber: Bit-Fields in C (Standalone)</a>
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_71–C_77: Pointers, Arithmetic & Pointer-to-Pointer</span>
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_99, C_101–C_103: Function Pointers & Return Types</span>
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_109–C_115: Structures, Union (C_114) & typedef</span>
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_138, C_139: Enumeration (Enum)</span>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=aMAM5vL7wTs" target="_blank"><i class="ph ph-cpu" style="color:#f43f5e;"></i> Jacob Sorber: Bit Fields in C (English Gap Fix)</a>
                 </div>
+                <p class="card-desc" style="font-size:12px; margin-top:6px;"><em>Note: L22 is Doubt-Solving Session-1 and L23 is Quiz-2.</em></p>
               </div>
-            </div>
-            <div class="unit-note-box info">
-              <strong>📌 Bit-Fields Coverage:</strong> Bit-fields are omitted from the two main playlists; the standalone Hindi (special video) and English (Jacob Sorber) videos linked in the cards completely solve this gap! (Lectures 22-23 are Doubt-Solving & Quiz-2).
             </div>
           </div>
 
@@ -1157,27 +1237,35 @@ previewEl.textContent = previewText[type] || "";
           <div class="unit-section">
             <div class="unit-header-row">
               <h3 class="unit-title">UNIT V — File Handling & Memory Management</h3>
-              <span class="unit-time"><i class="ph ph-calendar-check"></i> Lectures 24–29</span>
+              <span class="unit-time"><i class="ph ph-clock"></i> Lectures 24–29</span>
             </div>
             <div class="video-cards-grid">
               <div class="video-card">
-                <span class="card-badge badge-primary">🇮🇳 Hindi Spine (CWH)</span>
-                <h4 class="card-title">Ch. 11–12: Files & Dynamic Memory Allocation</h4>
-                <p class="card-desc">Covers Data organization and file operations (fopen, reading, writing — Ch. 11), Mini Project Initiation, and Dynamic Memory Management: malloc(), calloc(), realloc(), and free() (Ch. 12).</p>
-                <a class="card-btn" href="https://www.youtube.com/watch?v=ZSPZob_1TOk" target="_blank" rel="noopener noreferrer"><i class="ph ph-play-circle"></i> Watch Chapters 11–12</a>
-              </div>
-              <div class="video-card">
-                <span class="card-badge badge-info">🇬🇧 English Spine (Jenny's)</span>
-                <h4 class="card-title">C_119 to C_136: File I/O & Heap Memory</h4>
+                <span class="card-badge badge-primary">🇮🇳 Hindi Spine (CWH Ch. 10 & 11)</span>
+                <h4 class="card-title">File I/O, Project 2 & Dynamic Memory</h4>
+                <p class="card-desc">Covers file opening modes, reading, writing, dynamic memory allocation via malloc/calloc/realloc, and deallocation via free(). Inline deep-links:</p>
                 <div class="video-links-list">
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-folder-open"></i> C_119 to C_131: fopen, read/write/append & fseek/rewind</a>
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-cpu"></i> C_132 to C_134: malloc() & calloc() Allocation</a>
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-trash"></i> C_135 & C_136: realloc() & free() Deallocation</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=46395s" target="_blank"><i class="ph ph-folder-open" style="color:#10b981;"></i> Ch. 10: File I/O & Operations [12:53:15]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=49517s" target="_blank"><i class="ph ph-pencil" style="color:#fbbf24;"></i> Ch. 10: Practice Set [13:45:17]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=50423s" target="_blank" style="background:rgba(16,185,129,0.1);"><i class="ph ph-game-controller" style="color:#4ade80;"></i> Project 2: Snake, Water, Gun Game [14:00:23]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=51709s" target="_blank"><i class="ph ph-cpu" style="color:#38bdf8;"></i> Ch. 11: Dynamic Memory (malloc, calloc) [14:21:49]</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=ZSPZob_1TOk&t=53982s" target="_blank"><i class="ph ph-pencil" style="color:#fbbf24;"></i> Ch. 11: Practice Set & free() [14:59:42]</a>
                 </div>
               </div>
+              <div class="video-card">
+                <span class="card-badge badge-secondary">🇬🇧 English Spine (Jenny's)</span>
+                <h4 class="card-title">C_119–C_131 File I/O & C_132–C_136 DMA</h4>
+                <p class="card-desc">Detailed standalone English videos on file stream pointers and heap allocation:</p>
+                <div class="video-links-list">
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_119–C_131: fopen, read/write/append, fseek & rewind</span>
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_132–C_134: malloc() & calloc() Allocation</span>
+                  <span class="video-link-item"><i class="ph ph-check"></i> C_135 & C_136: realloc() & free() Deallocation</span>
+                </div>
+                <p class="card-desc" style="font-size:12px; margin-top:6px;"><em>Note: L28 is Doubt-Solving Session-2 and L29 is Quiz-3.</em></p>
+              </div>
             </div>
-            <div class="unit-note-box">
-              <strong>⚠️ Conceptual Flag for Lecture 27 ("Garbage Collection"):</strong> Plain C has <em>no automatic garbage collector</em> — memory allocated on the heap MUST be freed manually using <code>free()</code>. If your slides or LMS list "Garbage Collection," this is a conceptual discussion or comparison; do not go looking for a <code>gc()</code> function in standard C as it doesn't exist!
+            <div class="unit-note-box" style="margin-top:8px;">
+              <strong>⚠️ Conceptual Flag for Lecture 27 ("Garbage Collection"):</strong> Plain C has <em>no automatic garbage collector</em> — memory allocated on the heap MUST be freed manually using <code>free()</code>. If your slides or LMS list "Garbage Collection," this is a conceptual discussion or language comparison; do not go looking for a <code>gc()</code> function in standard C as it does not exist!
             </div>
           </div>
 
@@ -1187,97 +1275,88 @@ previewEl.textContent = previewText[type] || "";
           <div class="unit-section">
             <div class="unit-header-row">
               <h3 class="unit-title">UNIT VI — Preprocessor, Macro, Static & Shared Library</h3>
-              <span class="unit-time"><i class="ph ph-calendar-check"></i> Lectures 30–36</span>
+              <span class="unit-time"><i class="ph ph-clock"></i> Lectures 30–36</span>
             </div>
             <div class="video-cards-grid">
               <div class="video-card">
-                <span class="card-badge badge-primary">🇮🇳 Hindi Spine & Headers</span>
-                <h4 class="card-title">Preprocessors, Macros & ctype.h</h4>
-                <p class="card-desc">Covers Preprocessor directives, Macro definitions vs Functions (CWH Ch. 13). Basic headers (stdio, stdlib, string) are covered across earlier programs.</p>
+                <span class="card-badge badge-primary">🇬🇧 Jenny's (Primary Spine Here)</span>
+                <h4 class="card-title">C_146 Preprocessor & C_148–C_149 Macros</h4>
+                <p class="card-desc">Because CodeWithHarry's 15-hour master video terminates after Ch. 11 DMA, Jenny's Lectures serves as our canonical primary source for L30 Preprocessor directives and L31 Macros!</p>
                 <div class="video-links-list">
-                  <a class="video-link-item" href="https://www.youtube.com/watch?v=4G3xvBQhONg" target="_blank"><i class="ph ph-video-camera" style="color:#f48fb1;"></i> Standalone Hindi Video: ctype.h Character Functions</a>
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-video-camera" style="color:#a855f7;"></i> Watch C_146 (Preprocessors) & C_148–149 (Macros)</a>
                 </div>
-                <a class="card-btn" href="https://www.youtube.com/watch?v=ZSPZob_1TOk" target="_blank"><i class="ph ph-play-circle"></i> Watch Chapter 13</a>
               </div>
               <div class="video-card">
-                <span class="card-badge badge-info">🇬🇧 English Spine & Linkers</span>
-                <h4 class="card-title">Macros & Static / Shared Libraries</h4>
+                <span class="card-badge badge-warning">🇮🇳 Hindi Option & Library Fixes</span>
+                <h4 class="card-title">MySirG Preprocessor & Standalone Headers</h4>
+                <p class="card-desc">Slotting in Saurabh Shukla Sir (MySirG) for Hindi preprocessor coverage, plus standalone links for ctype.h and library linking:</p>
                 <div class="video-links-list">
-                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-file-code"></i> C_146 to C_149: Preprocessor Directives & Macros</a>
-                  <a class="video-link-item" href="https://www.youtube.com/watch?v=qtep76C7X5s" target="_blank"><i class="ph ph-video-camera" style="color:#38bdf8;"></i> Standalone English (#131): How to Link Static & Shared Libraries</a>
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLUaNxYlalMECkeFxDNCOFSRj6SLBf9Oi6" target="_blank"><i class="ph ph-play-circle" style="color:#fcd34d;"></i> MySirG Hindi C Playlist (Preprocessor & Macros)</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=4G3xvBQhONg" target="_blank"><i class="ph ph-video-camera" style="color:#4ade80;"></i> Standalone Hindi Video: ctype.h Character Functions</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=qtep76C7X5s" target="_blank"><i class="ph ph-video-camera" style="color:#38bdf8;"></i> #131 English Video: Link Static vs Shared Libraries</a>
                 </div>
-                <p class="card-desc">Complete macro breakdown and standalone tutorial on compiling & linking static vs shared library archives.</p>
               </div>
               <div class="video-card">
-                <span class="card-badge badge-warning">📚 Library References</span>
-                <h4 class="card-title">Specialized Headers & GCC Lib Guides</h4>
-                <p class="card-desc">No dedicated video lectures exist for specialized minor headers (assert.h, stdarg.h, time.h, math.h) or Hindi static/shared library commands. Best reference documentation:</p>
+                <span class="card-badge badge-info">📖 Academic Docs & Reference Hub</span>
+                <h4 class="card-title">TutorialsPoint & GFG Guide for Header Gaps</h4>
+                <p class="card-desc">No video course covers minor standard header functions cleanly. Rely on canonical online references for complete syntax verification:</p>
                 <div class="video-links-list">
-                  <a class="video-link-item" href="https://www.tutorialspoint.com/c_standard_library/index.htm" target="_blank"><i class="ph ph-book-open" style="color:#fcd34d;"></i> TutorialsPoint: C Standard Library Reference</a>
-                  <a class="video-link-item" href="https://www.geeksforgeeks.org/c/how-do-i-create-a-library-in-c/" target="_blank"><i class="ph ph-terminal-window" style="color:#4ade80;"></i> GeeksforGeeks: Static vs Shared C Library Guide</a>
+                  <a class="video-link-item" href="https://www.tutorialspoint.com/c_standard_library/index.htm" target="_blank"><i class="ph ph-book-open" style="color:#38bdf8;"></i> TutorialsPoint: C Standard Library Docs (assert, time, math, stdarg)</a>
+                  <a class="video-link-item" href="https://www.geeksforgeeks.org/c/how-do-i-create-a-library-in-c/" target="_blank"><i class="ph ph-code" style="color:#4ade80;"></i> GeeksforGeeks: Creating Static & Shared Libraries in C</a>
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Practical Site Notes Box -->
-          <div class="roadmap-header-box" style="margin-top:16px; background:linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(16, 185, 129, 0.15));">
-            <h3><i class="ph ph-lightbulb" style="color:#fcd34d;"></i> Practical Study Notes for Students</h3>
-            <ul style="margin:8px 0 0 0; padding-left:20px; color:rgba(255,255,255,0.8); font-size:13.5px; line-height:1.7;">
-              <li><strong>Attribution & Creator Monetization:</strong> All links lead directly to the official channels of CodeWithHarry, Jenny's Lectures, and Saurabh Shukla Sir so creators properly receive views and support for their incredible free content.</li>
-              <li><strong>Git & GitHub Practice:</strong> Since your course labs require pushing code to GitHub, pair this guide with CodeWithHarry's free Git/GitHub beginner playlist on YouTube!</li>
-              <li><strong>Free Timestamps & Cheatsheets:</strong> Always pair the Hindi video spine with <a href="https://www.codewithharry.com/notes/" target="_blank" style="color:#38bdf8;text-decoration:underline;">CodeWithHarry's free PDF notes & syntax sheets</a> to jump directly to any lecture's exact timestamp instead of scrubbing a 15-hour video!</li>
-            </ul>
+            <p style="color:rgba(255,255,255,0.6); font-size:13px; margin-top:8px; text-align:right;"><em>L34: Project Evaluation | L35: Viva-2 | L36: Overall Common Test</em></p>
           </div>
 
           <!-- Quick Summary Table -->
-          <div class="summary-table-box">
-            <h4><i class="ph ph-table" style="margin-right:8px;color:#38bdf8;"></i> Quick Summary & Coverage Map</h4>
+          <div class="summary-table-box" style="margin-top:16px;">
+            <h4><i class="ph ph-table" style="margin-right:8px;color:#34d399;"></i> Course Coverage & Gap Analysis Summary</h4>
             <table>
               <thead>
                 <tr>
-                  <th>Unit</th>
-                  <th>Hindi Coverage</th>
-                  <th>English Coverage</th>
-                  <th>Real Gaps / Solutions</th>
+                  <th>Unit & Topic Module</th>
+                  <th>🇮🇳 Hindi Spine (CodeWithHarry unless noted)</th>
+                  <th>🇬🇧 English Spine (Jenny's Lectures)</th>
+                  <th>Real Gaps & Canonical Solutions</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td><strong>I — Intro to Computing</strong></td>
-                  <td>2/4 lectures (Ch. 0)</td>
-                  <td>2/4 lectures (C_01–C_06)</td>
-                  <td><span style="color:#facc15;">Algorithms, Pseudocode & Flowcharts (L3–L4)</span> &rarr; Solved via Neso Academy / NPTEL</td>
+                  <td>Thin (2/4 lectures, agenda & compiler setup [00:00 - 00:22:30])</td>
+                  <td>Stronger foundational coverage (C_01–C_03, C_06)</td>
+                  <td><span style="color:#facc15;">L3–L4 Flowcharts & Pseudocode</span> &rarr; Neso Academy & NPTEL (Anupam Basu)</td>
                 </tr>
                 <tr>
                   <td><strong>II — C Fundamentals</strong></td>
-                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span></td>
-                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span></td>
-                  <td>goto statement (minor) &rarr; Solved via CWH notes</td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span> (Ch. 1–4 with inline deep-links)</td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span> (C_05–C_42)</td>
+                  <td><span style="color:#facc15;">goto statement</span> (minor gap in Jenny's; covered in CWH notes)</td>
                 </tr>
                 <tr>
                   <td><strong>III — Array & Function</strong></td>
-                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span></td>
-                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span></td>
-                  <td><span style="color:#4ade80;">None</span> (Scope rules folded into Jenny's Storage Classes)</td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span> (Ch. 5, 7, 8 deep-links)</td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span> (C_46–70, C_84–108)</td>
+                  <td><span style="color:#4ade80;">None</span> (Scope rules folded into Jenny's Storage Classes C_140–145)</td>
                 </tr>
                 <tr>
                   <td><strong>IV — Structures & Pointers</strong></td>
-                  <td><span style="color:#4ade80;font-weight:bold;">Full</span> (Bit-fields via standalone video)</td>
-                  <td><span style="color:#4ade80;font-weight:bold;">Full</span> (Bit-fields via standalone video)</td>
-                  <td><span style="color:#4ade80;">None</span> (Bit-fields solved via standalone links)</td>
+                  <td><span style="color:#f87171;">Enum & bit-fields confirmed absent</span> in CWH Ch.9</td>
+                  <td>Enum full (C_138–139); bit-fields absent</td>
+                  <td><span style="color:#facc15;">Enum</span> &rarr; Saurabh Shukla Sir | <span style="color:#facc15;">Bit-fields</span> &rarr; Standalone Hindi & Jacob Sorber</td>
                 </tr>
                 <tr>
-                  <td><strong>V — File Handling & Memory</strong></td>
-                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span></td>
-                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span></td>
-                  <td><span style="color:#4ade80;">None</span> (L27 is a content-accuracy note on manual <code>free()</code> vs GC)</td>
+                  <td><strong>V — File I/O & Memory</strong></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span> (Ch. 10 & 11 deep-links)</td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span> (C_119–C_136)</td>
+                  <td><span style="color:#4ade80;">None</span> (L27 is an accuracy note on manual <code>free()</code> vs GC)</td>
                 </tr>
                 <tr>
-                  <td><strong>VI — Preprocessor & Libraries</strong></td>
-                  <td>Partial (Ch. 13 & ctype.h standalone)</td>
-                  <td>Partial (C_146–149 & #131 Static Libs)</td>
-                  <td><span style="color:#f87171;">assert.h, stdarg.h, time.h, math.h</span> &rarr; Solved via TutorialsPoint & GFG Guides</td>
+                  <td><strong>VI — Preprocessor & Libs</strong></td>
+                  <td><span style="color:#f87171;">Confirmed absent from CWH entirely</span> (stops at Ch. 11)</td>
+                  <td>Primary Spine for Preprocessor (C_146) & Macros (C_148–149)</td>
+                  <td><span style="color:#f87171;">assert, stdarg, time, math.h & libraries</span> &rarr; TutorialsPoint & GFG</td>
                 </tr>
               </tbody>
             </table>
@@ -1286,6 +1365,519 @@ previewEl.textContent = previewText[type] || "";
       `;
   }
 
+  function renderDEVideoRoadmap(container) {
+      container.innerHTML = `
+        <div class="video-roadmap-container">
+          <!-- Header Overview -->
+          <div class="roadmap-header-box" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.18), rgba(245, 158, 11, 0.18)); border-color: rgba(245, 158, 11, 0.35);">
+            <h3><i class="ph ph-circuitry" style="color:#fbbf24;"></i> Digital Electronics (ECEG1012) — 5 Units (45 Lectures) Guide</h3>
+            <p>Mapped directly to your university 45-lecture course plan. Structured around the canonical Indian engineering exam trio: <strong>Gate Smashers</strong> (Primary Channel, built for university exams, GATE, and NET), cross-supplemented by <strong>Neso Academy</strong> and <strong>Knowledge Gate</strong> for logic hardware families and ADC/DAC converters.</p>
+            <div class="spine-quick-links" style="margin-top:12px; display:flex; flex-wrap:wrap; gap:10px;">
+              <a class="spine-pill hindi-pill" style="background:linear-gradient(135deg, #ef4444, #dc2626); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/@GateSmashers" target="_blank"><i class="ph ph-play-circle"></i> Gate Smashers Main Channel</a>
+              <a class="spine-pill hindi-pill" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/watch?v=O0gtKDu_cJc" target="_blank"><i class="ph ph-list-video"></i> Digital Logic Full Playlist Entry</a>
+              <a class="spine-pill english-pill" style="background:linear-gradient(135deg, #8b5cf6, #6d28d9); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/playlist?list=PLZzbg5nrC3Tu_rcMpbfyXRZGCW6fmCj9z" target="_blank"><i class="ph ph-cpu"></i> Gate Smashers 8085/8086 MPMC Playlist</a>
+              <a class="spine-pill english-pill" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/@nesoacademy" target="_blank"><i class="ph ph-broadcast"></i> Neso Academy Backup</a>
+            </div>
+          </div>
+
+          <!-- Practical Advice Box -->
+          <div class="roadmap-header-box" style="margin-top:-16px; margin-bottom:8px; background:linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(16, 185, 129, 0.15)); border-color: rgba(59, 130, 246, 0.35);">
+            <h3><i class="ph ph-info" style="color:#60a5fa;"></i> Critical Study Strategy for DE</h3>
+            <p style="margin:6px 0 0 0; font-size:13.5px; line-height:1.6; color:rgba(255,255,255,0.85);"><strong>⚡ Expect a Channel Switch at Unit IV!</strong> While Gate Smashers is squarely the best channel for Units I, II, III, and V (pure digital logic, K-maps, flip-flops, and microprocessors), Unit IV (A/D and D/A Converters) is analog/instrumentation flavored. <strong>We strongly advise switching to Neso Academy as your primary channel for Unit IV specifically</strong> to master ladder circuits and sampling theory!</p>
+          </div>
+
+          <!-- UNIT I & II -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT I & II — Logic Families & Combinational Circuits</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> Lectures 1–18</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">UNIT I: LECTURES 1–9</span>
+                <h4 class="card-title">Number Systems, Gates & Logic Families</h4>
+                <p class="card-desc">Covers digital signals, logic gates, Boolean algebra, binary arithmetic, error detection/correction codes, and hardware logic families (TTL, CMOS, Schottky, Tri-state logic).</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=O0gtKDu_cJc" target="_blank"><i class="ph ph-play-circle" style="color:#fbbf24;"></i> Gate Smashers: Number Systems & Boolean Logic</a>
+                  <a class="video-link-item" href="https://www.youtube.com/@KnowledgeGATE" target="_blank"><i class="ph ph-video-camera" style="color:#38bdf8;"></i> Knowledge Gate / Neso: TTL & CMOS Logic Families</a>
+                </div>
+                <div class="unit-note-box info" style="margin-top:auto; font-size:12px;">
+                  <strong>ℹ️ Hardware Logic Families Note:</strong> Gate Smashers notes that hardware electrical specifications (TTL/CMOS) are college add-ons, making coverage lighter. Use Knowledge Gate or Neso Academy for TTL/CMOS depth!
+                </div>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-primary">UNIT II: LECTURES 10–18</span>
+                <h4 class="card-title">Combinational Circuits & Quine-McCluskey</h4>
+                <p class="card-desc">Covers K-map minimization, don't-care conditions, MUX/DEMUX, adders/subtractors, BCD arithmetic, ALU design, comparators, parity generators, encoders, display drivers, and Quine-McCluskey (Tabulation) method.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/@GateSmashers" target="_blank"><i class="ph ph-check-circle" style="color:#4ade80;"></i> Gate Smashers: Combinational Logic (Core Strength)</a>
+                </div>
+                <div class="unit-note-box" style="margin-top:auto; font-size:12px; border-left-color:#4ade80;">
+                  <strong>🌟 Gate Smashers Strongest Domain:</strong> This unit represents Gate Smashers' highest-rated engineering content. Every circuit from K-maps to Quine-McCluskey is covered with extensive numerical exam examples!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="unit-divider">
+
+          <!-- UNIT III & IV -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT III & IV — Sequential Systems & ADC/DAC Converters</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> Lectures 19–37</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">UNIT III: LECTURES 19–28</span>
+                <h4 class="card-title">Flip-Flops, Shift Registers & Counters</h4>
+                <p class="card-desc">Covers 1-bit bistable latches, clocked SR, JK, T, and D flip-flops, excitation tables, flip-flop conversion, shift registers (SISO, SIPO, PISO, PIPO), ring counters, sequence generators, and asynchronous (ripple) vs synchronous counter design.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/@GateSmashers" target="_blank"><i class="ph ph-circuitry" style="color:#fbbf24;"></i> Gate Smashers: Flip-Flops & Counter Design</a>
+                </div>
+                <p class="card-desc" style="font-size:12px; margin-top:8px;"><em>Note: L28 is dedicated problem-solving recap and mid-term evaluation review.</em></p>
+              </div>
+              <div class="video-card" style="background:rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.25);">
+                <span class="card-badge badge-warning">UNIT IV: LECTURES 29–37 (CHANNEL SWITCH)</span>
+                <h4 class="card-title">A/D & D/A Converter Architectures</h4>
+                <p class="card-desc">Covers Weighted resistor & R-2R ladder DACs, sample-and-hold circuits, ADC quantization, Parallel (Flash) comparator, Successive Approximation Register (SAR) ADC, counting, dual-slope, and voltage-to-frequency conversion.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/@nesoacademy" target="_blank" style="background:rgba(16,185,129,0.15); font-weight:600;"><i class="ph ph-star" style="color:#34d399;"></i> Lead with Neso Academy for ADC / DAC (Stronger Fit)</a>
+                  <a class="video-link-item" href="https://www.youtube.com/@GateSmashers" target="_blank"><i class="ph ph-video-camera" style="color:#94a3b8;"></i> Gate Smashers (Secondary Backup for Unit IV)</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="unit-divider">
+
+          <!-- UNIT V -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT V — Introduction to Microprocessors (8085/8086)</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> Lectures 38–45</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card" style="grid-column: span 2;">
+                <span class="card-badge badge-primary">UNIT V: LECTURES 38–45</span>
+                <h4 class="card-title">8085/8086 Microprocessor Architecture, Timing Diagrams & Assembly</h4>
+                <p class="card-desc">Covers 8085 and 8086 internal CPU architecture, pin configurations, internal registers & status flag registers, bus demultiplexing (address/data), fetch/execute/instruction machine cycles, timing diagrams, instruction sets (data transfer, arithmetic, logic, branching), and addressing modes.</p>
+                <div class="video-links-list" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLZzbg5nrC3Tu_rcMpbfyXRZGCW6fmCj9z" target="_blank" style="grid-column: span 2; background:rgba(139, 92, 246, 0.15);"><i class="ph ph-cpu" style="color:#c084fc;"></i> Watch Gate Smashers Dedicated Microprocessor (MPMC) Master Playlist</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary & Reference Table -->
+          <div class="summary-table-box" style="margin-top:16px;">
+            <h4><i class="ph ph-book-open" style="margin-right:8px;color:#fbbf24;"></i> Digital Electronics Syllabus & Textbook Reference Hub</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Unit & Topic Area</th>
+                  <th>Recommended Primary Channel</th>
+                  <th>Key Textbooks & Reference Manuals</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>I — Logic Families & Number Systems</strong></td>
+                  <td>Gate Smashers (Logic) | Neso Academy (TTL/CMOS)</td>
+                  <td>M. M. Mano, <em>"Digital Logic and Computer Design"</em> (Pearson)</td>
+                </tr>
+                <tr>
+                  <td><strong>II — Combinational Circuits</strong></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Gate Smashers</span> (Highest exam numerical depth)</td>
+                  <td>R. P. Jain, <em>"Modern Digital Electronics"</em> (4th Ed, McGraw Hill)</td>
+                </tr>
+                <tr>
+                  <td><strong>III — Sequential Circuits & FFs</strong></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Gate Smashers</span> (Complete flip-flop design)</td>
+                  <td>A. A. Kumar, <em>"Fundamentals of Digital Circuits"</em> (Prentice Hall)</td>
+                </tr>
+                <tr>
+                  <td><strong>IV — A/D and D/A Converters</strong></td>
+                  <td><span style="color:#34d399;font-weight:bold;">Neso Academy</span> (Crucial channel switch for analog depth)</td>
+                  <td>R. P. Jain (Chapter on Analog-to-Digital Interfacing)</td>
+                </tr>
+                <tr>
+                  <td><strong>V — Microprocessors 8085/8086</strong></td>
+                  <td>Gate Smashers MPMC Dedicated Playlist</td>
+                  <td>R. S. Gaonkar, <em>"Microprocessor Architecture, Programming, and Applications with the 8085"</em></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+  }
+
+  function renderAIMLVideoRoadmap(container) {
+      container.innerHTML = `
+        <div class="video-roadmap-container">
+          <!-- Header Overview -->
+          <div class="roadmap-header-box" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(139, 92, 246, 0.18)); border-color: rgba(139, 92, 246, 0.35);">
+            <h3><i class="ph ph-brain" style="color:#a855f7;"></i> Elements of AI & ML — 5 Units Comprehensive Video Roadmap</h3>
+            <p>Mapped directly to your 5-unit university curriculum. Powered by an outstanding primary swap-in: <strong>Mahesh Huddar (VTU Pulse)</strong> — an Indian CS professor whose channel is built around an integrated AI+ML syllabus with systematic, English-medium solved-numerical tutorials. Backed by <strong>Simple Snippets</strong>, <strong>Krish Naik</strong> (practical code-along ML), <strong>StatQuest</strong>, and <strong>Simplilearn</strong>.</p>
+            <div class="spine-quick-links" style="margin-top:12px; display:flex; flex-wrap:wrap; gap:10px;">
+              <a class="spine-pill hindi-pill" style="background:linear-gradient(135deg, #8b5cf6, #6d28d9); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/@MaheshHuddar" target="_blank"><i class="ph ph-play-circle"></i> Mahesh Huddar Main Channel</a>
+              <a class="spine-pill hindi-pill" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/playlist?list=PL4gu8xQu0_5JrWjrWNMmXNx4zFwRrpqCR" target="_blank"><i class="ph ph-list-video"></i> AI Mastery Playlist (150+ Topics)</a>
+              <a class="spine-pill english-pill" style="background:linear-gradient(135deg, #3b82f6, #2563eb); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/@krishnaik06" target="_blank"><i class="ph ph-code"></i> Krish Naik Practical ML Channel</a>
+            </div>
+          </div>
+
+          <!-- UNIT I & II -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT I & II — AI Fundamentals & First-Order Logic</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> Unit I & II</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">UNIT I: AI INTRODUCTION</span>
+                <h4 class="card-title">Intelligent Agents, Problem Spaces & Search</h4>
+                <p class="card-desc">Covers AI applications, AI techniques, levels of models, criteria of success, rational & intelligent agents, learning agents, application domains, and heuristic search algorithms.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PL4gu8xQu0_5JrWjrWNMmXNx4zFwRrpqCR" target="_blank"><i class="ph ph-play-circle" style="color:#a855f7;"></i> Mahesh Huddar: AI Mastery Chapters 1–3 (Exact Fit)</a>
+                </div>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-secondary">UNIT II: LOGIC FOR AI</span>
+                <h4 class="card-title">Propositional & Predicate Logic, Unification & Resolution</h4>
+                <p class="card-desc">Covers propositional syntax/semantics, First-Order Predicate Logic (FOPL), knowledge representation, clausal Normal Form transformation, resolution refutation, and the Unification algorithm.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PL4gu8xQu0_5JrWjrWNMmXNx4zFwRrpqCR" target="_blank"><i class="ph ph-math-operations" style="color:#38bdf8;"></i> Mahesh Huddar: Unification & FOPL Solved Numericals</a>
+                  <a class="video-link-item" href="https://www.youtube.com/results?search_query=Simple+Snippets+Artificial+Intelligence+Propositional+Logic" target="_blank"><i class="ph ph-video-camera" style="color:#10b981;"></i> Simple Snippets: Standalone Propositional Logic Backup</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="unit-divider">
+
+          <!-- UNIT III & IV -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT III & IV — Machine Learning Foundations & Algorithmic Types</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> Unit III & IV</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">UNIT III: INTRO TO ML</span>
+                <h4 class="card-title">Datasets, Cross-Validation, PCA, LDA & ICA</h4>
+                <p class="card-desc">Covers ML foundations, dataset handling, feature sets, train/test/validation splitting, k-fold cross validation, and dimensionality reduction via Principal Component Analysis (PCA), LDA, and ICA.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PL4gu8xQu0_5JrWjrWNMmXNx4zFwRrpqCR" target="_blank"><i class="ph ph-chart-scatter" style="color:#a855f7;"></i> Mahesh Huddar: PCA & Dimensionality Reduction</a>
+                  <a class="video-link-item" href="https://www.youtube.com/@statquest" target="_blank"><i class="ph ph-lightning" style="color:#fbbf24;"></i> StatQuest with Josh Starmer: LDA & ICA Theory Backup</a>
+                  <a class="video-link-item" href="https://www.youtube.com/@krishnaik06" target="_blank"><i class="ph ph-laptop" style="color:#10b981;"></i> Krish Naik: Train/Test/Validation Splitting Code Workflow</a>
+                </div>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-primary">UNIT IV: TYPES OF ML</span>
+                <h4 class="card-title">Supervised, Unsupervised, Reinforcement & Semi-Supervised</h4>
+                <p class="card-desc">Covers Regression & Classification (Naive Bayes, Decision Trees ID3, Perceptron/ANN), Unsupervised Clustering (Hierarchical/Agglomerative, k-means), and introduction to Reinforcement learning.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PL4gu8xQu0_5JrWjrWNMmXNx4zFwRrpqCR" target="_blank"><i class="ph ph-tree-view" style="color:#a855f7;"></i> Mahesh Huddar: Solved Naive Bayes, ID3 & Clustering</a>
+                  <a class="video-link-item" href="https://www.youtube.com/@krishnaik06" target="_blank"><i class="ph ph-code-block" style="color:#38bdf8;"></i> Krish Naik: Reinforcement & Semi-Supervised ML Backup</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="unit-divider">
+
+          <!-- UNIT V -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT V — Real-World Applications of AI & ML</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> Unit V</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card" style="grid-column: span 2; background:rgba(245, 158, 11, 0.05); border-color: rgba(245, 158, 11, 0.3);">
+                <span class="card-badge badge-warning">UNIT V: INDUSTRY APPLICATIONS (SURVEY UNIT GAP FIX)</span>
+                <h4 class="card-title">AI for Society, Healthcare, Banking, Logistics & Energy</h4>
+                <p class="card-desc">Covers qualitative awareness topics: AI for society/women/environment, ML applications in banking financial fraud detection, biometric cybersecurity, clinical healthcare, EdTech, retail/supply chain optimization, transportation, and smart electrical energy grids.</p>
+                <div class="video-links-list" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                  <a class="video-link-item" href="https://www.youtube.com/@SimplilearnOfficial" target="_blank" style="grid-column: span 2; background:rgba(245, 158, 11, 0.15); font-weight:600;"><i class="ph ph-buildings" style="color:#fcd34d;"></i> Watch Simplilearn "AI & ML in [Industry]" Dedicated Explainer Videos</a>
+                </div>
+                <div class="unit-note-box warning" style="margin-top:8px; font-size:12px;">
+                  <strong>⚠️ Why Simplilearn here?</strong> Because Unit V is qualitative survey/awareness material and not numerical exam theory, classic academic GATE/VTU professors omit it. Simplilearn's industry documentaries and case studies fit this unit's exact spirit!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary Table -->
+          <div class="summary-table-box" style="margin-top:16px;">
+            <h4><i class="ph ph-table" style="margin-right:8px;color:#a855f7;"></i> AI & ML Course Coverage Summary</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Unit & Topic Module</th>
+                  <th>Mahesh Huddar (VTU Pulse)</th>
+                  <th>Recommended Backups & Industry Solutions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>I — AI Introduction</strong></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Exact Fit</span> (AI Mastery Ch. 1–3)</td>
+                  <td>None required</td>
+                </tr>
+                <tr>
+                  <td><strong>II — Logic for AI</strong></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Confirmed</span> (Unification & FOPL)</td>
+                  <td>Simple Snippets for standalone Propositional Logic explainers</td>
+                </tr>
+                <tr>
+                  <td><strong>III — Intro to Machine Learning</strong></td>
+                  <td>Confirmed for PCA & reduction</td>
+                  <td><span style="color:#facc15;">LDA/ICA</span> &rarr; StatQuest (Josh Starmer) | <span style="color:#facc15;">Data Split</span> &rarr; Krish Naik</td>
+                </tr>
+                <tr>
+                  <td><strong>IV — Types of ML</strong></td>
+                  <td>Strong solved numericals (Naive Bayes, ID3, ANN)</td>
+                  <td><span style="color:#facc15;">Reinforcement & Semi-Supervised</span> &rarr; Krish Naik</td>
+                </tr>
+                <tr>
+                  <td><strong>V — Applications of AI & ML</strong></td>
+                  <td><span style="color:#f87171;">Absent (Not numerical theory)</span></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Simplilearn Official</span> Industry Case Study videos</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+  }
+
+  function renderPythonVideoRoadmap(container) {
+      container.innerHTML = `
+        <div class="video-roadmap-container">
+          <!-- Header Overview -->
+          <div class="roadmap-header-box" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(245, 158, 11, 0.18)); border-color: rgba(59, 130, 246, 0.35);">
+            <h3><i class="ph ph-file-code" style="color:#60a5fa;"></i> Python — Basics + OOP (Mapped to W3Schools & College Curriculum)</h3>
+            <p>Structured directly around W3Schools' canonical tutorial topics augmented by advanced college-level Object-Oriented Programming (OOP) and exception hierarchy expectations. Powered by a single high-depth creator: <strong>CodeWithHarry</strong>.</p>
+            <div class="spine-quick-links" style="margin-top:12px; display:flex; flex-wrap:wrap; gap:10px;">
+              <a class="spine-pill hindi-pill" style="background:linear-gradient(135deg, #3b82f6, #2563eb); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/watch?v=UrsmFxEIp5k" target="_blank"><i class="ph ph-play-circle"></i> Complete Python Course (Hindi Single Video)</a>
+              <a class="spine-pill hindi-pill" style="background:linear-gradient(135deg, #8b5cf6, #6d28d9); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/playlist?list=PLu0W_9lII9ahfRrhFcoB-4lpp9YaBmdCP" target="_blank"><i class="ph ph-list-video"></i> Dedicated OOP-Only Playlist</a>
+              <a class="spine-pill english-pill" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.codewithharry.com/notes/" target="_blank"><i class="ph ph-file-text"></i> Free Python Handbook & Cheatsheets</a>
+              <a class="spine-pill english-pill" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.w3schools.com/python/" target="_blank"><i class="ph ph-globe"></i> W3Schools Reference</a>
+            </div>
+          </div>
+
+          <!-- Why Single Channel Note -->
+          <div class="roadmap-header-box" style="margin-top:-16px; margin-bottom:8px; background:linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.15)); border-color: rgba(16, 185, 129, 0.35);">
+            <h3><i class="ph ph-check-fat" style="color:#34d399;"></i> Why One Channel & No Split Spines Here?</h3>
+            <p style="margin:6px 0 0 0; font-size:13.5px; line-height:1.6; color:rgba(255,255,255,0.85);">Unlike legacy C language or Digital Electronics tutorials, CodeWithHarry's Python catalogue is genuinely comprehensive enough across the entire spectrum — moving effortlessly from simple syntax syntax to advanced OOP, File I/O, and intro to Machine Learning — that <strong>no secondary fill-in channel is required</strong>!</p>
+          </div>
+
+          <!-- PART 1 & 2 -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">PART 1 & 2 — Core Python Basics & Intermediate Scripting</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> W3Schools Basics & Intermediate</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">PART 1: PYTHON BASICS</span>
+                <h4 class="card-title">Syntax, Data Types, Collections & Control Flow</h4>
+                <p class="card-desc">Covers Python intro, indentation syntax, variables, numbers, type casting, strings & slicing, Booleans, operators, core data collections (Lists, Tuples, Sets, Dictionaries), conditionals (If...elif...else), loops (While, For, range), functions, Lambda expressions, and array handling.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=UrsmFxEIp5k" target="_blank"><i class="ph ph-play-circle" style="color:#60a5fa;"></i> Watch CWH Complete Python Master Video</a>
+                </div>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-primary">PART 2: INTERMEDIATE SCRIPTING</span>
+                <h4 class="card-title">Scope, Modules, Exception Handling & File I/O</h4>
+                <p class="card-desc">Covers local/global variable scope (global keywords), building & importing modules/packages, error handling via Try...Except...Else...Finally blocks, interactive user input, f-string formatting, and File I/O (Read files, Write/Create files, append modes, and Delete file system operations).</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.w3schools.com/python/python_file_handling.asp" target="_blank"><i class="ph ph-folder-open" style="color:#34d399;"></i> W3Schools Interactive File I/O Guide</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="unit-divider">
+
+          <!-- PART 3 & 4 -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">PART 3 & 4 — W3Schools OOP & Advanced College-Level Extras</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> OOP & College CS Extras</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-secondary">PART 3: W3SCHOOLS OOP SECTION</span>
+                <h4 class="card-title">Classes, __init__ Constructor, Inheritance & Encapsulation</h4>
+                <p class="card-desc">Follows W3Schools' exact Object-Oriented sequence: Classes & Objects &rarr; <code>__init__()</code> initialization Method &rarr; <code>self</code> Parameter binding &rarr; Class & Instance Properties &rarr; Class Methods &rarr; Inheritance hierarchy &rarr; Polymorphism &rarr; Encapsulation &rarr; Inner Classes.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLu0W_9lII9ahfRrhFcoB-4lpp9YaBmdCP" target="_blank" style="background:rgba(139,92,246,0.15);"><i class="ph ph-brackets-curly" style="color:#c084fc;"></i> Jump Straight to CWH Dedicated OOP-Only Playlist</a>
+                </div>
+              </div>
+              <div class="video-card" style="background:rgba(245, 158, 11, 0.05); border-color: rgba(245, 158, 11, 0.3);">
+                <span class="card-badge badge-warning">PART 4: COLLEGE-LEVEL EXTRAS (CRITICAL)</span>
+                <h4 class="card-title">Multiple Inheritance, Diamond Problem & Abstract Classes</h4>
+                <p class="card-desc">While W3Schools covers OOP basics lightly, university CS exams expect deep familiarity with: Multiple/Multilevel Inheritance, Method Overriding & Overloading, Abstract Base Classes (<code>abc</code> module & <code>@abstractmethod</code>), Custom Exception hierarchies, Iterators vs Generators (<code>yield</code>), and Function Decorators.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=UrsmFxEIp5k" target="_blank"><i class="ph ph-lightning" style="color:#fbbf24;"></i> Covered in CWH Numbered Series (Episodes #52, #63 & #66)</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary Table -->
+          <div class="summary-table-box" style="margin-top:16px;">
+            <h4><i class="ph ph-table" style="margin-right:8px;color:#60a5fa;"></i> Python Topic Mapping & Coverage Overview</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Curriculum Section</th>
+                  <th>Core Topics Included</th>
+                  <th>Recommended Spine & Resource</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Core Basics</strong></td>
+                  <td>Syntax, Data Types, Lists, Dicts, If/Else, Loops, Functions</td>
+                  <td><span style="color:#4ade80;font-weight:bold;">CodeWithHarry</span> & W3Schools Python Guide</td>
+                </tr>
+                <tr>
+                  <td><strong>Intermediate Scripting</strong></td>
+                  <td>Scope, Modules, Try/Except, User Input, File Handling (Open, Read, Write, Delete)</td>
+                  <td><span style="color:#4ade80;font-weight:bold;">CodeWithHarry</span> Complete Course & Notes</td>
+                </tr>
+                <tr>
+                  <td><strong>Object-Oriented Programming (OOP)</strong></td>
+                  <td>Classes/Objects, <code>__init__</code>, <code>self</code>, Inheritance, Polymorphism, Encapsulation</td>
+                  <td>CWH <span style="color:#a855f7;font-weight:bold;">Dedicated OOP Playlist</span></td>
+                </tr>
+                <tr>
+                  <td><strong>College-Level Extras</strong></td>
+                  <td>Multiple Inheritance, Diamond Problem, Abstract Classes (<code>abc</code>), Generators, Decorators</td>
+                  <td>CWH Numbered Series (#52, #63, #66) & Advanced Docs</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+  }
+
+  function renderPhysicsVideoRoadmap(container) {
+      container.innerHTML = `
+        <div class="video-roadmap-container">
+          <!-- Header Overview -->
+          <div class="roadmap-header-box" style="background: linear-gradient(135deg, rgba(14, 165, 233, 0.18), rgba(99, 102, 241, 0.18)); border-color: rgba(99, 102, 241, 0.35);">
+            <h3><i class="ph ph-atom" style="color:#38bdf8;"></i> Engineering Physics — 4 Units Comprehensive Video Resource Guide</h3>
+            <p>Standard Indian B.Tech first-year Engineering Physics syllabus (vector electrodynamics, quantum mechanics, lasers/fibre optics, and semiconductor physics). Structured around <strong>University Academy (Primary Spine)</strong> — unrivaled for thorough vector derivations and rigorous numerical problem-solving — with an essential channel switch to <strong>Neso Academy</strong> at Unit IV.</p>
+            <div class="spine-quick-links" style="margin-top:12px; display:flex; flex-wrap:wrap; gap:10px;">
+              <a class="spine-pill hindi-pill" style="background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/@UniversityAcademy" target="_blank"><i class="ph ph-play-circle"></i> University Academy Channel</a>
+              <a class="spine-pill hindi-pill" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://youtube.com/playlist?list=PLBlnK6fEyqRg2ATyNPDt9yDx08ncmk2m3" target="_blank"><i class="ph ph-cpu"></i> Neso Academy Unit IV Semiconductor Playlist</a>
+              <a class="spine-pill english-pill" style="background:linear-gradient(135deg, #8b5cf6, #6d28d9); color:#fff; padding:6px 14px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/@Ekeeda" target="_blank"><i class="ph ph-video-camera"></i> Ekeeda & Sanjiv Backups</a>
+            </div>
+          </div>
+
+          <!-- UNIT I & II -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT I & II — Lasers, Fibre Optics & Electro-Magnetics</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> Unit I & II</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">UNIT I: LASERS & FIBRE OPTICS</span>
+                <h4 class="card-title">Einstein Coefficients, Lasers & Optical Waveguides</h4>
+                <p class="card-desc">Covers spontaneous/stimulated emission, Einstein A & B coefficients, population inversion, pumping, Ruby & He-Ne lasers, holography, optical fibre structure, acceptance angle/cone, numerical aperture (NA), and signal attenuation.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/@UniversityAcademy" target="_blank"><i class="ph ph-star" style="color:#fbbf24;"></i> University Academy: Lasers & Fibre Optics (Core Strength)</a>
+                </div>
+                <div class="unit-note-box" style="margin-top:auto; font-size:12px; border-left-color:#38bdf8;">
+                  <strong>🌟 Most Requested Unit:</strong> This is squarely University Academy's strongest and highest-viewed physics material, featuring step-by-step numerical aperture derivations!
+                </div>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-primary">UNIT II: ELECTRO-MAGNETICS</span>
+                <h4 class="card-title">Vector Calculus, Electrostatics & Maxwell's Equations</h4>
+                <p class="card-desc">Covers coordinate systems, Del operator, gradient, divergence, curl, Divergence & Stokes' theorem, electrostatics (Coulomb's law, Gauss's law, polarization, dielectrics), magnetostatics (Biot-Savart, Ampere's law), Faraday's law, displacement current, and deriving Maxwell's equations.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/@UniversityAcademy" target="_blank"><i class="ph ph-magnet" style="color:#a855f7;"></i> University Academy: Electromagnetic Field Theory (EMT)</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="unit-divider">
+
+          <!-- UNIT III & IV -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT III & IV — Quantum Mechanics & Semiconductor Devices</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> Unit III & IV</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">UNIT III: QUANTUM MECHANICS</span>
+                <h4 class="card-title">Wave Mechanics, Uncertainty & Schrödinger Equation</h4>
+                <p class="card-desc">Covers photoelectric & Compton effects, pair production/annihilation, de Broglie matter waves, Davisson-Germer experiment, phase/group velocity, Heisenberg's gamma-ray microscope, uncertainty principle, wave function normalization, Schrödinger equation (time dependent/independent), and particle in a 1-D/3-D potential box.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/@UniversityAcademy" target="_blank"><i class="ph ph-atom" style="color:#38bdf8;"></i> University Academy: Quantum Mechanics & Numericals</a>
+                </div>
+              </div>
+              <div class="video-card" style="background:rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.3);">
+                <span class="card-badge badge-warning">UNIT IV: SEMICONDUCTORS (CHANNEL SWITCH)</span>
+                <h4 class="card-title">PN Junction, Zener Breakdown, Rectifiers & Solar Cells</h4>
+                <p class="card-desc">Covers P/N type semiconductors, energy bands, conductivity/mobility, drift velocity, Hall effect, PN junction barrier formation, static/dynamic resistance, avalanche & Zener breakdown, rectifiers (half/full wave), ripple factor, Zener voltage regulation, LEDs, photodiodes, and solar cells.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://youtube.com/playlist?list=PLBlnK6fEyqRg2ATyNPDt9yDx08ncmk2m3" target="_blank" style="background:rgba(16,185,129,0.15); font-weight:600;"><i class="ph ph-cpu" style="color:#34d399;"></i> Lead with Neso Academy (Analog & Semiconductor Devices)</a>
+                </div>
+                <div class="unit-note-box warning" style="margin-top:8px; font-size:12px;">
+                  <strong>⚠️ Why Switch to Neso Academy here?</strong> Unlike theoretical physics, Unit IV is essentially solid-state "Electronic Devices." Neso Academy's analog electronics catalogue teaches diodes and rectifiers with much greater schematic precision than general physics channels!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary Table -->
+          <div class="summary-table-box" style="margin-top:16px;">
+            <h4><i class="ph ph-table" style="margin-right:8px;color:#38bdf8;"></i> Engineering Physics Channel Allocation Summary</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Unit & Subject Domain</th>
+                  <th>Best Recommended Channel</th>
+                  <th>Key Strengths & Rationale</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>I — Lasers & Fibre Optics</strong></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">University Academy</span></td>
+                  <td>Squarely strongest unit with step-by-step numerical aperture proofs.</td>
+                </tr>
+                <tr>
+                  <td><strong>II — Electro-Magnetics</strong></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">University Academy</span></td>
+                  <td>EMT content built specifically for heavy vector-calculus derivations.</td>
+                </tr>
+                <tr>
+                  <td><strong>III — Quantum Mechanics</strong></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">University Academy</span></td>
+                  <td>Unrivaled for solved numericals (Compton shifts, uncertainty, particle in box).</td>
+                </tr>
+                <tr>
+                  <td><strong>IV — Semiconductor Physics</strong></td>
+                  <td><span style="color:#34d399;font-weight:bold;">Neso Academy</span> (Channel Switch!)</td>
+                  <td>Analog Electronics playlist is superior for circuit-level diode/rectifier analysis.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+  }
   function renderAEM2VideoRoadmap(container) {
       container.innerHTML = `
         <div class="video-roadmap-container">
@@ -1614,6 +2206,297 @@ previewEl.textContent = previewText[type] || "";
                   <td><strong>Mathematics LibreTexts (Orloff's Text)</strong></td>
                   <td>Comprehensive online university book for analytic functions, contour integration, and complex variable theory.</td>
                   <td><a href="https://math.libretexts.org/Bookshelves/Analysis/Complex_Variables_with_Applications_(Orloff)" target="_blank">math.libretexts.org/Orloff</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+  }
+
+  function renderDSAVideoRoadmap(container) {
+      container.innerHTML = `
+        <div class="video-roadmap-container">
+          <!-- Header Overview -->
+          <div class="roadmap-header-box" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(59, 130, 246, 0.18)); border-color: rgba(16, 185, 129, 0.35);">
+            <div class="header-badges">
+              <span class="badge-tag" style="background:#059669;">CSEG1043: 60 LECTURE HOURS</span>
+              <span class="badge-tag" style="background:#2563eb;">DUAL VERIFIED SPINES</span>
+              <span class="badge-tag" style="background:#d97706;">INCLUDES THEORY & LAB KEY NOTES</span>
+            </div>
+            <h3>Data Structures & Algorithms — Complete Video Map & Key Revision Notes</h3>
+            <p>Mapped directly to your university <strong>60-Lecture Course Plan (Units I–VI)</strong>. Language isn't the filter here — the best resource wins! Designed around two comprehensive spines with academic gap solutions and interactive revision notes for every single unit.</p>
+            <div class="creator-spines">
+              <a class="spine-pill english-pill" style="background:linear-gradient(135deg, #2563eb, #1d4ed8); color:#fff; padding:8px 16px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank"><i class="ph ph-play-circle"></i> Primary Spine: Jenny's Lectures DSA (122 Videos)</a>
+              <a class="spine-pill english-pill" style="background:linear-gradient(135deg, #059669, #047857); color:#fff; padding:8px 16px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31ZTn2P9vF02bkb3SC8uiUUn" target="_blank"><i class="ph ph-cpu"></i> Jenny's DAA Playlist (Algorithm Analysis)</a>
+              <a class="spine-pill hindi-pill" style="background:linear-gradient(135deg, #d97706, #b45309); color:#fff; padding:8px 16px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/playlist?list=PLu0W_9lII9ahIappRPN0MCAgtOu3lQjQi" target="_blank"><i class="ph ph-code"></i> Hindi Backup: CodeWithHarry C-based DSA</a>
+            </div>
+          </div>
+
+          <!-- Lab Exp 6 Alert -->
+          <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); padding: 14px 18px; border-radius: 12px; margin-bottom: 24px; display:flex; align-items:flex-start; gap:12px;">
+            <i class="ph ph-flask" style="font-size:24px; color:#f87171; margin-top:2px; flex-shrink:0;"></i>
+            <div>
+              <h4 style="margin:0 0 4px 0; color:#f87171; font-size:15px;">🔬 Critical Lab Alert: Experiment 6 (Heap Data Structure)</h4>
+              <p style="margin:0; font-size:13px; line-height:1.5; color:rgba(255,255,255,0.85);">
+                Since your lab list includes <strong>Heaps as Experiment 6</strong> (which is not explicitly named as a separate unit heading in the theory syllabus), make sure to watch <strong>Jenny's Heap Videos (Videos 7.8–7.9, located inside the Unit VI Sorting section)</strong> when preparing for your Lab IA and Viva!
+              </p>
+            </div>
+          </div>
+
+          <!-- Unit I -->
+          <div class="unit-roadmap-card">
+            <div class="unit-card-header">
+              <span class="unit-num-badge">UNIT I</span>
+              <h4>Introduction & Asymptotic Analysis (12 Lecture Hours)</h4>
+            </div>
+            <p class="unit-desc"><strong>Syllabus Coverage:</strong> DS overview, classification & importance, role in problem-solving, terminology, memory allocation/GC/compaction, iterative vs recursive approach, asymptotic & amortized analysis, 1D/2D arrays + operations, structures (nested, function pointer, self-referential, anonymous unions, ADTs).</p>
+            <div class="unit-content-grid">
+              <div class="primary-videos">
+                <h5 style="color:#60a5fa;margin-top:0;">🎯 Core Spine Videos</h5>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31ZTn2P9vF02bkb3SC8uiUUn" target="_blank"><i class="ph ph-play-circle" style="color:#60a5fa;"></i> Jenny's DAA Playlist: Big-O/Ω/Θ, Asymptotic & Recurrence Relations</a>
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank"><i class="ph ph-play-circle" style="color:#60a5fa;"></i> Jenny's DSA (§1 Videos 1.1–1.6): 1D/2D Arrays & Pointers in RAM</a>
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLu0W_9lII9ahIappRPN0MCAgtOu3lQjQi" target="_blank"><i class="ph ph-play-circle" style="color:#facc15;"></i> CodeWithHarry DSA (§1): Hindi Alternative for Intro & Big-O</a>
+                </div>
+              </div>
+              <div class="gap-solutions">
+                <h5 style="color:#f87171;margin-top:0;">⚠️ Syllabus Gaps & C References</h5>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.geeksforgeeks.org/dsa/memory-allocation-in-data-structure/" target="_blank"><i class="ph ph-article" style="color:#4ade80;"></i> GfG Reference: Memory Allocation, GC & Compaction Theory</a>
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31a8UcMN9-35ghv8qyFWD9_S" target="_blank"><i class="ph ph-code" style="color:#a855f7;"></i> C Structures & Unions: Refer to Jenny's C Course (C_109–C_118)</a>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:14px; padding:12px; background:rgba(16, 185, 129, 0.08); border-left:4px solid #10b981; border-radius:6px;">
+              <h5 style="margin:0 0 6px 0; color:#34d399; font-size:13px;"><i class="ph ph-lightbulb" style="vertical-align:middle;margin-right:4px;"></i> Key Revision Notes for Unit I</h5>
+              <ul style="margin:0; padding-left:18px; font-size:12.5px; line-height:1.6; color:rgba(255,255,255,0.8);">
+                <li><strong>Classification:</strong> Linear (Array, Linked List, Stack, Queue) vs Non-linear (Tree, Graph) | Static (fixed size array) vs Dynamic (grows/shrinks linked list).</li>
+                <li><strong>Iterative vs Recursive:</strong> Iteration repeats via loops (constant extra memory); recursion repeats via function self-calls (consumes call-stack memory, risks stack overflow on deep recursion).</li>
+                <li><strong>Asymptotic Analysis:</strong> Describes how runtime/space scales with input size <em>n</em> ignoring constants — expressed via Big-O (upper bound/worst case), Big-Ω (lower bound/best case), Big-Θ (tight bound).</li>
+                <li><strong>Amortized Analysis:</strong> Average cost per operation across a sequence of operations (e.g., dynamic array resizing has occasional O(n) resize, but O(1) amortized per insertion).</li>
+                <li><strong>Abstract Data Type (ADT):</strong> Defined by its behavior (operations allowed) rather than implementation — e.g. a Stack ADT guarantees push/pop/peek, whether array or list underneath.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Unit II -->
+          <div class="unit-roadmap-card">
+            <div class="unit-card-header">
+              <span class="unit-num-badge">UNIT II</span>
+              <h4>Linked Lists & Advanced Structures (10 Lecture Hours)</h4>
+            </div>
+            <p class="unit-desc"><strong>Syllabus Coverage:</strong> Singly, Doubly, Circular Linked List operations; Header List & Sentinel Node; Generalized Linked List; Skip List; applications; polynomial manipulation via LL; implementing other DS using LL.</p>
+            <div class="unit-content-grid">
+              <div class="primary-videos">
+                <h5 style="color:#60a5fa;margin-top:0;">🎯 Core Spine Videos</h5>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank"><i class="ph ph-play-circle" style="color:#60a5fa;"></i> Jenny's DSA (§2 Videos 2.1–2.21): Complete SLL, DLL & Circular LL</a>
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLu0W_9lII9ahIappRPN0MCAgtOu3lQjQi" target="_blank"><i class="ph ph-play-circle" style="color:#facc15;"></i> CodeWithHarry DSA: Linked List Operations (Hindi Backup)</a>
+                </div>
+              </div>
+              <div class="gap-solutions">
+                <h5 style="color:#f87171;margin-top:0;">⚠️ Academic Topic Gaps (GfG Solutions)</h5>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.geeksforgeeks.org/dsa/doubly-linked-list-using-sentinel-nodes/" target="_blank"><i class="ph ph-article" style="color:#4ade80;"></i> GfG: Header Lists & Sentinel (Dummy) Node Pattern</a>
+                  <a class="video-link-item" href="https://www.geeksforgeeks.org/dsa/generalized-linked-list/" target="_blank"><i class="ph ph-article" style="color:#4ade80;"></i> GfG: Generalized Linked Lists (Multi-variable Polynomials)</a>
+                  <a class="video-link-item" href="https://www.geeksforgeeks.org/dsa/skip-list/" target="_blank"><i class="ph ph-article" style="color:#f59e0b;"></i> GfG: Skip Lists (Probabilistic O(log n) Search Structure)</a>
+                  <a class="video-link-item" href="https://www.geeksforgeeks.org/dsa/polynomial-addition-using-linked-list/" target="_blank"><i class="ph ph-code" style="color:#a855f7;"></i> GfG: Polynomial Addition & Manipulation via LL</a>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:14px; padding:12px; background:rgba(16, 185, 129, 0.08); border-left:4px solid #10b981; border-radius:6px;">
+              <h5 style="margin:0 0 6px 0; color:#34d399; font-size:13px;"><i class="ph ph-lightbulb" style="vertical-align:middle;margin-right:4px;"></i> Key Revision Notes for Unit II</h5>
+              <ul style="margin:0; padding-left:18px; font-size:12.5px; line-height:1.6; color:rgba(255,255,255,0.8);">
+                <li><strong>Array vs Linked List:</strong> Arrays give O(1) random access but O(n) insertion/deletion (shifting); Linked lists give O(1) insertion/deletion (if pointer is known) but O(n) traversal access.</li>
+                <li><strong>Singly vs Doubly vs Circular:</strong> Singly points forward; Doubly adds <code>prev</code> pointer allowing backward traversal at extra memory cost; Circular links tail to head for round-robin scheduling.</li>
+                <li><strong>Sentinel / Header Node:</strong> A dummy node placed at the start/end purely to eliminate edge-case conditionals like "is list empty?" or "inserting at head?".</li>
+                <li><strong>Skip List:</strong> Trades extra memory (multi-level forward pointers per node) for search speed close to a balanced tree, without needing complex rotation/balancing logic.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Unit III -->
+          <div class="unit-roadmap-card">
+            <div class="unit-card-header">
+              <span class="unit-num-badge">UNIT III</span>
+              <h4>Stack & Queue Architectures (10 Lecture Hours)</h4>
+            </div>
+            <p class="unit-desc"><strong>Syllabus Coverage:</strong> Stack & Queue structures/operations; array vs linked-list implementation; Circular Queue; Deque; Priority Queue; Infix→Prefix/Postfix conversion; expression evaluation; brief DFS & Job scheduling / BFS.</p>
+            <div class="unit-content-grid">
+              <div class="primary-videos">
+                <h5 style="color:#60a5fa;margin-top:0;">🎯 Core Spine Videos</h5>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank"><i class="ph ph-play-circle" style="color:#60a5fa;"></i> Jenny's DSA (§3 Videos 3.1–3.13): Stacks, Infix/Postfix & Expression Trees</a>
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank"><i class="ph ph-play-circle" style="color:#60a5fa;"></i> Jenny's DSA (§4 Videos 4.1–4.8): Queues, Circular Queue & Deque</a>
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLu0W_9lII9ahIappRPN0MCAgtOu3lQjQi" target="_blank"><i class="ph ph-play-circle" style="color:#facc15;"></i> CodeWithHarry DSA: Stack & Queue Fundamentals (Hindi Backup)</a>
+                </div>
+              </div>
+              <div class="gap-solutions">
+                <h5 style="color:#f87171;margin-top:0;">⚠️ Priority Queue Gap & Traversal Notes</h5>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank"><i class="ph ph-fast-forward" style="color:#f59e0b;"></i> Priority Queue: Jump Ahead to Jenny's Heap Videos (7.8–7.9)</a>
+                  <a class="video-link-item" href="https://www.geeksforgeeks.org/dsa/priority-queue-in-data-structure/" target="_blank"><i class="ph ph-article" style="color:#4ade80;"></i> GfG: Priority Queue Architecture & Job Scheduling Theory</a>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:14px; padding:12px; background:rgba(16, 185, 129, 0.08); border-left:4px solid #10b981; border-radius:6px;">
+              <h5 style="margin:0 0 6px 0; color:#34d399; font-size:13px;"><i class="ph ph-lightbulb" style="vertical-align:middle;margin-right:4px;"></i> Key Revision Notes for Unit III</h5>
+              <ul style="margin:0; padding-left:18px; font-size:12.5px; line-height:1.6; color:rgba(255,255,255,0.8);">
+                <li><strong>Stack (LIFO):</strong> Last In, First Out (push/pop/peek). Essential for function call stacks, recursion tracking, undo mechanisms, and parsing syntax.</li>
+                <li><strong>Queue (FIFO):</strong> First In, First Out (enqueue/dequeue). Used in CPU job scheduling and asynchronous task buffers.</li>
+                <li><strong>Circular Queue:</strong> Solves the "false full" limitation of linear arrays by wrapping the rear pointer back to index 0 via modular arithmetic.</li>
+                <li><strong>Deque (Double-Ended Queue):</strong> Allows insertion and deletion at both terminal ends — generalizes stacks and queues.</li>
+                <li><strong>Expression Evaluation:</strong> Infix → Postfix uses an operator stack popped by precedence rules; Postfix evaluation uses an operand stack pushing values and popping two operands when an operator is reached.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Unit IV -->
+          <div class="unit-roadmap-card">
+            <div class="unit-card-header">
+              <span class="unit-num-badge">UNIT IV</span>
+              <h4>Trees, AVL & Balanced Search Trees (10 Lecture Hours)</h4>
+            </div>
+            <p class="unit-desc"><strong>Syllabus Coverage:</strong> Tree terminology; Binary Tree properties; traversals (level/in/pre/post); Threaded Binary Tree; BST properties & operations; Balanced BST concept; AVL Tree (rotations, insertion, deletion); Red-Black Tree; Multi-way Search Tree & B-Tree basics.</p>
+            <div class="unit-content-grid">
+              <div class="primary-videos">
+                <h5 style="color:#60a5fa;margin-top:0;">🎯 Core Spine Videos (Strongest Section!)</h5>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank"><i class="ph ph-play-circle" style="color:#60a5fa;"></i> Jenny's DSA (§5 Videos 5.1–5.31): Complete BST, AVL Rotations (LL/RR/LR/RL), Red-Black & B-Trees</a>
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLu0W_9lII9ahIappRPN0MCAgtOu3lQjQi" target="_blank"><i class="ph ph-play-circle" style="color:#facc15;"></i> CodeWithHarry DSA: Binary Trees, BST & Traversals (Hindi Alternative)</a>
+                </div>
+              </div>
+              <div class="gap-solutions">
+                <h5 style="color:#f87171;margin-top:0;">⚠️ Threaded Trees & Multi-Way Note</h5>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.geeksforgeeks.org/dsa/threaded-binary-tree/" target="_blank"><i class="ph ph-article" style="color:#4ade80;"></i> GfG: Threaded Binary Trees (Inorder Threads for O(1) Traversal)</a>
+                  <span class="video-link-item" style="color:rgba(255,255,255,0.7); cursor:default;"><i class="ph ph-info" style="color:#38bdf8;"></i> Note: Jenny's B-Tree videos double as your Multi-way Search Tree lectures!</span>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:14px; padding:12px; background:rgba(16, 185, 129, 0.08); border-left:4px solid #10b981; border-radius:6px;">
+              <h5 style="margin:0 0 6px 0; color:#34d399; font-size:13px;"><i class="ph ph-lightbulb" style="vertical-align:middle;margin-right:4px;"></i> Key Revision Notes for Unit IV</h5>
+              <ul style="margin:0; padding-left:18px; font-size:12.5px; line-height:1.6; color:rgba(255,255,255,0.8);">
+                <li><strong>Binary Search Tree (BST):</strong> Left subtree < node < right subtree, yielding O(log n) lookup when balanced, but degrades to O(n) worst-case if skewed into a linear chain.</li>
+                <li><strong>Balanced BST Trade-offs (Common Exam Question):</strong> AVL Trees guarantee stricter balancing (faster lookups, slower insertions due to frequent rotations); Red-Black Trees offer looser balancing (faster insertions, slightly slower lookups — standard in C++ <code>std::map</code> and Linux kernel).</li>
+                <li><strong>Traversals:</strong> Inorder (L-Root-R) produces sorted order for BST; Preorder (Root-L-R) clones/serializes trees; Postorder (L-R-Root) safely deletes trees bottom-up (children before parent).</li>
+                <li><strong>B-Trees:</strong> Generalizes BST to permit >2 children per node — specifically designed for disk-based storage (databases, filesystems) to minimize disk I/O read height over RAM CPU comparisons.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Unit V -->
+          <div class="unit-roadmap-card">
+            <div class="unit-card-header">
+              <span class="unit-num-badge">UNIT V</span>
+              <h4>Hash Tables & Graph Algorithms (10 Lecture Hours)</h4>
+            </div>
+            <p class="unit-desc"><strong>Syllabus Coverage:</strong> Hashing & hash functions; hash table structure & collisions; collision resolution; load factor; applications; Graph intro & terminology; adjacency matrix/list; DFS & BFS; Connected Components; MST & Shortest Path.</p>
+            <div class="unit-content-grid">
+              <div class="primary-videos">
+                <h5 style="color:#60a5fa;margin-top:0;">🎯 Core Spine Videos (Thorough Coverage!)</h5>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank"><i class="ph ph-play-circle" style="color:#60a5fa;"></i> Jenny's DSA (§8 Videos 8.1–8.3): Hashing, Probing & Separate Chaining</a>
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank"><i class="ph ph-play-circle" style="color:#60a5fa;"></i> Jenny's DSA (§6 Videos 6.1–6.15): Complete BFS/DFS, Prim's, Kruskal's, Dijkstra & Bellman-Ford</a>
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLu0W_9lII9ahIappRPN0MCAgtOu3lQjQi" target="_blank"><i class="ph ph-play-circle" style="color:#facc15;"></i> CodeWithHarry DSA: Hashing & Graph Basics (Hindi Alternative)</a>
+                </div>
+              </div>
+              <div class="gap-solutions">
+                <h5 style="color:#f87171;margin-top:0;">⚠️ Standalone Theory Gaps</h5>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.geeksforgeeks.org/dsa/hash-functions-and-hash-tables/" target="_blank"><i class="ph ph-article" style="color:#4ade80;"></i> GfG: Hash Functions (Division, Mid-Square, Multiplication) & Load Factor Maintenance</a>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:14px; padding:12px; background:rgba(16, 185, 129, 0.08); border-left:4px solid #10b981; border-radius:6px;">
+              <h5 style="margin:0 0 6px 0; color:#34d399; font-size:13px;"><i class="ph ph-lightbulb" style="vertical-align:middle;margin-right:4px;"></i> Key Revision Notes for Unit V</h5>
+              <ul style="margin:0; padding-left:18px; font-size:12.5px; line-height:1.6; color:rgba(255,255,255,0.8);">
+                <li><strong>Hash Tables & Collisions:</strong> Provides average O(1) operations by converting keys to indices via hash functions. Collisions occur when distinct keys hash to identical table slots.</li>
+                <li><strong>Collision Resolution:</strong> Separate Chaining (slots hold linked lists of colliding items) vs Open Addressing (Linear/Quadratic probing & Double Hashing — probing empty array slots directly).</li>
+                <li><strong>Load Factor:</strong> $\\alpha = \\frac{\\text{number of entries}}{\\text{table size}}$. Keep below ~0.7; exceeding this causes lookups to degrade toward O(n).</li>
+                <li><strong>Graph Representations:</strong> Adjacency Matrix gives O(1) edge check but O(V²) memory; Adjacency List is space-efficient for sparse graphs at O(V+E).</li>
+                <li><strong>Traversals & MST:</strong> BFS explores level-by-level (Queue, unweighted shortest paths); DFS explores deep (Stack/Recursion, cycle detection & topological sort). Prim's vs Kruskal's are greedy algorithms for Minimum Spanning Trees!</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Unit VI -->
+          <div class="unit-roadmap-card">
+            <div class="unit-card-header">
+              <span class="unit-num-badge">UNIT VI</span>
+              <h4>Sorting & Searching Complexities (8 Lecture Hours)</h4>
+            </div>
+            <p class="unit-desc"><strong>Syllabus Coverage:</strong> Stability & in-place properties; internal vs external sorting; Bubble/Selection/Insertion sort; lower bound for comparison-based sorting; recursive Merge Sort; recursive Quicksort; recursive Binary Search; complexity comparison.</p>
+            <div class="unit-content-grid">
+              <div class="primary-videos">
+                <h5 style="color:#60a5fa;margin-top:0;">🎯 Core Spine Videos</h5>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank"><i class="ph ph-play-circle" style="color:#60a5fa;"></i> Jenny's DSA (§7 Videos 7.1–7.13): Linear/Binary Search, Merge, Quick, Bubble & Heap Sort</a>
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31ZTn2P9vF02bkb3SC8uiUUn" target="_blank"><i class="ph ph-play-circle" style="color:#60a5fa;"></i> Jenny's DAA Playlist: Complete Sorting & Searching Time Complexity Comparison</a>
+                  <a class="video-link-item" href="https://www.youtube.com/playlist?list=PLu0W_9lII9ahIappRPN0MCAgtOu3lQjQi" target="_blank"><i class="ph ph-play-circle" style="color:#facc15;"></i> CodeWithHarry DSA: Core Sorts & Binary Search (Hindi Backup)</a>
+                </div>
+              </div>
+              <div class="gap-solutions">
+                <h5 style="color:#f87171;margin-top:0;">⚠️ Decision Tree Lower Bound Proof</h5>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.geeksforgeeks.org/dsa/lower-bound-on-comparison-based-sorting-algorithms/" target="_blank"><i class="ph ph-article" style="color:#4ade80;"></i> GfG: Lower Bound for Comparison-Based Sorting (Ω(n log n) Decision Tree Proof)</a>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:14px; padding:12px; background:rgba(16, 185, 129, 0.08); border-left:4px solid #10b981; border-radius:6px;">
+              <h5 style="margin:0 0 6px 0; color:#34d399; font-size:13px;"><i class="ph ph-lightbulb" style="vertical-align:middle;margin-right:4px;"></i> Key Revision Notes for Unit VI</h5>
+              <ul style="margin:0; padding-left:18px; font-size:12.5px; line-height:1.6; color:rgba(255,255,255,0.8);">
+                <li><strong>Stable Sort:</strong> Preserves the original relative order of identical elements (Merge, Insertion, Bubble are stable; Quick and Selection are typically not).</li>
+                <li><strong>In-Place Sort:</strong> Operates within O(1) auxiliary memory beyond the array (Bubble, Insertion, Selection, Quick are in-place; standard Merge Sort requires O(n) buffer memory).</li>
+                <li><strong>Internal vs External:</strong> Internal sorting happens entirely in RAM; External sorting occurs on disk when datasets exceed main memory (e.g., external merge sort).</li>
+                <li><strong>Comparison Lower Bound:</strong> Ω(n log n) is the theoretical absolute lower bound proven via decision-tree argument — no comparison-based sort can ever beat this worst case!</li>
+                <li><strong>Quick vs Merge Sort:</strong> Quick Sort averages O(n log n) but degrades to O(n²) worst case on bad pivot selection; Merge Sort guarantees O(n log n) across all cases at the cost of space.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Quick Summary Table -->
+          <div class="summary-table-box" style="margin-top:20px;">
+            <h4><i class="ph ph-table" style="margin-right:8px;color:#34d399;"></i> DSA Course Coverage & Gap Analysis Summary Table</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Unit & Syllabus Module</th>
+                  <th>Best Resource(s)</th>
+                  <th>Coverage Status & Gap Solutions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>I. Introduction</strong></td>
+                  <td><a href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31ZTn2P9vF02bkb3SC8uiUUn" target="_blank">Jenny's DAA</a> + <a href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank">Jenny's DSA §1</a></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">~80% Covered</span> (Memory allocation/GC theory + structures cross-referenced to C course are the only gaps)</td>
+                </tr>
+                <tr>
+                  <td><strong>II. Linked List</strong></td>
+                  <td><a href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank">Jenny's DSA §2</a></td>
+                  <td><span style="color:#facc15;font-weight:bold;">~65% Covered</span> (Header/Sentinel node, generalized LL, skip list, & polynomial-via-LL require GfG references)</td>
+                </tr>
+                <tr>
+                  <td><strong>III. Stack & Queue</strong></td>
+                  <td><a href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank">Jenny's DSA §3–4</a></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">~85% Covered</span> (Priority queue requires jumping ahead to Unit VI Heap videos 7.8–7.9)</td>
+                </tr>
+                <tr>
+                  <td><strong>IV. Tree</strong></td>
+                  <td><a href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank">Jenny's DSA §5</a></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">~90% Covered</span> (Strongest module! Only threaded binary trees require external GfG reading)</td>
+                </tr>
+                <tr>
+                  <td><strong>V. Hash Table & Graph</strong></td>
+                  <td><a href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank">Jenny's DSA §6, §8</a></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">~90% Covered</span> (Standalone hash functions & load factor maintenance are the only minor gaps)</td>
+                </tr>
+                <tr>
+                  <td><strong>VI. Sorting & Searching</strong></td>
+                  <td><a href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank">Jenny's DSA §7</a> + <a href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31ZTn2P9vF02bkb3SC8uiUUn" target="_blank">Jenny's DAA</a></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">~85% Covered</span> (Stability definitions & lower-bound decision proofs appear as side-remarks)</td>
                 </tr>
               </tbody>
             </table>
