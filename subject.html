@@ -273,6 +273,7 @@
           <button class="tab" data-type="labs">Labs</button>
           <button class="tab" data-type="tutorial">Tutorials</button>
           <button class="tab" data-type="pyqs">PYQs</button>
+          <button class="tab" id="videoTabBtn" data-type="videos">Videos</button>
         </div>
       </div>
 
@@ -318,7 +319,8 @@
     notes: [],
     labs: [],
     tutorial: [],
-    pyqs: []
+    pyqs: [],
+    videos: []
   };
 
   function fetchResources() {
@@ -331,6 +333,7 @@
                   fileData.pyqs = data.pyq || []; // map pyq -> pyqs
                   fileData.notes = data.notes || [];
                   fileData.tutorial = data.tutorial || [];
+                  fileData.videos = (data.video || []).concat(data.videos || []);
               }
           })
           .catch(err => console.error('Failed to fetch resources', err));
@@ -342,7 +345,8 @@
     notes: "Notes for this subject will appear here. Click a file to preview/download.",
     labs: "Lab manuals and experiments are listed below.",
     tutorial: "Tutorial sheets and problem sets for practice.",
-    pyqs: "Previous year question papers for practice."
+    pyqs: "Previous year question papers for practice.",
+    videos: "Video lectures and tutorials for in-depth conceptual learning."
   };
 
   /* DOM refs */
@@ -413,7 +417,7 @@
         <span>${f.name}</span>
         <div class="file-actions">
           <a href="${f.link}" target="_blank" rel="noopener noreferrer">
-            <button class="pill-btn download-btn">Download</button>
+            <button class="pill-btn download-btn">${type === 'videos' ? '<i class="ph ph-play-circle" style="vertical-align:middle;margin-right:3px;"></i>Watch' : 'Download'}</button>
           </a>
           <button class="pill-btn save-btn">Save</button>
         </div>`;

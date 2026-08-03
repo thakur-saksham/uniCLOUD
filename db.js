@@ -58,7 +58,7 @@ async function initDB() {
     CREATE TABLE IF NOT EXISTS subject_resources (
       id         SERIAL PRIMARY KEY,
       subject_id INTEGER NOT NULL REFERENCES subjects(id),
-      type       TEXT    NOT NULL CHECK(type IN ('syllabus','notes','lab','pyq')),
+      type       TEXT    NOT NULL CHECK(type IN ('syllabus','notes','lab','pyq','tutorial','video','videos')),
       name       TEXT    NOT NULL,
       link       TEXT    NOT NULL
     );

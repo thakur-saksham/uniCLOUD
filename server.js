@@ -490,8 +490,8 @@ app.get('/api/subject-resources', async (req, res) => {
     if (!branch || !subject)
       return res.status(400).json({ error: 'branch and subject required' });
     const b = (await db.query('SELECT id FROM branches WHERE LOWER(name) = LOWER(?)', [branch])).rows[0];
-    if (!b) return res.json({ syllabus: [], notes: [], lab: [], pyq: [], tutorial: [] });
-    
+    if (!b) return res.json({ syllabus: [], notes: [], lab: [], pyq: [], tutorial: [], video: [], videos: [] });
+
     let s;
     if (sem) {
         s = (await db.query('SELECT id FROM subjects WHERE branch_id = ? AND LOWER(name) = LOWER(?) AND semester = ?', [b.id, subject, parseInt(sem, 10)])).rows[0];
@@ -499,12 +499,12 @@ app.get('/api/subject-resources', async (req, res) => {
         s = (await db.query('SELECT id FROM subjects WHERE branch_id = ? AND LOWER(name) = LOWER(?)', [b.id, subject])).rows[0];
     }
     
-    if (!s) return res.json({ syllabus: [], notes: [], lab: [], pyq: [], tutorial: [] });
+    if (!s) return res.json({ syllabus: [], notes: [], lab: [], pyq: [], tutorial: [], video: [], videos: [] });
     sid = s.id;
   }
 
-  const rows   = (await db.query('SELECT id, type, name, link FROM subject_resources WHERE subject_id = ? ORDER BY name DESC', [sid])).rows;
-  const result = { syllabus: [], notes: [], lab: [], pyq: [], tutorial: [] };
+  const rows   = (await db.query("SELECT id, type, name, link FROM subject_resources WHERE subject_id = ? ORDER BY CASE WHEN type = 'pyq' THEN name END DESC, id ASC", [sid])).rows;
+  const result = { syllabus: [], notes: [], lab: [], pyq: [], tutorial: [], video: [], videos: [] };
   rows.forEach(r => { if (result[r.type]) result[r.type].push(r); });
   res.json(result);
 });
