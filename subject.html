@@ -621,6 +621,10 @@ previewEl.textContent = previewText[type] || "";
             renderAEMVideoRoadmap(fileList);
             return;
         }
+        if (sName === 'aem ii' || sName === 'aem 2' || sName === 'mathematics ii' || sName.includes('aem ii') || sName.includes('aem 2')) {
+            renderAEM2VideoRoadmap(fileList);
+            return;
+        }
         if (sName.includes('programming') || sName === 'c language' || sName === 'c programming' || sName === 'c' || sName.includes('problem solving')) {
             renderCVideoRoadmap(fileList);
             return;
@@ -1267,6 +1271,342 @@ previewEl.textContent = previewText[type] || "";
                   <td>Partial (Ch. 13 & ctype.h standalone)</td>
                   <td>Partial (C_146–149 & #131 Static Libs)</td>
                   <td><span style="color:#f87171;">assert.h, stdarg.h, time.h, math.h</span> &rarr; Solved via TutorialsPoint & GFG Guides</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+  }
+
+  function renderAEM2VideoRoadmap(container) {
+      container.innerHTML = `
+        <div class="video-roadmap-container">
+          <!-- Header Overview -->
+          <div class="roadmap-header-box" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.18), rgba(168, 85, 247, 0.15));">
+            <h3><i class="ph ph-function" style="color:#818cf8;"></i> Engineering Mathematics II (AEM II) — Hindi & English Video Roadmap</h3>
+            <p>Complete course plan roadmap (Units I–V) leveraging primary engineering mathematics creators: <strong>Dr. Gajendra Purohit (GP Sir)</strong> & <strong>Pradeep Giri Sir</strong>, supplemented by rigorous university archives (MIT OCW, NPTEL, Paul's Notes, GeeksforGeeks) to solve applied modeling gaps.</p>
+          </div>
+
+          <!-- Practical Study Notes Box -->
+          <div class="roadmap-header-box" style="margin-top:-16px; margin-bottom:8px; background:linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(239, 68, 68, 0.12)); border-color:rgba(245, 158, 11, 0.3);">
+            <h3><i class="ph ph-info" style="color:#fcd34d;"></i> Critical Student Guidance & Navigation Tips</h3>
+            <ul style="margin:8px 0 0 0; padding-left:20px; color:rgba(255,255,255,0.85); font-size:13.5px; line-height:1.65;">
+              <li><strong>GP Sir's Catalogue Structure:</strong> His library is immense but organized into dozens of topic-focused playlists rather than a single master course. Use our direct links below or search his channel with exact syllabus keywords!</li>
+              <li><strong>🎧 Dual Audio Tracks:</strong> Several of GP Sir's numerical methods videos feature selectable <em>Hindi/English audio tracks</em>. Click the YouTube player gear icon (&neox;) to switch audio rather than assuming Hindi-only!</li>
+              <li><strong>Pradeep Giri Module Numbering:</strong> His lectures follow SPPU university numbering ("Eng. Maths 1/2/3"). Don't be confused if his video title says a different semester—rely on the direct topic links provided below!</li>
+              <li><strong>Applied Math & ML Gaps:</strong> Optimization (Unit I-B) and physical PDE modeling (Unit V) pull from Operations Research and Mathematical Physics, which YouTube math channels omit. We link direct NPTEL and academic articles to save you hours of futile searching!</li>
+            </ul>
+          </div>
+
+          <!-- UNIT I -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT I — Numerical Methods and Optimization</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> 12 hrs</span>
+            </div>
+            <h4 style="margin:4px 0 -8px 0; color:#c7d2fe; font-size:14.5px;">Part A: Numerical Methods (Full Coverage)</h4>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">🎯 GP Sir Master Playlist</span>
+                <h4 class="card-title">Numerical Analysis & Methods (~7 hrs)</h4>
+                <p class="card-desc">Covers Bisection method, Newton-Raphson, Gauss Elimination, Gauss-Seidel, Gauss-Jordan, LU Decomposition, Jacobi method, Interpolation (Newton forward/backward, Stirling, Bessel, Lagrange), Numerical Differentiation/Integration, and ODE solutions (Picard's, Euler modified, RK4, Milne/Adams-Bashforth).</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=3j0c_FhOt5U" target="_blank"><i class="ph ph-video-camera" style="color:#a855f7;"></i> Standalone: Bisection Method Tutorial</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=iviiGB5vxLA" target="_blank"><i class="ph ph-video-camera" style="color:#a855f7;"></i> Standalone: Trapezoidal & Simpson's Rules</a>
+                </div>
+                <a class="card-btn" href="https://www.youtube.com/playlist?list=PLU6SqdYcYsfKijyeV7vhc1NP-H9tsFNHZ" target="_blank" rel="noopener noreferrer"><i class="ph ph-play-circle"></i> Open Numerical Analysis Playlist</a>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-secondary">🥈 Pradeep Giri Backup</span>
+                <h4 class="card-title">Numerical Solution — One-Shot Revision</h4>
+                <p class="card-desc">Rapid-fire one-shot lecture covering the entire numerical module in a single sitting. Outstanding for night-before exam revision, though fast-paced for first-time learning!</p>
+                <a class="card-btn" style="background:linear-gradient(135deg, #ec4899, #be185d);" href="https://www.youtube.com/watch?v=77UZR8n6I4E" target="_blank"><i class="ph ph-lightning"></i> Watch One-Shot Revision</a>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-info">🌐 Web References</span>
+                <h4 class="card-title">Derivations & C Code Implementations</h4>
+                <p class="card-desc">Essential academic reference websites for step-by-step mathematical derivations and quick programming syntax:</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://tutorial.math.lamar.edu" target="_blank"><i class="ph ph-book-open" style="color:#38bdf8;"></i> Paul's Online Math Notes (Lamar Univ.)</a>
+                  <a class="video-link-item" href="https://www.geeksforgeeks.org/engineering-mathematics/numerical-methods/" target="_blank"><i class="ph ph-code" style="color:#4ade80;"></i> GeeksforGeeks: Numerical Methods + Code</a>
+                </div>
+              </div>
+            </div>
+
+            <h4 style="margin:12px 0 -8px 0; color:#fca5a5; font-size:14.5px;">Part B: Optimization — ⚠️ Genuine YouTube Gap</h4>
+            <div class="unit-note-box">
+              <strong>⚠️ Why Optimization is Missing from YouTube:</strong> Topics like Simplex method, Duality, Convex sets, Markowitz Model, Steepest Descent / Hill Climbing, Least Squares, and Constrained Optimization belong to Operations Research and ML theory. GP Sir teaches Lagrange Multipliers solely as unconstrained two-variable calculus—not in the constrained optimization framing required here. Utilize the rigorous university alternatives below!
+            </div>
+            <div class="video-cards-grid" style="margin-top:2px;">
+              <div class="video-card">
+                <span class="card-badge badge-warning">🏛️ IIT Academic Solution</span>
+                <h4 class="card-title">NPTEL: Optimization Methods</h4>
+                <p class="card-desc">Rigorous English university video course covering Simplex algorithms, Duality theory, Lagrange Multipliers, and steepest gradient descent search directly mapped to engineering requirements.</p>
+                <a class="card-btn" style="background:linear-gradient(135deg, #f59e0b, #d97706);" href="https://nptel.ac.in/courses/105108127" target="_blank"><i class="ph ph-graduation-cap"></i> Launch NPTEL Course (Course 105108127)</a>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-info">📖 Conceptual Explainer</span>
+                <h4 class="card-title">GFG: Lagrange Multipliers in Optimization</h4>
+                <p class="card-desc">Quick, concise mathematical reading guide breaking down Lagrange multipliers specifically within constrained optimization theory and boundary condition problems.</p>
+                <a class="card-btn" style="background:linear-gradient(135deg, #3b82f6, #0284c7);" href="https://www.geeksforgeeks.org/engineering-mathematics/lagrange-multipliers/" target="_blank"><i class="ph ph-file-text"></i> Read Optimization Explainer</a>
+              </div>
+            </div>
+          </div>
+
+          <hr class="unit-divider">
+
+          <!-- UNIT II -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT II — Infinite Series and Introduction to Complex Analysis</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> 12 hrs</span>
+            </div>
+            <h4 style="margin:4px 0 -8px 0; color:#c7d2fe; font-size:14.5px;">Part A: Sequence & Series (Convergence Tests - Full Coverage)</h4>
+            <div class="video-cards-grid">
+              <div class="video-card" style="grid-column: 1 / -1;">
+                <span class="card-badge badge-primary">🎯 GP Sir Dedicated Playlist</span>
+                <h4 class="card-title">Infinite Series (Convergence & Divergence)</h4>
+                <p class="card-desc">Complete syllabus alignment with zero gaps! Covers p-series & Geometric series test, Comparison & Limit Comparison tests, D'Alembert's Ratio test, Cauchy Root test, Leibniz (Alternating Series) test, and Absolute/Conditional Convergence.</p>
+                <div class="video-links-list" style="flex-direction:row; flex-wrap:wrap;">
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=gtccPmpZ-lU" target="_blank"><i class="ph ph-video-camera"></i> P-Series & Geometric Test</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=4ZCDZe17fWY" target="_blank"><i class="ph ph-video-camera"></i> Comparison Test</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=lVgjTZMO05I" target="_blank"><i class="ph ph-video-camera"></i> Limit Comparison Test</a>
+                </div>
+                <a class="card-btn" href="https://www.youtube.com/playlist?list=PLU6SqdYcYsfJqbZvQECrwnlQrp4fg6isX" target="_blank"><i class="ph ph-play-circle"></i> Open Infinite Series Playlist</a>
+              </div>
+            </div>
+
+            <h4 style="margin:12px 0 -8px 0; color:#c7d2fe; font-size:14.5px;">Part B: Complex Analysis (Full Coverage)</h4>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">🎯 GP Sir Complex Analysis</span>
+                <h4 class="card-title">Complex Variables & Integration (~7 hrs)</h4>
+                <p class="card-desc">Covers Complex numbers, Euler's formula, Hyperbolic functions, Limit/Continuity/Derivative, Analytic functions, Cauchy-Riemann equations, Harmonic functions, Line integrals & Cauchy's theorem/integral formula, Zeros & Singularities (via Residue theorem), and Taylor/Laurent Power Series!</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=t9xW7UaZwZ0" target="_blank"><i class="ph ph-video-camera" style="color:#a855f7;"></i> Standalone: Analytic Functions & C-R Equations</a>
+                </div>
+                <p class="card-desc" style="font-size:12px; margin-bottom:8px;"><em>Search "Complex Analysis GP Sir" on YouTube for his full ~7 hr series (includes bonus practice on conformal mapping & bilinear transformations).</em></p>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-info">🌐 Syllabus-Cited Archives</span>
+                <h4 class="card-title">MIT OCW & LibreTexts Complex Analysis</h4>
+                <p class="card-desc">Literally cited in your university course syllabus! When Paul's Online Math Notes lacks complex analysis depth, these are the gold-standard theoretical replacements:</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://ocw.mit.edu/courses/18-04-complex-variables-with-applications-spring-2018/" target="_blank"><i class="ph ph-bank" style="color:#fcd34d;"></i> MIT OCW: Complex Variables with Applications</a>
+                  <a class="video-link-item" href="https://math.libretexts.org/Bookshelves/Analysis/Complex_Variables_with_Applications_(Orloff)" target="_blank"><i class="ph ph-books" style="color:#38bdf8;"></i> LibreTexts: Orloff's Complex Variables Text</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="unit-divider">
+
+          <!-- UNIT III -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT III — Introduction to Special Functions</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> 4 hrs</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">🎯 GP Sir Master Playlist</span>
+                <h4 class="card-title">Series Solution of DEs & Special Functions</h4>
+                <p class="card-desc">Covers Power series method, Ordinary/Singular points, Frobenius method, Legendre's equation & polynomials (Rodrigues formula, generating functions, recurrence, orthogonality), and Bessel's equation & Bessel functions (recurrence, generating functions, orthogonality, worked examples).</p>
+                <a class="card-btn" href="https://www.youtube.com/playlist?list=PLhSp9OSVmeyKv5l_nJlvC-lu-P1qszMMQ" target="_blank"><i class="ph ph-play-circle"></i> Watch Special Functions Playlist</a>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-warning">⚠️ Application Gap Solution</span>
+                <h4 class="card-title">CV Raman's Model of Indian Drums</h4>
+                <p class="card-desc">This unique India-specific acoustics application is not taught by GP Sir or Pradeep Giri. It traces directly to a landmark physics paper cited in your syllabus web resources:</p>
+                <div class="unit-note-box info" style="margin-top:auto; font-size:12.5px;">
+                  <strong>📄 Syllabus Citation to Study:</strong><br>
+                  Gaudet, Gauthier & Léger (2006), <em>"The evolution of harmonic Indian musical drums: A mathematical perspective,"</em> Journal of Sound and Vibration. Check your instructor's lecture slides or search the paper title to read the mathematical summary!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="unit-divider">
+
+          <!-- UNIT IV -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT IV — Integral Transforms</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> 8 hrs</span>
+            </div>
+            <h4 style="margin:4px 0 -8px 0; color:#c7d2fe; font-size:14.5px;">Part A: Laplace Transform (Full Coverage)</h4>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">🎯 GP Sir Complete Course</span>
+                <h4 class="card-title">Laplace Transform Complete Course</h4>
+                <p class="card-desc">Covers Laplace formulas, First & Second Shifting Theorems, derivatives, integrals, periodic functions, Heaviside & Dirac Delta functions, Inverse Laplace, Convolution theorem, and solving ODEs via Laplace.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=I1svK4H6vrk" target="_blank"><i class="ph ph-video-camera" style="color:#a855f7;"></i> Standalone: Convolution Theorem Tutorial</a>
+                  <a class="video-link-item" href="https://glasp.co/youtube/p/formula-of-laplace-transform-and-inverse-laplace-transform-by-gp-sir" target="_blank"><i class="ph ph-file-text" style="color:#fcd34d;"></i> Laplace & Inverse Formula Reference</a>
+                </div>
+                <a class="card-btn" href="https://www.youtube.com/playlist?list=PLU6SqdYcYsfILCRFpIM3fQdVIzOo71snJ" target="_blank"><i class="ph ph-play-circle"></i> Open Laplace Playlist</a>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-secondary">🥈 Pradeep Giri Backup</span>
+                <h4 class="card-title">Inverse Laplace & Shifting Practice</h4>
+                <p class="card-desc">Lecture 01 focusing directly on core formulae and intense Shifting Theorem numerical problem solving. An exceptional practice-problem supplement!</p>
+                <a class="card-btn" style="background:linear-gradient(135deg, #ec4899, #be185d);" href="https://www.youtube.com/watch?v=cRTOT_DJ2Ms" target="_blank"><i class="ph ph-pencil-simple"></i> Watch Practice Lecture 01</a>
+              </div>
+            </div>
+
+            <h4 style="margin:12px 0 -8px 0; color:#c7d2fe; font-size:14.5px;">Part B: Fourier Series & Transforms</h4>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">🎯 GP Sir Fourier Series</span>
+                <h4 class="card-title">Fourier Series & Transforms</h4>
+                <p class="card-desc">Covers even/odd functions, Dirichlet's condition, half-range sine & cosine series, harmonic analysis, Fourier Transforms, Sine/Cosine transforms, Inverse Fourier transforms, and boundary value PDE applications.</p>
+                <a class="card-btn" href="https://www.classcentral.com/course/youtube-integral-transform-laplace-fourier-transform-90974" target="_blank"><i class="ph ph-play-circle"></i> Access Integral Transform Series</a>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-warning">⚡ Algorithm Gap (FFT)</span>
+                <h4 class="card-title">Fast Fourier Transform (FFT) & Intuition</h4>
+                <p class="card-desc">FFT is a numerical signal processing algorithm omitted by pure engineering math creators. Best visual intuition & algorithm breakdowns:</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/results?search_query=3Blue1Brown+Fourier+Transform" target="_blank"><i class="ph ph-eye" style="color:#fcd34d;"></i> 3Blue1Brown: Visual Fourier Intuition</a>
+                  <a class="video-link-item" href="https://www.geeksforgeeks.org/dsa/fast-fourier-transform-for-polynomial-multiplication/" target="_blank"><i class="ph ph-code" style="color:#4ade80;"></i> GFG: Fast Fourier Transform Algorithm</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="unit-divider">
+
+          <!-- UNIT V -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT V — Introduction to PDEs and Applications</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> 8 hrs</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">🎯 GP Sir Core PDEs</span>
+                <h4 class="card-title">Linear PDEs, Separation & Heat Eq.</h4>
+                <p class="card-desc">Covers Homogeneous & Non-homogeneous PDEs (Complementary Functions & Particular Integrals directly in the Special Functions series Parts I–IV), Method of Separation of Variables, and Heat Conduction/Diffusion equation solutions.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=NGz3Qo0rGiI" target="_blank"><i class="ph ph-fire" style="color:#f97316;"></i> Heat Equation & Separation of Variables</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=Do_q2ErNAoQ" target="_blank"><i class="ph ph-waves" style="color:#38bdf8;"></i> 1D Wave Equation Solution in Hindi</a>
+                </div>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-warning">⚠️ PDE Classification & Applications Gap</span>
+                <h4 class="card-title">Paul's Notes & NPTEL Physics</h4>
+                <p class="card-desc">Mainstream math creators omit PDE classification (Elliptic, Hyperbolic, Parabolic), Laplace/Poisson equations, diffusion-randomness links (random walks ↔ diffusion), and physical modeling (air pollution, traffic flow, crime hotspots via Murray's Mathematical Biology). Recommended replacements:</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://tutorial.math.lamar.edu/classes/de/intropde.aspx" target="_blank"><i class="ph ph-book-open" style="color:#38bdf8;"></i> Paul's Notes: Clear PDE Solvers (Heat/Wave/Laplace)</a>
+                  <a class="video-link-item" href="https://nptel.ac.in/courses/115106086" target="_blank"><i class="ph ph-atom" style="color:#a855f7;"></i> NPTEL: Prof. V. Balakrishnan (Diffusion & Math Physics)</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Summary Table -->
+          <div class="summary-table-box">
+            <h4><i class="ph ph-table" style="margin-right:8px;color:#818cf8;"></i> Quick Summary & Coverage Map</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Unit & Topic Module</th>
+                  <th>GP Sir / Pradeep Giri Coverage</th>
+                  <th>Real Gaps / Recommended Solutions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>0 — Motivation</strong></td>
+                  <td>N/A (Instructor-delivered)</td>
+                  <td><span style="color:#94a3b8;">N/A (Instructor-delivered intro)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>I-A — Numerical Methods</strong></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span> (Dual Hindi/Eng audio option)</td>
+                  <td><span style="color:#4ade80;">None</span></td>
+                </tr>
+                <tr>
+                  <td><strong>I-B — Optimization</strong></td>
+                  <td><span style="color:#f87171;">None</span> (Operations Research / ML domain)</td>
+                  <td><span style="color:#facc15;">Simplex, Duality, Lagrange, Descent, Markowitz, Hill Climbing</span> &rarr; NPTEL Course & GFG</td>
+                </tr>
+                <tr>
+                  <td><strong>II-A — Infinite Series</strong></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span> (Complete tests)</td>
+                  <td><span style="color:#4ade80;">None</span></td>
+                </tr>
+                <tr>
+                  <td><strong>II-B — Complex Analysis</strong></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span> (~7 hr series)</td>
+                  <td><span style="color:#4ade80;">None</span> (Supplement with MIT OCW & LibreTexts)</td>
+                </tr>
+                <tr>
+                  <td><strong>III — Special Functions</strong></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Full</span> (Bessel & Legendre polynomials)</td>
+                  <td><span style="color:#facc15;">CV Raman Drums Application</span> &rarr; Gaudet et al. (2006) Paper</td>
+                </tr>
+                <tr>
+                  <td><strong>IV-A — Laplace Transform</strong></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Full Coverage</span> (Plus Pradeep Giri practice)</td>
+                  <td><span style="color:#4ade80;">None</span></td>
+                </tr>
+                <tr>
+                  <td><strong>IV-B — Fourier Series & Transform</strong></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Mostly Full Coverage</span></td>
+                  <td><span style="color:#facc15;">Fast Fourier Transform (FFT)</span> &rarr; 3Blue1Brown & GFG</td>
+                </tr>
+                <tr>
+                  <td><strong>V — PDEs & Applications</strong></td>
+                  <td>Partial (Homogeneous/Non-homog., Heat Eq., Separation)</td>
+                  <td><span style="color:#f87171;">PDE Classification, Randomness Link, Laplace/Poisson, Pollution/Traffic</span> &rarr; Paul's Notes & Balakrishnan NPTEL</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Master Web References Table -->
+          <div class="summary-table-box" style="margin-top:16px;">
+            <h4><i class="ph ph-link" style="margin-right:8px;color:#4ade80;"></i> Master Hub of All Cited Web Archives</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Resource Name & Institution</th>
+                  <th>Primary Application Area in AEM II</th>
+                  <th>Direct Archive Link</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Paul's Online Math Notes (Lamar Univ.)</strong></td>
+                  <td>Clean numerical derivations, integration rules, and clear Heat/Wave/Laplace PDE walkthroughs.</td>
+                  <td><a href="https://tutorial.math.lamar.edu" target="_blank">tutorial.math.lamar.edu</a></td>
+                </tr>
+                <tr>
+                  <td><strong>GeeksforGeeks Engineering Maths</strong></td>
+                  <td>Numerical methods formula lockups, C code implementations, Lagrange multipliers, and FFT algorithm syntax.</td>
+                  <td><a href="https://www.geeksforgeeks.org/engineering-mathematics/" target="_blank">geeksforgeeks.org/eng-math</a></td>
+                </tr>
+                <tr>
+                  <td><strong>MIT OCW (Course 18.04)</strong></td>
+                  <td>Syllabus-cited canonical textbook archive for Complex Variables with Applications (Spring 2018).</td>
+                  <td><a href="https://ocw.mit.edu/courses/18-04-complex-variables-with-applications-spring-2018/" target="_blank">ocw.mit.edu/18-04</a></td>
+                </tr>
+                <tr>
+                  <td><strong>NPTEL Optimization Methods</strong></td>
+                  <td>IIT video lectures resolving Unit I-B gaps in Simplex algorithms, Duality theory, and Steepest Descent.</td>
+                  <td><a href="https://nptel.ac.in/courses/105108127" target="_blank">nptel.ac.in/105108127</a></td>
+                </tr>
+                <tr>
+                  <td><strong>NPTEL Selected Topics in Math Physics</strong></td>
+                  <td>Syllabus-cited lectures by Prof. V. Balakrishnan bridging physical diffusion, randomness, and advanced PDEs.</td>
+                  <td><a href="https://nptel.ac.in/courses/115106086" target="_blank">nptel.ac.in/115106086</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Mathematics LibreTexts (Orloff's Text)</strong></td>
+                  <td>Comprehensive online university book for analytic functions, contour integration, and complex variable theory.</td>
+                  <td><a href="https://math.libretexts.org/Bookshelves/Analysis/Complex_Variables_with_Applications_(Orloff)" target="_blank">math.libretexts.org/Orloff</a></td>
                 </tr>
               </tbody>
             </table>
