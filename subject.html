@@ -241,6 +241,235 @@
     .skeleton * {
       visibility: hidden;
     }
+
+    /* Video Roadmap & Unit Cards UI */
+    .video-roadmap-container {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+      padding: 10px 0 40px 0;
+    }
+    .roadmap-header-box {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(236, 72, 153, 0.12));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 5px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+    }
+    .roadmap-header-box h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .roadmap-header-box p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .unit-section {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .unit-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .unit-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: #f3f4f6;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-left: 4px solid #a855f7;
+      padding-left: 12px;
+      margin: 0;
+    }
+    .unit-time {
+      font-size: 12px;
+      background: rgba(168, 85, 247, 0.2);
+      color: #d8b4fe;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+    .video-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 20px;
+    }
+    .video-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .video-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(168, 85, 247, 0.4);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      align-self: flex-start;
+    }
+    .badge-primary { background: rgba(168, 85, 247, 0.2); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .badge-secondary { background: rgba(236, 72, 153, 0.2); color: #f48fb1; border: 1px solid rgba(236, 72, 153, 0.3); }
+    .badge-warning { background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-info { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); }
+    
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 8px 0;
+      line-height: 1.4;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.5;
+      margin: 0 0 16px 0;
+      flex-grow: 1;
+    }
+    .video-links-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-grow: 1;
+    }
+    .video-link-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: #e2e8f0;
+      text-decoration: none;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 8px;
+      border: 1px solid transparent;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .video-link-item:hover {
+      background: rgba(168, 85, 247, 0.15);
+      color: #fff;
+      border-color: rgba(168, 85, 247, 0.3);
+    }
+    .card-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #a855f7, #6366f1);
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      box-sizing: border-box;
+    }
+    .card-btn:hover {
+      opacity: 0.92;
+    }
+    .unit-note-box {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-left: 4px solid #f59e0b;
+      padding: 14px 18px;
+      border-radius: 8px;
+      color: #fde68a;
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+    .unit-note-box.info {
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-left: 4px solid #6366f1;
+      color: #e0e7ff;
+    }
+    .unit-divider {
+      border: none;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+      margin: 4px 0;
+    }
+    .summary-table-box {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .summary-table-box h4 {
+      margin: 0;
+      padding: 16px 20px;
+      font-size: 16px;
+      color: #fff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .summary-table-box table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13.5px;
+    }
+    .summary-table-box th {
+      background: rgba(255, 255, 255, 0.05);
+      color: #a855f7;
+      padding: 12px 20px;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .summary-table-box td {
+      padding: 12px 20px;
+      color: #e2e8f0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      line-height: 1.5;
+    }
+    .summary-table-box tr:last-child td {
+      border-bottom: none;
+    }
+    .summary-table-box a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+    .summary-table-box a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -385,6 +614,11 @@
 
     // render file rows
     fileList.innerHTML = "";
+
+    if (type === 'videos' && (subject.trim().toLowerCase() === 'aem i' || subject.trim().toLowerCase() === 'aem 1' || subject.trim().toLowerCase() === 'mathematics i')) {
+        renderAEMVideoRoadmap(fileList);
+        return;
+    }
 
     if (branch !== 'CSE' && type !== 'pyqs') {
       const comingSoon = document.createElement('div');
@@ -543,7 +777,217 @@
         });
     }
   });
-</script>
 
+  function renderAEMVideoRoadmap(container) {
+      container.innerHTML = `
+        <div class="video-roadmap-container">
+          <!-- Header Overview -->
+          <div class="roadmap-header-box">
+            <h3><i class="ph ph-film-slate" style="color:#a855f7;"></i> Engineering Mathematics I — Hindi Playlist / Video Roadmap</h3>
+            <p>Curated learning roadmap utilizing top engineering mathematics educators: <strong>Dr. Gajendra Purohit (GP Sir)</strong> & <strong>Pradeep Giri Sir</strong>. Where a topic is missing from full playlists, direct one-shots or targeted video refreshers are attached.</p>
+          </div>
+
+          <!-- UNIT I -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT I — Differential Calculus</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> 9 hrs</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">🎯 Main Playlist</span>
+                <h4 class="card-title">Differential Calculus for B.Sc. & Engineering</h4>
+                <p class="card-desc">By Dr. Gajendra Purohit (GP Sir). Covers: Rolle's, Lagrange's & Cauchy's Mean Value Theorems, Successive Differentiation, Leibnitz Theorem, Taylor's & Maclaurin's Series, Partial Differentiation, Euler's Theorem, Jacobian, and Maxima-Minima (incl. Lagrange multipliers).</p>
+                <a class="card-btn" href="https://www.youtube.com/playlist?list=PLU6SqdYcYsfIJRl8mo2Rv1MpdvmVD0YyI" target="_blank" rel="noopener noreferrer"><i class="ph ph-play-circle"></i> Watch Full Playlist</a>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-secondary">⚡ Pradeep Giri Sir (One-Shots)</span>
+                <h4 class="card-title">Alternate Exam Revision Lectures</h4>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=a8RiOyvbhQY" target="_blank"><i class="ph ph-video-camera" style="color:#f48fb1;"></i> Differential Calculus Full One-Shot</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=tWHWOSrbBDI" target="_blank"><i class="ph ph-video-camera" style="color:#f48fb1;"></i> Single Variable Calculus One-Shot</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=VIMZq5x4Wqk" target="_blank"><i class="ph ph-video-camera" style="color:#f48fb1;"></i> Partial Differentiation One-Shot</a>
+                </div>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-warning">⚠️ Prerequisite Topic</span>
+                <h4 class="card-title">Remainder & Factor Theorem Review</h4>
+                <p class="card-desc">Basic pre-calculus review (polynomials, functions & graphs) not present in engineering playlists. Concise refresher by Khan Academy.</p>
+                <a class="card-btn" style="background:linear-gradient(135deg, #f59e0b, #d97706);" href="https://www.khanacademy.org/math/algebra2/x2ec2f6f830c9fb89:poly-div/x2ec2f6f830c9fb89:remainder-theorem/v/polynomial-remainder-theorem-to-test-factor" target="_blank" rel="noopener noreferrer"><i class="ph ph-arrow-square-out"></i> Watch Refresher</a>
+              </div>
+            </div>
+          </div>
+
+          <hr class="unit-divider">
+
+          <!-- UNIT II -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT II — Integral Calculus</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> 9 hrs</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">🎯 Main Playlist</span>
+                <h4 class="card-title">Integral Calculus – Complete Course</h4>
+                <p class="card-desc">By Dr. Gajendra Purohit (GP Sir). Covers: Double integrals (Cartesian & polar), Change of order of integration, Triple integrals, Change of variables, Arc length, Volume & Surface area of revolution (real-world applications), Dirichlet's theorem.</p>
+                <a class="card-btn" href="https://www.youtube.com/playlist?list=PLU6SqdYcYsfJV8Lfq4KFA0U8kGeJ2NGWV" target="_blank" rel="noopener noreferrer"><i class="ph ph-play-circle"></i> Watch Full Playlist</a>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-primary">🎯 Dedicated Series</span>
+                <h4 class="card-title">Beta & Gamma Functions</h4>
+                <p class="card-desc">Separate dedicated series by GP Sir diving deep into properties, transformations, evaluation methods, and mathematical problem solving for Gamma and Beta functions.</p>
+                <a class="card-btn" href="https://www.youtube.com/playlist?list=PLU6SqdYcYsfKBwI-gt4_3stvN0esrPCAq" target="_blank" rel="noopener noreferrer"><i class="ph ph-play-circle"></i> Watch Beta/Gamma Playlist</a>
+              </div>
+            </div>
+            <div class="unit-note-box info">
+              <strong>📌 Coordinate Systems Note:</strong> Cylindrical and spherical coordinates for triple integrals are covered directly within the Triple Integral videos inside the main GP Sir playlist above (not needed as a separate video).
+            </div>
+          </div>
+
+          <hr class="unit-divider">
+
+          <!-- UNIT III -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT III — Vector Algebra and Calculus</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> 9 hrs</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">🎯 Main Playlist</span>
+                <h4 class="card-title">Vector Calculus 2.0 – Complete Series</h4>
+                <p class="card-desc">By Dr. Gajendra Purohit (GP Sir). Covers: Vector algebra, Scalar & vector point functions, Vector differentiation, Gradient/Directional derivative, Divergence & Curl (irrotational/solenoidal), Line/Surface/Volume integrals, Work-Circulation-Flux, Green's, Stokes', and Gauss Divergence theorems.</p>
+                <a class="card-btn" href="https://www.youtube.com/playlist?list=PLU6SqdYcYsfIfW2FdmomPkWDJ3vPLW1SN" target="_blank" rel="noopener noreferrer"><i class="ph ph-play-circle"></i> Watch Full Playlist</a>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-secondary">⚡ Pradeep Giri Sir (Backup)</span>
+                <h4 class="card-title">Vector Differentiation & Gradient</h4>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=NAJuuEKwOIQ" target="_blank"><i class="ph ph-video-camera" style="color:#f48fb1;"></i> Lecture 01: Gradient & Directional Derivative</a>
+                </div>
+                <p class="card-desc">No full standalone vector-calculus playlist exists on his channel — GP Sir's playlist is recommended as your primary complete resource.</p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="unit-divider">
+
+          <!-- UNIT IV -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT IV — Linear Differential Equations with Visualizations</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> 11 hrs</span>
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">🎯 Main Playlist</span>
+                <h4 class="card-title">Differential Equation 2.0</h4>
+                <p class="card-desc">By Dr. Gajendra Purohit (GP Sir). Covers: Order & degree, Linearity vs non-linearity, Exact equations, Integrating factors, Higher-order linear DEs with constant coefficients (CF & PI, all cases), Wronskian, Variation of Parameters.</p>
+                <a class="card-btn" href="https://www.youtube.com/playlist?list=PLU6SqdYcYsfIuZVt20v-eNZBfFLENrM1F" target="_blank" rel="noopener noreferrer"><i class="ph ph-play-circle"></i> Watch Full Playlist</a>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-secondary">⚡ Pradeep Giri Sir (One-Shots)</span>
+                <h4 class="card-title">One-Shot & Specific Topic Lectures</h4>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=GBjmQ-JHzjU" target="_blank"><i class="ph ph-video-camera"></i> First Order DE One-Shot</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=MYgHlr8V4do" target="_blank"><i class="ph ph-video-camera"></i> First Order DE SPPU One-Shot (35 min)</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=pthhx1P1gEg" target="_blank"><i class="ph ph-video-camera"></i> Linear DE Higher Order (Lecture 1)</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?_GsHS15658I" target="_blank"><i class="ph ph-video-camera"></i> Particular Integral (Lecture 5)</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=n0Whb6h7n-w" target="_blank"><i class="ph ph-video-camera"></i> Linear DE Higher Order Full One-Shot</a>
+                </div>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-info">🔬 Tools & Applications</span>
+                <h4 class="card-title">Visualizations & Circuit Analysis</h4>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.geogebra.org/t/differential-equation" target="_blank"><i class="ph ph-cube" style="color:#38bdf8;"></i> GeoGebra Interactive DE Visualizers</a>
+                  <a class="video-link-item" href="https://mrcet.com/downloads/digital_notes/EEE/31082020/Electrical%20Circuit%20Analysis.pdf" target="_blank"><i class="ph ph-file-pdf" style="color:#38bdf8;"></i> Electric Circuits & DE Notes (English Reference)</a>
+                </div>
+                <p class="card-desc">Essential interactive tools from syllabus and worked word-problem reference notes.</p>
+              </div>
+            </div>
+            <div class="unit-note-box">
+              <strong>⚠️ Applications Note:</strong> Word problems on electric circuits (RL/RC/RLC), radioactive decay, population growth, and harmonic oscillators are typically taught in applied physics rather than pure mathematics channels. GP Sir teaches the underlying exact and linear solving techniques; refer to the digital notes above for specific circuit examples!
+            </div>
+          </div>
+
+          <hr class="unit-divider">
+
+          <!-- UNIT V -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">UNIT V — Non-Linear Differential Equations with Visualizations</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> 6 hrs</span>
+            </div>
+            <div class="unit-note-box">
+              <strong>⚠️ Critical Recommendation for Unit V:</strong> This unit covers advanced interdisciplinary modeling (Bass diffusion, Lotka-Volterra predator-prey, SIR epidemic models, and nerve impulses) which are not covered by mainstream Hindi math creators like GP Sir or Pradeep Giri Sir. Since GP Sir's DE 2.0 playlist builds core ODE stability and equilibrium points via Wronskian reasoning, we strongly advise self-studying the applied models using your course slides, GeoGebra applets, and the reference readings below!
+            </div>
+            <div class="video-cards-grid" style="margin-top:8px;">
+              <div class="video-card">
+                <span class="card-badge badge-primary">📚 Prerequisite Math</span>
+                <h4 class="card-title">Core ODE Stability & Equilibrium</h4>
+                <p class="card-desc">Master phase concepts, system of equations analysis, and equilibrium point stability techniques using GP Sir's comprehensive DE 2.0 foundation.</p>
+                <a class="card-btn" href="https://www.youtube.com/playlist?list=PLU6SqdYcYsfIuZVt20v-eNZBfFLENrM1F" target="_blank" rel="noopener noreferrer"><i class="ph ph-play-circle"></i> Open DE 2.0 Playlist</a>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-info">🌐 Interdisciplinary Models</span>
+                <h4 class="card-title">Bass Diffusion & Epidemic Models</h4>
+                <p class="card-desc">Deep-dive reading reference for the Bass diffusion of innovation model and foundational background for Lotka-Volterra / SIR biological models.</p>
+                <a class="card-btn" style="background:linear-gradient(135deg, #3b82f6, #0284c7);" href="https://en.wikipedia.org/wiki/Bass_diffusion_model" target="_blank" rel="noopener noreferrer"><i class="ph ph-book-open"></i> Read Reference Guide</a>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-secondary">🔬 Visualization Engine</span>
+                <h4 class="card-title">GeoGebra Phase Portraits & ODEs</h4>
+                <p class="card-desc">Syllabus visualization tool to simulate non-linear phase portraits, linearization, logistic equations, and autonomous vs non-autonomous dynamics in real time.</p>
+                <a class="card-btn" style="background:linear-gradient(135deg, #ec4899, #be185d);" href="https://www.geogebra.org/t/differential-equation" target="_blank" rel="noopener noreferrer"><i class="ph ph-cube"></i> Launch Interactive Tool</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Summary Table -->
+          <div class="summary-table-box">
+            <h4><i class="ph ph-table" style="margin-right:8px;color:#a855f7;"></i> Quick Summary & Coverage Map</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Unit</th>
+                  <th>Best Single Resource</th>
+                  <th>Fully Covers Unit?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>I. Differential Calculus</strong></td>
+                  <td><a href="https://www.youtube.com/playlist?list=PLU6SqdYcYsfIJRl8mo2Rv1MpdvmVD0YyI" target="_blank">GP Sir Playlist</a></td>
+                  <td><span style="color:#4ade80;">~95%</span> (missing: remainder/factor theorem review)</td>
+                </tr>
+                <tr>
+                  <td><strong>II. Integral Calculus</strong></td>
+                  <td><a href="https://www.youtube.com/playlist?list=PLU6SqdYcYsfJV8Lfq4KFA0U8kGeJ2NGWV" target="_blank">GP Sir Playlist</a> + <a href="https://www.youtube.com/playlist?list=PLU6SqdYcYsfKBwI-gt4_3stvN0esrPCAq" target="_blank">Beta-Gamma Playlist</a></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Yes (100%)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>III. Vector Algebra & Calculus</strong></td>
+                  <td><a href="https://www.youtube.com/playlist?list=PLU6SqdYcYsfIfW2FdmomPkWDJ3vPLW1SN" target="_blank">GP Sir Playlist</a></td>
+                  <td><span style="color:#4ade80;font-weight:bold;">Yes (100%)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>IV. Linear DE with Visualizations</strong></td>
+                  <td><a href="https://www.youtube.com/playlist?list=PLU6SqdYcYsfIuZVt20v-eNZBfFLENrM1F" target="_blank">GP Sir Playlist</a></td>
+                  <td><span style="color:#facc15;">~80%</span> (missing: applied circuit/decay/oscillator word problems)</td>
+                </tr>
+                <tr>
+                  <td><strong>V. Non-Linear DE with Visualizations</strong></td>
+                  <td>None found in single playlist</td>
+                  <td><span style="color:#f87171;">~20%</span> (only prerequisite ODE skills covered, no Hindi content on Bass/Lotka-Volterra/SIR/nerve-impulse)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+  }
+</script>
 </body>
 </html>
