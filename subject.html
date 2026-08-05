@@ -656,6 +656,10 @@ previewEl.textContent = previewText[type] || "";
             renderCVideoRoadmap(fileList);
             return;
         }
+        if (sName.includes('linux') || sName.includes('unix') || sName.includes('shell') || sName.includes('operating system')) {
+            renderLinuxVideoRoadmap(fileList);
+            return;
+        }
     }
 
     if (branch !== 'CSE' && type !== 'pyqs') {
@@ -2589,6 +2593,121 @@ previewEl.textContent = previewText[type] || "";
                   <td><strong>VI. Sorting & Searching</strong></td>
                   <td><a href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31bbKJzrsKfMpo_grxuLl8LU" target="_blank">Jenny's DSA §7</a> + <a href="https://www.youtube.com/playlist?list=PLdo5W4Nhv31ZTn2P9vF02bkb3SC8uiUUn" target="_blank">Jenny's DAA</a></td>
                   <td><span style="color:#4ade80;font-weight:bold;">~85% Covered</span> (Stability definitions & lower-bound decision proofs appear as side-remarks)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+  }
+
+  function renderLinuxVideoRoadmap(container) {
+      container.innerHTML = `
+        <div class="video-roadmap-container">
+          <!-- Header Overview -->
+          <div class="roadmap-header-box" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(245, 158, 11, 0.18)); border-color: rgba(16, 185, 129, 0.35);">
+            <div class="header-badges" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+              <span style="background:rgba(16, 185, 129, 0.2); border:1px solid #10b981; color:#6ee7b7; font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px;">100+ COMMANDS &amp; SHELL SCRIPTING</span>
+              <span style="background:rgba(245, 158, 11, 0.2); border:1px solid #f59e0b; color:#fde047; font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px;">ONE-SHOT HINDI MASTERCLASS</span>
+            </div>
+            <h3><i class="ph ph-terminal" style="color:#10b981;"></i> Linux OS &amp; Shell Scripting — Command Masterclass &amp; Video Roadmap</h3>
+            <p>Comprehensive video resource guide mastering Linux command-line operations, filesystem hierarchy, permission management (<code style="color:#34d399;">chmod, chown</code>), pipeline redirection, process monitoring, and bash shell scripting. Anchored by <strong>MPrashant's renowned 100 Commands One-Shot Hindi Tutorial</strong> for instant exam and lab mastery!</p>
+            <div class="spine-quick-links" style="margin-top:12px; display:flex; flex-wrap:wrap; gap:10px;">
+              <a class="spine-pill hindi-pill" style="background:linear-gradient(135deg, #059669, #047857); color:#fff; padding:8px 16px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/watch?v=Byx4sgLR88E&t=2316s" target="_blank"><i class="ph ph-play-circle"></i> MPrashant: 100 Linux Commands Masterclass</a>
+              <a class="spine-pill hindi-pill" style="background:linear-gradient(135deg, #d97706, #b45309); color:#fff; padding:8px 16px; border-radius:999px; text-decoration:none; font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px;" href="https://www.youtube.com/results?search_query=CodeWithHarry+Linux+Shell+Scripting+Hindi" target="_blank"><i class="ph ph-code"></i> CodeWithHarry: Bash &amp; Shell Scripting</a>
+            </div>
+          </div>
+
+          <!-- MODULE 1: COMMAND LINE & CORE TOOLS -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">MODULE I — Core Linux Commands &amp; Terminal Mastery</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> 100 Commands Explained</span>
+            </div>
+            <div style="margin-bottom: 16px; padding: 12px 16px; background: rgba(255,255,255,0.02); border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.75); font-size: 13.5px; line-height: 1.5;">
+              <strong>Coverage:</strong> Navigation (<code style="color:#60a5fa;">cd, ls, pwd, mkdir, rm, rmdir</code>), file handling &amp; viewing (<code style="color:#60a5fa;">cat, touch, cp, mv, head, tail, less</code>), searching &amp; pipelines (<code style="color:#facc15;">grep, find, sort, uniq, awk, sed, |</code>), user &amp; group management (<code style="color:#f472b6;">su, sudo, useradd, passwd, whoami</code>), file permissions (<code style="color:#a855f7;">chmod, chown, chgrp, umask</code>), and system process utilities (<code style="color:#34d399;">ps, top, kill, df, free, history, uname</code>).
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">🏆 PRIMARY ONE-SHOT MASTERCLASS</span>
+                <h4 class="card-title">Linux for Beginners: 100 Commands in One Video (Hindi)</h4>
+                <p class="card-desc">The definitive Hindi video guide by <strong>MPrashant</strong> that breaks down 100 essential power-user commands with live terminal demonstrations, visual examples, and real-world system admin tips.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=Byx4sgLR88E&t=2316s" target="_blank" style="background:rgba(16, 185, 129, 0.15); font-weight:600;"><i class="ph ph-star" style="color:#34d399;"></i> 🎬 Watch Masterclass (Direct to Core Command Execution @ 38:36)</a>
+                  <a class="video-link-item" href="https://www.youtube.com/watch?v=Byx4sgLR88E" target="_blank"><i class="ph ph-play-circle" style="color:#60a5fa;"></i> ▶️ Watch from Beginning (Intro &amp; Architecture 00:00:00)</a>
+                </div>
+                <div class="unit-note-box" style="margin-top:auto; font-size:12px; border-left-color:#34d399;">
+                  <strong>🌟 Instructor: MPrashant</strong> — Widely regarded as one of the best high-yield Linux command tutorials for technical interviews, semester practicals, and DevOps foundations!
+                </div>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-warning">⚡ EXAM COMMAND CHEATSHEET</span>
+                <h4 class="card-title">Essential Command Categories &amp; Flags</h4>
+                <p class="card-desc">Quick revision reference for viva and laboratory exam command prompts:</p>
+                <ul style="margin:8px 0 0 0; padding-left:18px; color:rgba(255,255,255,0.8); font-size:12.5px; line-height:1.6;">
+                  <li><strong>Directory recursive delete:</strong> <code style="color:#f87171;">rm -rf /path/to/dir</code> (Use with caution!)</li>
+                  <li><strong>Octal permission flags:</strong> <code style="color:#a855f7;">chmod 755 script.sh</code> gives Read/Write/Execute to owner (4+2+1=7), Read/Execute to group (4+1=5), and Read/Execute to others (5).</li>
+                  <li><strong>Search file content:</strong> <code style="color:#facc15;">grep -rn "search_string" ./directory</code> does case-sensitive recursive matching with line numbers.</li>
+                  <li><strong>Process diagnosis:</strong> <code style="color:#34d399;">ps aux | grep node</code> finds background running process IDs (PID) to terminate via <code style="color:#f87171;">kill -9 PID</code>.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <hr class="unit-divider">
+
+          <!-- MODULE 2: BASH SHELL SCRIPTING -->
+          <div class="unit-section">
+            <div class="unit-header-row">
+              <h3 class="unit-title">MODULE II — Bash Shell Scripting &amp; Automation</h3>
+              <span class="unit-time"><i class="ph ph-clock"></i> Bash Programming</span>
+            </div>
+            <div style="margin-bottom: 16px; padding: 12px 16px; background: rgba(255,255,255,0.02); border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.75); font-size: 13.5px; line-height: 1.5;">
+              <strong>Coverage:</strong> Shebang headers (<code style="color:#34d399;">#!/bin/bash</code>), environment vs user variables, command substitution, user inputs (<code style="color:#60a5fa;">read</code>), arithmetic evaluation (<code style="color:#facc15;">expr, $(())</code>), conditional tests (<code style="color:#f472b6;">if, elif, fi, case</code>), iteration structures (<code style="color:#a855f7;">for, while, until</code>), bash functions, command-line positional arguments (<code style="color:#38bdf8;">$1, $2, $#, $@</code>), and task scheduling with <code style="color:#34d399;">crontab</code>.
+            </div>
+            <div class="video-cards-grid">
+              <div class="video-card">
+                <span class="card-badge badge-primary">🎯 BASH SCRIPTING PLAYLISTS</span>
+                <h4 class="card-title">Shell Scripting Fundamentals &amp; Logic</h4>
+                <p class="card-desc">Step-by-step programming guides to writing automated bash scripts, evaluating logical conditions, and looping across system files and logs.</p>
+                <div class="video-links-list">
+                  <a class="video-link-item" href="https://www.youtube.com/results?search_query=CodeWithHarry+Linux+Shell+Scripting+Hindi" target="_blank"><i class="ph ph-play-circle" style="color:#facc15;"></i> CodeWithHarry: Linux Shell Scripting &amp; Bash Tutorials (Hindi)</a>
+                  <a class="video-link-item" href="https://www.geeksforgeeks.org/introduction-to-linux-shell-and-shell-scripting/" target="_blank"><i class="ph ph-article" style="color:#4ade80;"></i> GeeksforGeeks: Complete Shell Scripting Reference &amp; Practice Programs</a>
+                </div>
+              </div>
+              <div class="video-card">
+                <span class="card-badge badge-info">💡 LAB SCRIPTING GOLD RULES</span>
+                <h4 class="card-title">Common Bash Pitfalls to Avoid</h4>
+                <ul style="margin:8px 0 0 0; padding-left:18px; color:rgba(255,255,255,0.8); font-size:12.5px; line-height:1.6;">
+                  <li><strong>No spaces around equals:</strong> Variable assignment requires <code style="color:#34d399;">NAME="Linux"</code> without spaces around the <code>=</code> sign (unlike Python or C).</li>
+                  <li><strong>Space inside square brackets:</strong> Test conditions require mandatory spaces inside brackets: <code style="color:#60a5fa;">if [ "$val" -gt 10 ]; then</code>.</li>
+                  <li><strong>Make script executable:</strong> Always run <code style="color:#a855f7;">chmod +x script.sh</code> before attempting execution via <code style="color:#34d399;">./script.sh</code>.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary Table -->
+          <div class="summary-table-box" style="margin-top:24px;">
+            <h4><i class="ph ph-table" style="margin-right:8px;color:#10b981;"></i> Linux &amp; Shell Scripting Resource Summary Table</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Domain &amp; Competency</th>
+                  <th>Best Recommended Resource</th>
+                  <th>Key Highlights &amp; Application</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Core 100 Linux Commands</strong></td>
+                  <td><a href="https://www.youtube.com/watch?v=Byx4sgLR88E&t=2316s" target="_blank" style="color:#34d399; font-weight:bold;">MPrashant One-Shot Tutorial (@ 38:36)</a></td>
+                  <td>Definitive 100 command explanations, navigation, permissions, and pipeline demonstrations in simple Hindi.</td>
+                </tr>
+                <tr>
+                  <td><strong>Bash &amp; Shell Scripting</strong></td>
+                  <td><a href="https://www.youtube.com/results?search_query=CodeWithHarry+Linux+Shell+Scripting+Hindi" target="_blank" style="color:#facc15; font-weight:bold;">CodeWithHarry / GeeksforGeeks</a></td>
+                  <td>Essential syntax for automating semester lab exercises, loops, and positional parameters.</td>
                 </tr>
               </tbody>
             </table>
